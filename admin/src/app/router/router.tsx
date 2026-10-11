@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 
 import { clearCurrentSession, currentSessionQueryKey } from '@/entities/session'
 import { ConsultationsPage } from '@/pages/consultations'
@@ -8,7 +8,6 @@ import {
   SitePage,
   HomePage,
   FaqPage,
-  SocialsPage,
 } from '@/pages/site-settings'
 import { LoginPage } from '@/pages/login'
 import { authGetMe } from '@/shared/api'
@@ -57,7 +56,7 @@ export const router = createBrowserRouter(
         { path: 'contacts', element: <ContactsPage /> },
         { path: 'home', element: <HomePage /> },
         { path: 'faq', element: <FaqPage /> },
-        { path: 'socials', element: <SocialsPage /> },
+        { path: 'socials', element: <Navigate to="/contacts" replace /> },
         { path: 'site', element: <SitePage /> },
       ],
     },

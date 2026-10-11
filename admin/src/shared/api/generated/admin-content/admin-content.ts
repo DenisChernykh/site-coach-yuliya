@@ -34,6 +34,7 @@ import type {
   SiteSettingsDto,
   SocialLinkDto,
   WriteArticleDto,
+  WriteContactsDto,
   WriteFaqDto,
   WriteProgramDto,
   WriteSocialLinksDto,
@@ -647,7 +648,7 @@ export function useAdminGetContacts<
  * @summary Сохранить контактные данные
  */
 export const adminUpdateContacts = (
-  contactDetailsDto: BodyType<ContactDetailsDto>,
+  writeContactsDto: BodyType<WriteContactsDto>,
   options?: SecondParameter<typeof apiMutator>,
   signal?: AbortSignal,
 ) => {
@@ -656,7 +657,7 @@ export const adminUpdateContacts = (
       url: `/v1/admin/contacts`,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      data: contactDetailsDto,
+      data: writeContactsDto,
       signal,
     },
     options,
@@ -670,14 +671,14 @@ export const getAdminUpdateContactsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof adminUpdateContacts>>,
     TError,
-    { data: BodyType<ContactDetailsDto> },
+    { data: BodyType<WriteContactsDto> },
     TContext
   >
   request?: SecondParameter<typeof apiMutator>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof adminUpdateContacts>>,
   TError,
-  { data: BodyType<ContactDetailsDto> },
+  { data: BodyType<WriteContactsDto> },
   TContext
 > => {
   const mutationKey = ['adminUpdateContacts']
@@ -691,7 +692,7 @@ export const getAdminUpdateContactsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof adminUpdateContacts>>,
-    { data: BodyType<ContactDetailsDto> }
+    { data: BodyType<WriteContactsDto> }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -704,7 +705,7 @@ export const getAdminUpdateContactsMutationOptions = <
 export type AdminUpdateContactsMutationResult = NonNullable<
   Awaited<ReturnType<typeof adminUpdateContacts>>
 >
-export type AdminUpdateContactsMutationBody = BodyType<ContactDetailsDto>
+export type AdminUpdateContactsMutationBody = BodyType<WriteContactsDto>
 export type AdminUpdateContactsMutationError = ErrorType<unknown>
 
 /**
@@ -718,7 +719,7 @@ export const useAdminUpdateContacts = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof adminUpdateContacts>>,
       TError,
-      { data: BodyType<ContactDetailsDto> },
+      { data: BodyType<WriteContactsDto> },
       TContext
     >
     request?: SecondParameter<typeof apiMutator>
@@ -727,7 +728,7 @@ export const useAdminUpdateContacts = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof adminUpdateContacts>>,
   TError,
-  { data: BodyType<ContactDetailsDto> },
+  { data: BodyType<WriteContactsDto> },
   TContext
 > => {
   return useMutation(

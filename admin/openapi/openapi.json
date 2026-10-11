@@ -1332,9 +1332,6 @@
           "eyebrow": {
             "type": "string"
           },
-          "featured": {
-            "type": "boolean"
-          },
           "features": {
             "items": {
               "type": "string"
@@ -1366,8 +1363,7 @@
           "description",
           "price",
           "priceNote",
-          "features",
-          "featured"
+          "features"
         ],
         "type": "object"
       },
@@ -1416,9 +1412,23 @@
           "id": {
             "enum": [
               "telegram",
+              "whatsapp",
+              "max",
               "vk",
+              "ok",
+              "instagram",
+              "facebook",
+              "threads",
+              "x",
+              "youtube",
               "rutube",
-              "ok"
+              "tiktok",
+              "dzen",
+              "linkedin",
+              "pinterest",
+              "viber",
+              "discord",
+              "twitch"
             ],
             "type": "string"
           },
@@ -1613,10 +1623,114 @@
         ],
         "type": "object"
       },
+      "WriteArticleContentDto": {
+        "properties": {
+          "bodyMarkdown": {
+            "maxLength": 50000,
+            "type": "string"
+          },
+          "coverAlt": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "ctaDescription": {
+            "type": "string"
+          },
+          "ctaTitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "string"
+          },
+          "listingDescription": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "practiceQuestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "practiceTitle": {
+            "type": "string"
+          },
+          "previewDescription": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "previewTitle": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          },
+          "quoteNote": {
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/ArticleSectionDto"
+            },
+            "type": "array"
+          },
+          "slug": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "story": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "storyTitle": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "enum": [
+              "finding-work",
+              "showing-up"
+            ],
+            "type": "string"
+          },
+          "topicLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic",
+          "topicLabel",
+          "title",
+          "description",
+          "coverImage",
+          "coverAlt",
+          "intro",
+          "storyTitle",
+          "story",
+          "quote",
+          "quoteNote",
+          "sections",
+          "practiceTitle",
+          "practiceQuestions",
+          "ctaTitle",
+          "ctaDescription"
+        ],
+        "type": "object"
+      },
       "WriteArticleDto": {
         "properties": {
           "content": {
-            "$ref": "#/components/schemas/ArticleDto"
+            "$ref": "#/components/schemas/WriteArticleContentDto"
           },
           "published": {
             "type": "boolean"
@@ -1634,6 +1748,44 @@
         ],
         "type": "object"
       },
+      "WriteContactsDto": {
+        "properties": {
+          "address": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "maxLength": 254,
+            "nullable": true,
+            "type": "string"
+          },
+          "links": {
+            "items": {
+              "$ref": "#/components/schemas/SocialLinkDto"
+            },
+            "maxItems": 18,
+            "type": "array"
+          },
+          "phone": {
+            "maxLength": 80,
+            "nullable": true,
+            "type": "string"
+          },
+          "telegramUrl": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "phone",
+          "telegramUrl",
+          "address"
+        ],
+        "type": "object"
+      },
       "WriteFaqDto": {
         "properties": {
           "items": {
@@ -1648,10 +1800,50 @@
         ],
         "type": "object"
       },
+      "WriteProgramContentDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "price": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "priceNote": {
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 300,
+            "type": "string"
+          }
+        },
+        "required": [
+          "eyebrow",
+          "title",
+          "description",
+          "price",
+          "priceNote",
+          "features"
+        ],
+        "type": "object"
+      },
       "WriteProgramDto": {
         "properties": {
           "content": {
-            "$ref": "#/components/schemas/ServiceDto"
+            "$ref": "#/components/schemas/WriteProgramContentDto"
           },
           "published": {
             "type": "boolean"
@@ -4289,7 +4481,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ContactDetailsDto"
+                "$ref": "#/components/schemas/WriteContactsDto"
               }
             }
           },
@@ -4657,7 +4849,7 @@
             "sessionCookie": []
           }
         ],
-        "summary": "Повторить неудачную публикацию",
+        "summary": "Обновить сайт из сохранённого контента",
         "tags": [
           "publication"
         ]

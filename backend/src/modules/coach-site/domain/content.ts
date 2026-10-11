@@ -85,7 +85,6 @@ export interface ServiceDto {
   readonly price: number
   readonly priceNote: string
   readonly features: string[]
-  readonly featured: boolean
 }
 
 export interface ArticleSectionDto {
@@ -126,7 +125,7 @@ export interface FaqItemDto {
 }
 
 export interface SocialLinkDto {
-  readonly id: 'telegram' | 'vk' | 'rutube' | 'ok'
+  readonly id: SocialNetwork
   readonly label: string
   readonly url: string | null
 }
@@ -150,3 +149,25 @@ export interface ContactDetailsDto {
   readonly telegramUrl: string | null
   readonly address: string | null
 }
+
+export const socialNetworks = [
+  'telegram',
+  'whatsapp',
+  'max',
+  'vk',
+  'ok',
+  'instagram',
+  'facebook',
+  'threads',
+  'x',
+  'youtube',
+  'rutube',
+  'tiktok',
+  'dzen',
+  'linkedin',
+  'pinterest',
+  'viber',
+  'discord',
+  'twitch',
+] as const
+export type SocialNetwork = (typeof socialNetworks)[number]

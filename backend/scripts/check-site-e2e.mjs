@@ -428,6 +428,113 @@ try {
     'PASS CSRF, content editing, drafts, atomic publication scheduling and repeatable seed\n',
   )
 
+  const automaticContent = { ...draft.content, title: 'Как найти своё дело?' }
+  delete automaticContent.slug
+  const automaticInput = { ...draft, content: automaticContent }
+  const generated = (
+    await http('/v1/admin/articles', 'POST', automaticInput, 201, true)
+  ).body
+  const duplicate = (
+    await http('/v1/admin/articles', 'POST', automaticInput, 201, true)
+  ).body
+  assert.equal(generated.content.slug, 'kak-nayti-svoyo-delo')
+  assert.equal(duplicate.content.slug, 'kak-nayti-svoyo-delo-2')
+  const renamed = (
+    await http(
+      `/v1/admin/articles/${generated.id}`,
+      'PUT',
+      {
+        ...automaticInput,
+        content: { ...automaticContent, title: 'Новое название' },
+      },
+      200,
+      true,
+    )
+  ).body
+  assert.equal(renamed.content.slug, generated.content.slug)
+  const programContent = { ...initial.programs[0] }
+  delete programContent.id
+  const programInput = {
+    content: programContent,
+    published: false,
+    sortOrder: 0,
+  }
+  const program = (
+    await http('/v1/admin/programs', 'POST', programInput, 201, true)
+  ).body
+  assert.match(program.id, /^[a-f0-9-]{36}$/u)
+  assert.equal(program.id, program.content.id)
+  const updatedProgram = (
+    await http(
+      `/v1/admin/programs/${program.id}`,
+      'PUT',
+      {
+        ...programInput,
+        content: { ...programContent, title: 'Новое название программы' },
+      },
+      200,
+      true,
+    )
+  ).body
+  assert.equal(updatedProgram.content.id, program.id)
+  assert.equal(updatedProgram.content.featured, undefined)
+  const combinedContacts = {
+    email: 'coach@example.com',
+    phone: '+79000000000',
+    address: 'Онлайн',
+    telegramUrl: null,
+    links: [
+      { id: 'telegram', label: 'Telegram', url: 'https://t.me/unified_coach' },
+      {
+        id: 'instagram',
+        label: 'Instagram',
+        url: 'https://www.instagram.com/coach',
+      },
+      { id: 'whatsapp', label: 'WhatsApp', url: 'https://wa.me/79000000000' },
+      { id: 'youtube', label: 'YouTube', url: 'https://youtube.com/@coach' },
+      { id: 'vk', label: 'ВКонтакте', url: 'https://vk.com/coach' },
+      { id: 'dzen', label: 'Дзен', url: 'https://dzen.ru/coach' },
+    ],
+  }
+  const beforeContacts = (
+    await http('/v1/admin/publication', 'GET', undefined, 200, true)
+  ).body.requestedRevision
+  const contacts = (
+    await http('/v1/admin/contacts', 'PUT', combinedContacts, 200, true)
+  ).body
+  assert.equal(contacts.telegramUrl, combinedContacts.links[0].url)
+  assert.equal(
+    (await http('/v1/contacts')).body.telegramUrl,
+    combinedContacts.links[0].url,
+  )
+  assert.deepEqual(
+    (await http('/v1/social-links')).body,
+    combinedContacts.links,
+  )
+  assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    beforeContacts + 1,
+  )
+  await http(
+    '/v1/admin/contacts',
+    'PUT',
+    {
+      ...combinedContacts,
+      links: [combinedContacts.links[0], combinedContacts.links[0]],
+    },
+    422,
+    true,
+  )
+  assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    beforeContacts + 1,
+  )
+  process.stdout.write(
+    'PASS generated article addresses, duplicate titles, stable program IDs and atomic unified contacts\n',
+  )
+
   const publications = new PrismaPublicationAdapter(provider, transaction)
   let builtRevision = 0
   const builder = {
@@ -460,6 +567,20 @@ try {
   const published = await publications.get()
   assert.equal(published.status, 'IDLE')
   assert.equal(published.requestedRevision, published.deployedRevision)
+  await http('/v1/admin/publication/retry', 'POST', undefined, 204, true)
+  const manuallyRequested = await publications.get()
+  assert.equal(manuallyRequested.status, 'PENDING')
+  assert.equal(
+    manuallyRequested.requestedRevision,
+    published.requestedRevision + 1,
+  )
+  await publisher.runOnce(new AbortController().signal)
+  await http('/v1/admin/publication/retry', 'POST', undefined, 409, true)
+  await publisher.runOnce(new AbortController().signal)
+  assert.equal((await publications.get()).status, 'IDLE')
+  process.stdout.write(
+    'PASS manual website rebuild and active-build conflict protection\n',
+  )
   const count = await pool.query(
     'SELECT count(*)::int AS total FROM consultations',
   )

@@ -22,7 +22,6 @@ export const getServices200ResponseTitleMax = 300
 export const GetServices200ResponseItem = zod.strictObject({
   description: zod.string(),
   eyebrow: zod.string(),
-  featured: zod.boolean(),
   features: zod.array(zod.string()),
   id: zod
     .string()

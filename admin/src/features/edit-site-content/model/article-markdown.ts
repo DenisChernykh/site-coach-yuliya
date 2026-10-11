@@ -1,5 +1,5 @@
 import type { ArticleDto } from '@/shared/api'
-export function articleMarkdown(article: ArticleDto): string {
+export function articleMarkdown(article: Omit<ArticleDto, 'slug'>): string {
   if (article.bodyMarkdown !== undefined) return article.bodyMarkdown
   return [
     article.intro,

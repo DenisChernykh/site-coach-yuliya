@@ -64,7 +64,11 @@ pnpm --dir backend dev:host
 Production рассчитан на управляемый хостинг **NetAngels**. Код выкладывается
 кнопкой **Run workflow** в GitHub Actions. После изменения контента очередь
 бэкенда автоматически запускает пересборку статического Astro-сайта через 30
-секунд без новых правок. При ошибке остаётся предыдущая версия. Настройка
+секунд без новых правок. Кнопка «Обновить сайт» в админке запускает ту же
+очередь сразу для сохранённого контента. Для этого на сервере нужны
+`SITE_REBUILD_MODE=enabled`, `GITHUB_REPOSITORY`, `GITHUB_PUBLICATION_REF`,
+`GITHUB_ACTIONS_TOKEN` и `PUBLIC_SITE_URL`. Без настройки админка показывает
+причину недоступности кнопки. При ошибке остаётся предыдущая версия. Настройка
 описана в [backend/docs/netangels.md](backend/docs/netangels.md), API и команды —
 в [backend/README.md](backend/README.md).
 

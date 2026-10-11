@@ -162,7 +162,6 @@ export const services = [
     price: 3000,
     priceNote: 'за одну сессию',
     features: ['Одна встреча · 60 минут', 'Варианты и следующие действия'],
-    featured: false,
   },
   {
     id: 'four',
@@ -176,7 +175,6 @@ export const services = [
       'Поддержка между сессиями',
       'Дневник саморефлексии',
     ],
-    featured: true,
   },
   {
     id: 'eight',
@@ -186,7 +184,6 @@ export const services = [
     price: 18000,
     priceNote: '2 250 ₽ за встречу',
     features: ['8 встреч · раз в 7–10 дней', 'Регулярная сверка прогресса'],
-    featured: false,
   },
 ] satisfies ServiceDto[];
 

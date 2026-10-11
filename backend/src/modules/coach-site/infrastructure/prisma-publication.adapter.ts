@@ -44,17 +44,26 @@ export class PrismaPublicationAdapter implements PublicationPort {
   }
 
   public async retry(): Promise<void> {
-    const row = await this.get()
-    if (row.status !== 'FAILED') throw new DeliveryRetryConflictError()
-    await this.database.withClient((client) =>
-      client.sitePublication.updateMany({
-        where: { id: 'site', status: 'FAILED' },
-        data: {
-          status: 'PENDING',
-          attempts: 0,
-          nextAttemptAt: new Date(),
-          lastErrorCode: null,
-        },
+    await this.transaction.run(() =>
+      this.database.withClient(async (client) => {
+        const row = await client.sitePublication.upsert({
+          where: { id: 'site' },
+          create: { id: 'site' },
+          update: { updatedAt: new Date() },
+        })
+        if (['BUILDING', 'DISPATCHING'].includes(row.status))
+          throw new DeliveryRetryConflictError()
+        await client.sitePublication.update({
+          where: { id: 'site' },
+          data: {
+            status: 'PENDING',
+            requestedRevision: { increment: 1 },
+            requestedAt: new Date(),
+            attempts: 0,
+            nextAttemptAt: new Date(),
+            lastErrorCode: null,
+          },
+        })
       }),
     )
   }

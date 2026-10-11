@@ -11,7 +11,26 @@ import * as zod from 'zod'
  * @summary Социальные сети
  */
 export const GetSocialLinks200ResponseItem = zod.strictObject({
-  id: zod.enum(['telegram', 'vk', 'rutube', 'ok']),
+  id: zod.enum([
+    'telegram',
+    'whatsapp',
+    'max',
+    'vk',
+    'ok',
+    'instagram',
+    'facebook',
+    'threads',
+    'x',
+    'youtube',
+    'rutube',
+    'tiktok',
+    'dzen',
+    'linkedin',
+    'pinterest',
+    'viber',
+    'discord',
+    'twitch',
+  ]),
   label: zod.string(),
   url: zod.url().nullable(),
 })

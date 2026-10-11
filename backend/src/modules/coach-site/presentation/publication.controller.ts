@@ -70,7 +70,7 @@ export class PublicationController {
   @HttpCode(204)
   @ApiOperation({
     operationId: 'adminRetryPublication',
-    summary: 'Повторить неудачную публикацию',
+    summary: 'Обновить сайт из сохранённого контента',
   })
   @ApiNoContentResponse()
   public retry(): Promise<void> {

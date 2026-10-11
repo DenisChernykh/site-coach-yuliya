@@ -87,6 +87,8 @@ export const adminCreateArticleBodyContentPreviewDescriptionMax = 2000
 
 export const adminCreateArticleBodyContentPreviewTitleMax = 300
 
+export const adminCreateArticleBodyContentSlugMax = 100
+
 export const adminCreateArticleBodySortOrderMin = 0
 export const adminCreateArticleBodySortOrderMax = 10000
 
@@ -126,7 +128,7 @@ export const AdminCreateArticleBody = zod.strictObject({
         title: zod.string(),
       }),
     ),
-    slug: zod.string(),
+    slug: zod.string().max(adminCreateArticleBodyContentSlugMax).optional(),
     story: zod.array(zod.string()),
     storyTitle: zod.string(),
     title: zod.string(),
@@ -227,6 +229,8 @@ export const adminUpdateArticleBodyContentPreviewDescriptionMax = 2000
 
 export const adminUpdateArticleBodyContentPreviewTitleMax = 300
 
+export const adminUpdateArticleBodyContentSlugMax = 100
+
 export const adminUpdateArticleBodySortOrderMin = 0
 export const adminUpdateArticleBodySortOrderMax = 10000
 
@@ -266,7 +270,7 @@ export const AdminUpdateArticleBody = zod.strictObject({
         title: zod.string(),
       }),
     ),
-    slug: zod.string(),
+    slug: zod.string().max(adminUpdateArticleBodyContentSlugMax).optional(),
     story: zod.array(zod.string()),
     storyTitle: zod.string(),
     title: zod.string(),
@@ -371,6 +375,8 @@ export const adminUpdateContactsBodyAddressMax = 500
 
 export const adminUpdateContactsBodyEmailMax = 254
 
+export const adminUpdateContactsBodyLinksMax = 18
+
 export const adminUpdateContactsBodyPhoneMax = 80
 
 export const adminUpdateContactsBodyTelegramUrlMax = 500
@@ -378,6 +384,35 @@ export const adminUpdateContactsBodyTelegramUrlMax = 500
 export const AdminUpdateContactsBody = zod.strictObject({
   address: zod.string().max(adminUpdateContactsBodyAddressMax).nullable(),
   email: zod.string().max(adminUpdateContactsBodyEmailMax).nullable(),
+  links: zod
+    .array(
+      zod.strictObject({
+        id: zod.enum([
+          'telegram',
+          'whatsapp',
+          'max',
+          'vk',
+          'ok',
+          'instagram',
+          'facebook',
+          'threads',
+          'x',
+          'youtube',
+          'rutube',
+          'tiktok',
+          'dzen',
+          'linkedin',
+          'pinterest',
+          'viber',
+          'discord',
+          'twitch',
+        ]),
+        label: zod.string(),
+        url: zod.url().nullable(),
+      }),
+    )
+    .max(adminUpdateContactsBodyLinksMax)
+    .optional(),
   phone: zod.string().max(adminUpdateContactsBodyPhoneMax).nullable(),
   telegramUrl: zod
     .string()
@@ -655,7 +690,6 @@ export const AdminListPrograms200ResponseItem = zod.strictObject({
   content: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
-    featured: zod.boolean(),
     features: zod.array(zod.string()),
     id: zod
       .string()
@@ -683,9 +717,6 @@ export const AdminListPrograms200Response = zod.array(
  */
 export const adminCreateProgramBodyContentIdMax = 100
 
-export const adminCreateProgramBodyContentIdRegExp = new RegExp(
-  '^[a-z0-9]+(?:-[a-z0-9]+)*$',
-)
 export const adminCreateProgramBodyContentPriceMin = 0
 
 export const adminCreateProgramBodyContentTitleMax = 300
@@ -697,13 +728,8 @@ export const AdminCreateProgramBody = zod.strictObject({
   content: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
-    featured: zod.boolean(),
     features: zod.array(zod.string()),
-    id: zod
-      .string()
-      .min(1)
-      .max(adminCreateProgramBodyContentIdMax)
-      .regex(adminCreateProgramBodyContentIdRegExp),
+    id: zod.string().max(adminCreateProgramBodyContentIdMax).optional(),
     price: zod.number().min(adminCreateProgramBodyContentPriceMin),
     priceNote: zod.string(),
     title: zod.string().max(adminCreateProgramBodyContentTitleMax),
@@ -731,7 +757,6 @@ export const AdminCreateProgram201Response = zod.strictObject({
   content: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
-    featured: zod.boolean(),
     features: zod.array(zod.string()),
     id: zod
       .string()
@@ -769,9 +794,6 @@ export const AdminUpdateProgramParams = zod.strictObject({
 
 export const adminUpdateProgramBodyContentIdMax = 100
 
-export const adminUpdateProgramBodyContentIdRegExp = new RegExp(
-  '^[a-z0-9]+(?:-[a-z0-9]+)*$',
-)
 export const adminUpdateProgramBodyContentPriceMin = 0
 
 export const adminUpdateProgramBodyContentTitleMax = 300
@@ -783,13 +805,8 @@ export const AdminUpdateProgramBody = zod.strictObject({
   content: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
-    featured: zod.boolean(),
     features: zod.array(zod.string()),
-    id: zod
-      .string()
-      .min(1)
-      .max(adminUpdateProgramBodyContentIdMax)
-      .regex(adminUpdateProgramBodyContentIdRegExp),
+    id: zod.string().max(adminUpdateProgramBodyContentIdMax).optional(),
     price: zod.number().min(adminUpdateProgramBodyContentPriceMin),
     priceNote: zod.string(),
     title: zod.string().max(adminUpdateProgramBodyContentTitleMax),
@@ -817,7 +834,6 @@ export const AdminUpdateProgram200Response = zod.strictObject({
   content: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
-    featured: zod.boolean(),
     features: zod.array(zod.string()),
     id: zod
       .string()
@@ -883,7 +899,26 @@ export const AdminUpdateSite200Response = zod.strictObject({
  * @summary Ссылки социальных сетей
  */
 export const AdminGetSocialLinks200ResponseItem = zod.strictObject({
-  id: zod.enum(['telegram', 'vk', 'rutube', 'ok']),
+  id: zod.enum([
+    'telegram',
+    'whatsapp',
+    'max',
+    'vk',
+    'ok',
+    'instagram',
+    'facebook',
+    'threads',
+    'x',
+    'youtube',
+    'rutube',
+    'tiktok',
+    'dzen',
+    'linkedin',
+    'pinterest',
+    'viber',
+    'discord',
+    'twitch',
+  ]),
   label: zod.string(),
   url: zod.url().nullable(),
 })
@@ -897,7 +932,26 @@ export const AdminGetSocialLinks200Response = zod.array(
 export const AdminUpdateSocialLinksBody = zod.strictObject({
   links: zod.array(
     zod.strictObject({
-      id: zod.enum(['telegram', 'vk', 'rutube', 'ok']),
+      id: zod.enum([
+        'telegram',
+        'whatsapp',
+        'max',
+        'vk',
+        'ok',
+        'instagram',
+        'facebook',
+        'threads',
+        'x',
+        'youtube',
+        'rutube',
+        'tiktok',
+        'dzen',
+        'linkedin',
+        'pinterest',
+        'viber',
+        'discord',
+        'twitch',
+      ]),
       label: zod.string(),
       url: zod.url().nullable(),
     }),
@@ -905,7 +959,26 @@ export const AdminUpdateSocialLinksBody = zod.strictObject({
 })
 
 export const AdminUpdateSocialLinks200ResponseItem = zod.strictObject({
-  id: zod.enum(['telegram', 'vk', 'rutube', 'ok']),
+  id: zod.enum([
+    'telegram',
+    'whatsapp',
+    'max',
+    'vk',
+    'ok',
+    'instagram',
+    'facebook',
+    'threads',
+    'x',
+    'youtube',
+    'rutube',
+    'tiktok',
+    'dzen',
+    'linkedin',
+    'pinterest',
+    'viber',
+    'discord',
+    'twitch',
+  ]),
   label: zod.string(),
   url: zod.url().nullable(),
 })

@@ -9,7 +9,6 @@
 export type ServiceDto = {
   description: string
   eyebrow: string
-  featured: boolean
   features: string[]
   /**
    * @minLength 1

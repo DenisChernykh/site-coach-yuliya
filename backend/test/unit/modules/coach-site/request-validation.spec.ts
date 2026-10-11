@@ -34,7 +34,6 @@ describe('site HTTP input validation', () => {
         price: 0,
         priceNote: '',
         features: [],
-        featured: false,
       })
       expect(await validate(input, options)).not.toHaveLength(0)
     },

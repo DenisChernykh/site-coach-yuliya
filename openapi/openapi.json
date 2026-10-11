@@ -727,9 +727,6 @@
           "eyebrow": {
             "type": "string"
           },
-          "featured": {
-            "type": "boolean"
-          },
           "features": {
             "items": {
               "type": "string"
@@ -761,8 +758,7 @@
           "description",
           "price",
           "priceNote",
-          "features",
-          "featured"
+          "features"
         ],
         "type": "object"
       },
@@ -986,9 +982,23 @@
           "id": {
             "enum": [
               "telegram",
+              "whatsapp",
+              "max",
               "vk",
+              "ok",
+              "instagram",
+              "facebook",
+              "threads",
+              "x",
+              "youtube",
               "rutube",
-              "ok"
+              "tiktok",
+              "dzen",
+              "linkedin",
+              "pinterest",
+              "viber",
+              "discord",
+              "twitch"
             ],
             "type": "string"
           },

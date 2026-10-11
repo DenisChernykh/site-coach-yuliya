@@ -1,4 +1,4 @@
-import type { ArticleDto, ServiceDto } from '@/shared/api'
+import type { WriteArticleDto, WriteProgramDto } from '@/shared/api'
 
 export type ContentValue =
   | string
@@ -45,7 +45,6 @@ export const fieldLabels: Record<string, string> = {
   priceNote: 'Подпись к цене',
   features: 'Что входит',
   eyebrow: 'Надзаголовок',
-  featured: 'Выделить программу',
   question: 'Вопрос',
   answer: 'Ответ',
   url: 'Ссылка',
@@ -108,8 +107,7 @@ export const itemTemplates: Record<string, ContentValue> = {
   },
 }
 
-export const newArticle: ArticleDto = {
-  slug: '',
+export const newArticle: WriteArticleDto['content'] = {
   title: '',
   topic: 'finding-work',
   topicLabel: 'Поиск своего дела',
@@ -130,15 +128,13 @@ export const newArticle: ArticleDto = {
   ctaTitle: '',
   ctaDescription: '',
 }
-export const newProgram: ServiceDto = {
-  id: '',
+export const newProgram: WriteProgramDto['content'] = {
   title: '',
   description: '',
   eyebrow: '',
   price: 0,
   priceNote: '',
   features: [],
-  featured: false,
 }
 
 export function labelFor(key: string): string {
@@ -151,7 +147,7 @@ export function blankItem(template: ContentValue): ContentValue {
     return Object.fromEntries(
       Object.entries(template).map(([key, value]) => [
         key,
-        key === 'id' ? '' : blankItem(value),
+        key === 'id' ? crypto.randomUUID() : blankItem(value),
       ]),
     )
   }

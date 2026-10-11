@@ -1,4 +1,14 @@
-import type { PropsWithChildren } from 'react'
+import { useState, type CSSProperties, type PropsWithChildren } from 'react'
+import { SidebarResize } from './sidebar-resize'
+import {
+  Home,
+  FileText,
+  Layers,
+  Mail,
+  MessageSquare,
+  Settings,
+  Inbox,
+} from 'lucide-react'
 import { NavLink, useLocation } from 'react-router'
 import { useCurrentSession } from '@/entities/session'
 import { LogoutButton } from '@/features/auth-logout'
@@ -19,11 +29,21 @@ import {
   useSidebar,
 } from '@/shared/ui'
 
+const icons = {
+  '/': Inbox,
+  '/articles': FileText,
+  '/programs': Layers,
+  '/contacts': Mail,
+  '/home': Home,
+  '/faq': MessageSquare,
+  '/site': Settings,
+}
+
 function Navigation({ canManage }: { canManage: boolean }) {
   const { isMobile, setOpenMobile } = useSidebar()
   const { pathname } = useLocation()
   return (
-    <SidebarContent>
+    <SidebarContent className="px-2">
       <SidebarMenu>
         {siteNavigation
           .filter((item) => item.path === '/' || canManage)
@@ -41,6 +61,10 @@ function Navigation({ canManage }: { canManage: boolean }) {
                   />
                 }
               >
+                {(() => {
+                  const Icon = icons[item.path]
+                  return <Icon />
+                })()}
                 <span>{item.label}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -50,6 +74,23 @@ function Navigation({ canManage }: { canManage: boolean }) {
   )
 }
 export function AppShell({ children }: PropsWithChildren) {
+  const [width, setWidth] = useState(() => {
+    try {
+      const saved = Number(localStorage.getItem('coach-sidebar-width'))
+      return saved >= 200 && saved <= 400 ? saved : 256
+    } catch {
+      return 256
+    }
+  })
+  const resize = (next: number) => {
+    const clamped = Math.min(400, Math.max(200, next))
+    setWidth(clamped)
+    try {
+      localStorage.setItem('coach-sidebar-width', String(clamped))
+    } catch {
+      /* Storage can be unavailable. */
+    }
+  }
   const { data: user } = useCurrentSession()
   const { pathname } = useLocation()
   const canManage = user.permissions.includes('site.content.manage')
@@ -57,7 +98,9 @@ export function AppShell({ children }: PropsWithChildren) {
     siteNavigation.find((item) => item.path === pathname)?.label ??
     'Управление сайтом'
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      style={{ '--sidebar-width': `${width}px` } as CSSProperties}
+    >
       <Sidebar>
         <SidebarHeader>
           <p className="px-2 py-2 text-sm font-semibold">Юля Валишина</p>
@@ -72,6 +115,7 @@ export function AppShell({ children }: PropsWithChildren) {
           </span>
           <LogoutButton />
         </SidebarFooter>
+        <SidebarResize width={width} onChange={resize} />
       </Sidebar>
       <SidebarInset>
         <header className="flex h-12 items-center gap-3 border-b px-4">

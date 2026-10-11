@@ -136,7 +136,6 @@
 | ------------- | -------- | ----------- |
 | `description` | string   | да          |
 | `eyebrow`     | string   | да          |
-| `featured`    | boolean  | да          |
 | `features`    | string[] | да          |
 | `id`          | string   | да          |
 | `price`       | number   | да          |

@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { HomeSections } from './home-sections'
+import { ContactFields } from './contact-fields'
+import { networks } from '../model/social-networks'
+import { useState, type ReactNode } from 'react'
 import type { z } from 'zod'
 import {
   contactsSchema,
@@ -30,11 +33,18 @@ function SettingsForm<T>({
   schema,
   onSave,
   pending,
+  renderFields,
+  wide = false,
 }: {
   initial: T
   schema: z.ZodType<T>
   onSave: (input: T) => Promise<unknown>
   pending: boolean
+  renderFields?: (
+    value: ContentValue,
+    onChange: (value: ContentValue) => void,
+  ) => ReactNode
+  wide?: boolean
 }) {
   const [value, setValue] = useState(initial as ContentValue)
   const [dirty, setDirty] = useState(false)
@@ -43,7 +53,7 @@ function SettingsForm<T>({
   const { blocker } = useContentNavigationGuard(dirty)
   return (
     <form
-      className="max-w-3xl space-y-6"
+      className={`${wide ? 'max-w-5xl' : 'max-w-3xl'} space-y-6`}
       onSubmit={async (event) => {
         event.preventDefault()
         setError(null)
@@ -86,14 +96,18 @@ function SettingsForm<T>({
         </Alert>
       )}
       <fieldset disabled={pending}>
-        <ContentFields
-          value={value}
-          onChange={(next) => {
+        {(() => {
+          const change = (next: ContentValue) => {
             setValue(next)
             setDirty(true)
             setSaved(false)
-          }}
-        />
+          }
+          return renderFields ? (
+            renderFields(value, change)
+          ) : (
+            <ContentFields value={value} onChange={change} />
+          )
+        })()}
       </fieldset>
       {error && (
         <Alert variant="destructive">
@@ -111,11 +125,29 @@ function SettingsForm<T>({
     </form>
   )
 }
-export function ContactsForm({ initial }: { initial: ContactDetailsDto }) {
+export function ContactsForm({
+  initial,
+  socials,
+}: {
+  initial: ContactDetailsDto
+  socials: SocialLinkDto[]
+}) {
   const save = useSaveContacts()
   return (
     <SettingsForm
-      initial={initial}
+      initial={{
+        ...initial,
+        links: Object.entries(networks).map(([id, label]) => ({
+          id: id as SocialLinkDto['id'],
+          label,
+          url:
+            socials.find((link) => link.id === id)?.url ??
+            (id === 'telegram' ? initial.telegramUrl : null),
+        })),
+      }}
+      renderFields={(value, onChange) => (
+        <ContactFields value={value} onChange={onChange} />
+      )}
       schema={contactsSchema}
       onSave={save.mutateAsync}
       pending={save.isPending}
@@ -139,6 +171,10 @@ export function HomeForm({ initial }: { initial: HomePageDto }) {
     <SettingsForm
       initial={initial}
       schema={homeSchema}
+      wide
+      renderFields={(value, onChange) => (
+        <HomeSections value={value} onChange={onChange} />
+      )}
       onSave={save.mutateAsync}
       pending={save.isPending}
     />

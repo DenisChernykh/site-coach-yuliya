@@ -1,7 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger'
 import { Transform, Type } from 'class-transformer'
 import {
   IsDefined,
+  Matches,
+  ArrayUnique,
   IsArray,
   ArrayMaxSize,
   IsBoolean,
@@ -20,17 +22,51 @@ import {
 } from '../domain/consultation'
 import {
   ArticleDto,
+  ContactDetailsDto,
   FaqItemDto,
   ServiceDto,
   SocialLinkDto,
 } from './content.dto'
 
+export class WriteArticleContentDto extends OmitType(ArticleDto, [
+  'slug',
+] as const) {
+  @ApiPropertyOptional({ type: String, maxLength: 100 })
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsString()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u)
+  @Length(1, 100)
+  public readonly slug?: string
+}
+
+export class WriteProgramContentDto extends OmitType(ServiceDto, [
+  'id',
+] as const) {
+  @ApiPropertyOptional({ type: String, maxLength: 100 })
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsString()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u)
+  @Length(1, 100)
+  public readonly id?: string
+}
+
+export class WriteContactsDto extends ContactDetailsDto {
+  @ApiPropertyOptional({ type: () => [SocialLinkDto], maxItems: 18 })
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsArray()
+  @ArrayMaxSize(18)
+  @ArrayUnique((link: SocialLinkDto) => link.id)
+  @ValidateNested({ each: true })
+  @Type(() => SocialLinkDto)
+  public readonly links?: SocialLinkDto[]
+}
+
 export class WriteArticleDto {
-  @ApiProperty({ type: () => ArticleDto })
+  @ApiProperty({ type: () => WriteArticleContentDto })
   @IsDefined()
   @ValidateNested()
-  @Type(() => ArticleDto)
-  public readonly content!: ArticleDto
+  @Type(() => WriteArticleContentDto)
+  public readonly content!: WriteArticleContentDto
 
   @ApiProperty({ type: Boolean })
   @IsBoolean()
@@ -43,18 +79,22 @@ export class WriteArticleDto {
   public readonly sortOrder!: number
 }
 
-export class ManagedArticleDto extends WriteArticleDto {
+export class ManagedArticleDto extends OmitType(WriteArticleDto, [
+  'content',
+] as const) {
+  @ApiProperty({ type: () => ArticleDto })
+  public readonly content!: ArticleDto
   @ApiProperty({ type: String, format: 'uuid' }) public readonly id!: string
   @ApiProperty({ type: String, format: 'date-time' })
   public readonly updatedAt!: Date
 }
 
 export class WriteProgramDto {
-  @ApiProperty({ type: () => ServiceDto })
+  @ApiProperty({ type: () => WriteProgramContentDto })
   @IsDefined()
   @ValidateNested()
-  @Type(() => ServiceDto)
-  public readonly content!: ServiceDto
+  @Type(() => WriteProgramContentDto)
+  public readonly content!: WriteProgramContentDto
 
   @ApiProperty({ type: Boolean })
   @IsBoolean()
@@ -67,7 +107,11 @@ export class WriteProgramDto {
   public readonly sortOrder!: number
 }
 
-export class ManagedProgramDto extends WriteProgramDto {
+export class ManagedProgramDto extends OmitType(WriteProgramDto, [
+  'content',
+] as const) {
+  @ApiProperty({ type: () => ServiceDto })
+  public readonly content!: ServiceDto
   @ApiProperty({ type: String }) public readonly id!: string
   @ApiProperty({ type: String, format: 'date-time' })
   public readonly updatedAt!: Date
@@ -76,7 +120,8 @@ export class ManagedProgramDto extends WriteProgramDto {
 export class WriteSocialLinksDto {
   @ApiProperty({ type: () => [SocialLinkDto] })
   @IsArray()
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(18)
+  @ArrayUnique((link: SocialLinkDto) => link.id)
   @ValidateNested({ each: true })
   @Type(() => SocialLinkDto)
   public readonly links!: SocialLinkDto[]

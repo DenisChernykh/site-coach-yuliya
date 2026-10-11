@@ -47,6 +47,7 @@ import {
   ManagedProgramDto,
   UpdateConsultationDto,
   WriteArticleDto,
+  WriteContactsDto,
   WriteProgramDto,
   WriteSocialLinksDto,
   WriteFaqDto,
@@ -143,11 +144,12 @@ export class AdminContentController {
     operationId: 'adminUpdateContacts',
     summary: 'Сохранить контактные данные',
   })
-  @ApiBody({ type: ContactDetailsDto })
+  @ApiBody({ type: WriteContactsDto })
   public updateContacts(
-    @Body() input: ContactDetailsDto,
+    @Body() input: WriteContactsDto,
   ): Promise<ContactDetailsDto> {
-    return this.site.content.updateContacts(input)
+    const { links, ...contacts } = input
+    return this.site.content.updateContacts(contacts, links)
   }
 
   @Get('social-links')

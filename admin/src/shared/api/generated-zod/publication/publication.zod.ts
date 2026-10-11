@@ -26,7 +26,7 @@ export const AdminGetPublication200Response = zod.strictObject({
 })
 
 /**
- * @summary Повторить неудачную публикацию
+ * @summary Обновить сайт из сохранённого контента
  */
 export const AdminRetryPublication204Response = zod.void()
 

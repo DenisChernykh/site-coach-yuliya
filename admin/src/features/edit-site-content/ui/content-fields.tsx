@@ -17,8 +17,38 @@ type Props = {
   value: ContentValue
   onChange: (value: ContentValue) => void
   field?: string
-  lockedId?: boolean
 }
+const orderedFields = [
+  'id',
+  'name',
+  'profession',
+  'title',
+  'eyebrow',
+  'topic',
+  'description',
+  'headingLines',
+  'meetingNote',
+  'paragraphs',
+  'quote',
+  'steps',
+  'request',
+  'exploration',
+  'result',
+  'details',
+  'price',
+  'priceNote',
+  'features',
+  'question',
+  'answer',
+  'email',
+  'phone',
+  'address',
+  'actionLabel',
+]
+const fieldOrder = (key: string) =>
+  orderedFields.includes(key)
+    ? orderedFields.indexOf(key)
+    : orderedFields.length
 const longFields = new Set([
   'description',
   'intro',
@@ -39,13 +69,16 @@ const nullableFields = new Set([
   'telegramUrl',
   'url',
 ])
-export function ContentFields({
-  value,
-  onChange,
-  field = '',
-  lockedId = false,
-}: Props) {
+function newItem(template: ContentValue): ContentValue {
+  const item = structuredClone(template)
+  if (item && typeof item === 'object' && !Array.isArray(item) && 'id' in item)
+    item.id = crypto.randomUUID()
+  return item
+}
+
+export function ContentFields({ value, onChange, field = '' }: Props) {
   const id = useId()
+  if (field === 'id') return null
   if (Array.isArray(value)) {
     const objectItems =
       value.some((item) => item !== null && typeof item === 'object') ||
@@ -72,7 +105,14 @@ export function ContentFields({
         {value.map((item, index) => (
           <details className="space-y-3 border-l pl-4" key={index} open>
             <summary className="mb-3 cursor-pointer text-sm">
-              {labelFor(field)} {index + 1}
+              {item && typeof item === 'object' && !Array.isArray(item)
+                ? String(
+                    item.title ||
+                      item.question ||
+                      item.label ||
+                      `${labelFor(field)} ${index + 1}`,
+                  )
+                : `${labelFor(field)} ${index + 1}`}
             </summary>
             <ContentFields
               value={item}
@@ -99,9 +139,7 @@ export function ContentFields({
           onClick={() =>
             onChange([
               ...value,
-              structuredClone(
-                itemTemplates[field] ?? blankItem(value[0] ?? ''),
-              ),
+              newItem(itemTemplates[field] ?? blankItem(value[0] ?? '')),
             ])
           }
         >
@@ -113,15 +151,16 @@ export function ContentFields({
   if (value !== null && typeof value === 'object')
     return (
       <div className="space-y-4">
-        {Object.entries(value).map(([key, child]) => (
-          <ContentFields
-            key={key}
-            field={key}
-            value={child}
-            lockedId={lockedId}
-            onChange={(next) => onChange({ ...value, [key]: next })}
-          />
-        ))}
+        {Object.entries(value)
+          .sort(([a], [b]) => fieldOrder(a) - fieldOrder(b))
+          .map(([key, child]) => (
+            <ContentFields
+              key={key}
+              field={key}
+              value={child}
+              onChange={(next) => onChange({ ...value, [key]: next })}
+            />
+          ))}
       </div>
     )
   if (typeof value === 'boolean')
@@ -177,7 +216,6 @@ export function ContentFields({
       }
       min={typeof value === 'number' ? 0 : undefined}
       value={value === null ? '' : String(value)}
-      readOnly={lockedId && field === 'id'}
       onChange={(event) =>
         onChange(
           typeof value === 'number'

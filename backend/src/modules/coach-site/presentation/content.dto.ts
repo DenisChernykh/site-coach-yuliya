@@ -1,3 +1,4 @@
+import { socialNetworks, type SocialNetwork } from '../domain/content'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type, Transform } from 'class-transformer'
 import {
@@ -338,10 +339,6 @@ export class ServiceDto {
   @MaxLength(10000, { each: true })
   @ApiProperty({ type: () => [String] })
   public readonly features!: string[]
-
-  @IsBoolean()
-  @ApiProperty({ type: Boolean })
-  public readonly featured!: boolean
 }
 
 export class ArticleSectionDto {
@@ -508,9 +505,9 @@ export class FaqItemDto {
 export class SocialLinkDto {
   @IsString()
   @Length(0, 100)
-  @IsIn(['telegram', 'vk', 'rutube', 'ok'])
-  @ApiProperty({ type: String, enum: ['telegram', 'vk', 'rutube', 'ok'] })
-  public readonly id!: 'telegram' | 'vk' | 'rutube' | 'ok'
+  @IsIn(socialNetworks)
+  @ApiProperty({ type: String, enum: socialNetworks })
+  public readonly id!: SocialNetwork
 
   @IsString()
   @Length(0, 10000)

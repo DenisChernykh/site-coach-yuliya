@@ -199,7 +199,7 @@ export function useAdminGetPublication<
 }
 
 /**
- * @summary Повторить неудачную публикацию
+ * @summary Обновить сайт из сохранённого контента
  */
 export const adminRetryPublication = (
   options?: SecondParameter<typeof apiMutator>,
@@ -254,7 +254,7 @@ export type AdminRetryPublicationMutationResult = NonNullable<
 export type AdminRetryPublicationMutationError = ErrorType<unknown>
 
 /**
- * @summary Повторить неудачную публикацию
+ * @summary Обновить сайт из сохранённого контента
  */
 export const useAdminRetryPublication = <
   TError = ErrorType<unknown>,

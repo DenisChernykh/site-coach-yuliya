@@ -24,20 +24,25 @@ export interface ManagedProgram {
   readonly updatedAt: Date
 }
 
-export type WriteArticle = Pick<
-  ManagedArticle,
-  'content' | 'published' | 'sortOrder'
->
-export type WriteProgram = Pick<
-  ManagedProgram,
-  'content' | 'published' | 'sortOrder'
->
+export interface WriteArticle {
+  readonly content: Omit<ArticleDto, 'slug'> & { readonly slug?: string }
+  readonly published: boolean
+  readonly sortOrder: number
+}
+export interface WriteProgram {
+  readonly content: Omit<ServiceDto, 'id'> & { readonly id?: string }
+  readonly published: boolean
+  readonly sortOrder: number
+}
 
 export interface SiteContentPort {
   getSettings(): Promise<SiteSettingsDto>
   updateSettings(settings: SiteSettingsDto): Promise<SiteSettingsDto>
   getContacts(): Promise<ContactDetailsDto>
-  updateContacts(contacts: ContactDetailsDto): Promise<ContactDetailsDto>
+  updateContacts(
+    contacts: ContactDetailsDto,
+    links?: SocialLinkDto[],
+  ): Promise<ContactDetailsDto>
   getHome(): Promise<HomePageDto>
   updateHome(home: HomePageDto): Promise<HomePageDto>
   getFaq(): Promise<FaqItemDto[]>

@@ -131,6 +131,7 @@ export type {
   ManagedProgramDto,
   WriteArticleDto,
   WriteProgramDto,
+  WriteContactsDto,
   ContactDetailsDto,
   SiteSettingsDto,
   HomePageDto,

@@ -5,10 +5,10 @@
  * Заявки, уведомления Telegram, статьи, программы и контактные данные.
  * OpenAPI spec version: 0.1.0
  */
-import type { ArticleDto } from './articleDto'
+import type { WriteArticleContentDto } from './writeArticleContentDto'
 
 export type WriteArticleDto = {
-  content: ArticleDto
+  content: WriteArticleContentDto
   published: boolean
   /**
    * @minimum 0

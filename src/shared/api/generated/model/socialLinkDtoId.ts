@@ -6,4 +6,22 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type SocialLinkDtoId = 'telegram' | 'vk' | 'rutube' | 'ok';
+export type SocialLinkDtoId =
+  | 'telegram'
+  | 'whatsapp'
+  | 'max'
+  | 'vk'
+  | 'ok'
+  | 'instagram'
+  | 'facebook'
+  | 'threads'
+  | 'x'
+  | 'youtube'
+  | 'rutube'
+  | 'tiktok'
+  | 'dzen'
+  | 'linkedin'
+  | 'pinterest'
+  | 'viber'
+  | 'discord'
+  | 'twitch';

@@ -45,7 +45,9 @@ export function PublicationStatus() {
           : 'Автоматическая публикация отключена'}
       </p>
       <span className="text-xs text-muted-foreground">
-        На сайте: {data.deployedRevision} · В базе: {data.requestedRevision}
+        {data.automaticPublicationEnabled
+          ? 'Сохранённые изменения публикуются автоматически.'
+          : 'Для пересборки требуется настройка публикации на сервере.'}
       </span>
       {data.workflowUrl && (
         <a
@@ -57,20 +59,29 @@ export function PublicationStatus() {
           Открыть сборку
         </a>
       )}
-      {data.status === 'FAILED' && data.automaticPublicationEnabled && (
+      {
         <Button
           variant="outline"
           size="sm"
+          disabled={
+            !data.automaticPublicationEnabled ||
+            ['BUILDING', 'DISPATCHING'].includes(data.status)
+          }
+          title={
+            !data.automaticPublicationEnabled
+              ? 'Публикация не настроена на сервере'
+              : 'Пересобрать сайт из сохранённых изменений'
+          }
           isLoading={retry.isPending}
           loadingLabel="Запускаем"
           onClick={() => retry.mutate()}
         >
-          Повторить публикацию
+          Обновить сайт
         </Button>
-      )}
+      }
       {retry.isError && (
         <p className="text-destructive">
-          Не удалось запустить повторную публикацию.
+          Не удалось запустить обновление сайта.
         </p>
       )}
     </div>

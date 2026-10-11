@@ -16,7 +16,7 @@ import {
   isProblemCode,
   type WriteArticleDto,
   type WriteProgramDto,
-  type ContactDetailsDto,
+  type WriteContactsDto,
   type SiteSettingsDto,
   type HomePageDto,
   type FaqItemDto,
@@ -35,6 +35,9 @@ export function useContentMutation<T, R>(
       await Promise.all([
         client.invalidateQueries({ queryKey: contentKeys[kind]() }),
         client.invalidateQueries({ queryKey: contentKeys.publication() }),
+        ...(kind === 'contacts'
+          ? [client.invalidateQueries({ queryKey: contentKeys.socials() })]
+          : []),
       ])
     },
     onError: (error) => {
@@ -71,7 +74,7 @@ export function useDeleteProgram() {
 }
 export function useSaveContacts() {
   return useContentMutation(
-    (input: ContactDetailsDto) => adminUpdateContacts(input),
+    (input: WriteContactsDto) => adminUpdateContacts(input),
     'contacts',
   )
 }

@@ -1,10 +1,12 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import { Globe, MessageCircle, X } from 'lucide-react';
 import type { SocialLinkDto } from '@/entities/social-link';
 import { Button } from '@/shared/ui';
 import styles from './social-links.module.css';
 
-export function SocialLinks({ items }: { items: SocialLinkDto[] }) {
+export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
+  const items = supplied.filter((item) => item.url);
+  const many = items.length > 4;
   const [expanded, setExpanded] = useState(false);
   const id = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -28,7 +30,7 @@ export function SocialLinks({ items }: { items: SocialLinkDto[] }) {
   return (
     <div
       ref={panelRef}
-      className={styles.panel}
+      className={`${styles.panel} ${many ? styles.many : ''}`}
       data-expanded={expanded}
       style={{ '--social-count': items.length } as CSSProperties}
       onPointerEnter={(event) => {
@@ -64,41 +66,64 @@ export function SocialLinks({ items }: { items: SocialLinkDto[] }) {
         aria-hidden={!expanded}
         aria-label="Социальные сети"
         role="group"
+        className={many ? styles.list : undefined}
       >
-        {items.map((item, index) => (
-          <Button
-            key={item.id}
-            variant="outline"
-            size="icon-lg"
-            className={styles.item}
-            style={
-              {
-                '--social-index': items.length - index,
-                '--icon-url': `url('/icons/${item.id}.svg')`,
-              } as CSSProperties
-            }
-            nativeButton={!item.url}
-            render={
-              item.url ? (
-                <a href={item.url} target="_blank" rel="noopener noreferrer" />
-              ) : undefined
-            }
-            disabled={!item.url}
-            tabIndex={expanded && item.url ? 0 : -1}
-            aria-label={
-              item.url
-                ? item.label
-                : `${item.label} — профиль пока не подключён`
-            }
-            title={
-              item.url
-                ? item.label
-                : `${item.label} — профиль пока не подключён`
-            }
-          >
-            <span className={styles.icon} aria-hidden="true" />
-          </Button>
-        ))}
+        {items.map((item, index) =>
+          many ? (
+            <a
+              key={item.id}
+              href={item.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={expanded ? 0 : -1}
+              className={styles.listLink}
+            >
+              <Globe size={18} aria-hidden="true" />
+              {item.label}
+            </a>
+          ) : (
+            <Button
+              key={item.id}
+              variant="outline"
+              size="icon-lg"
+              className={styles.item}
+              style={
+                {
+                  '--social-index': items.length - index,
+                  '--icon-url': `url('/icons/${item.id}.svg')`,
+                } as CSSProperties
+              }
+              nativeButton={!item.url}
+              render={
+                item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ) : undefined
+              }
+              disabled={!item.url}
+              tabIndex={expanded && item.url ? 0 : -1}
+              aria-label={
+                item.url
+                  ? item.label
+                  : `${item.label} — профиль пока не подключён`
+              }
+              title={
+                item.url
+                  ? item.label
+                  : `${item.label} — профиль пока не подключён`
+              }
+            >
+              {['telegram', 'vk', 'rutube', 'ok'].includes(item.id) ? (
+                <span className={styles.icon} aria-hidden="true" />
+              ) : (
+                <Globe size={26} aria-hidden="true" />
+              )}
+            </Button>
+          ),
+        )}
       </div>
       <Button
         ref={triggerRef}

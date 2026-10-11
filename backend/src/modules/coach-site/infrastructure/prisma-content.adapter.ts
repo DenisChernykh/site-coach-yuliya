@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+import { articleSlug } from '../domain/content-identifiers'
 import { Prisma, type PrismaClient } from '@/generated/prisma/client'
 import type { TransactionPort } from '@/shared/application/transaction.port'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
@@ -24,6 +26,11 @@ import {
 
 function json<T>(value: unknown): T {
   return JSON.parse(JSON.stringify(value)) as T
+}
+function programContent(value: unknown): ServiceDto {
+  const content = json<ServiceDto & { featured?: boolean }>(value)
+  delete content.featured
+  return content
 }
 function inputJson(value: unknown): Prisma.InputJsonValue {
   return json<Prisma.InputJsonValue>(value)
@@ -111,20 +118,36 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
 
   public async updateContacts(
     contacts: ContactDetailsDto,
+    links?: SocialLinkDto[],
   ): Promise<ContactDetailsDto> {
-    await this.edit(async (client) => {
+    return this.edit(async (client) => {
       const site = await client.siteContent.findUniqueOrThrow({
         where: { id: 'site' },
       })
-      const socials = json<SocialLinkDto[]>(site.socials).map((link) =>
-        link.id === 'telegram' ? { ...link, url: contacts.telegramUrl } : link,
-      )
-      return client.siteContent.update({
+      const socials =
+        links ??
+        json<SocialLinkDto[]>(site.socials).map((link) =>
+          link.id === 'telegram'
+            ? { ...link, url: contacts.telegramUrl }
+            : link,
+        )
+      const synchronized =
+        links === undefined
+          ? contacts
+          : {
+              ...contacts,
+              telegramUrl:
+                links.find((link) => link.id === 'telegram')?.url ?? null,
+            }
+      await client.siteContent.update({
         where: { id: 'site' },
-        data: { contacts: inputJson(contacts), socials: inputJson(socials) },
+        data: {
+          contacts: inputJson(synchronized),
+          socials: inputJson(socials),
+        },
       })
+      return synchronized
     })
-    return contacts
   }
 
   public async updateHome(home: HomePageDto): Promise<HomePageDto> {
@@ -150,12 +173,20 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
   public async updateSocials(
     socials: SocialLinkDto[],
   ): Promise<SocialLinkDto[]> {
-    await this.edit((client) =>
-      client.siteContent.update({
+    await this.edit(async (client) => {
+      const site = await client.siteContent.findUniqueOrThrow({
         where: { id: 'site' },
-        data: { socials: inputJson(socials) },
-      }),
-    )
+      })
+      const contacts = {
+        ...json<ContactDetailsDto>(site.contacts),
+        telegramUrl:
+          socials.find((link) => link.id === 'telegram')?.url ?? null,
+      }
+      return client.siteContent.update({
+        where: { id: 'site' },
+        data: { socials: inputJson(socials), contacts: inputJson(contacts) },
+      })
+    })
     return socials
   }
 
@@ -192,18 +223,34 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     id?: string,
   ): Promise<ManagedArticle> {
     try {
-      const data = {
-        content: inputJson(input.content),
-        slug: input.content.slug,
-        topic: input.content.topic,
-        published: input.published,
-        sortOrder: input.sortOrder,
-      }
-      const row = await this.edit((client) =>
-        id === undefined
+      const row = await this.edit(async (client) => {
+        let slug: string
+        if (id !== undefined) {
+          const existing = await client.article.findUnique({ where: { id } })
+          if (existing === null) throw new SiteRecordNotFoundError()
+          slug = existing.slug
+        } else {
+          slug = input.content.slug ?? articleSlug(input.content.title)
+          if (input.content.slug === undefined) {
+            const base = slug
+            let suffix = 2
+            while (await client.article.findUnique({ where: { slug } })) {
+              slug = `${base}-${suffix++}`
+            }
+          }
+        }
+        const content: ArticleDto = { ...input.content, slug }
+        const data = {
+          content: inputJson(content),
+          slug,
+          topic: content.topic,
+          published: input.published,
+          sortOrder: input.sortOrder,
+        }
+        return id === undefined
           ? client.article.create({ data })
-          : client.article.update({ where: { id }, data }),
-      )
+          : client.article.update({ where: { id }, data })
+      })
       return { ...row, content: json<ArticleDto>(row.content) }
     } catch (error: unknown) {
       throw contentError(error)
@@ -226,7 +273,7 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     )
     return rows.map((row) => ({
       ...row,
-      content: json<ServiceDto>(row.content),
+      content: programContent(row.content),
     }))
   }
 
@@ -236,27 +283,33 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     const row = await this.database.withClient((client) =>
       client.program.findFirst({ where: { id, published: true } }),
     )
-    return row === null ? undefined : json<ServiceDto>(row.content)
+    return row === null ? undefined : programContent(row.content)
   }
 
   public async saveProgram(
     input: WriteProgram,
     id?: string,
   ): Promise<ManagedProgram> {
-    if (id !== undefined && id !== input.content.id)
+    if (
+      id !== undefined &&
+      input.content.id !== undefined &&
+      id !== input.content.id
+    )
       throw new SiteContentConflictError()
     try {
+      const programId = id ?? input.content.id ?? randomUUID()
+      const content: ServiceDto = { ...input.content, id: programId }
       const data = {
-        content: inputJson(input.content),
+        content: inputJson(content),
         published: input.published,
         sortOrder: input.sortOrder,
       }
       const row = await this.edit((client) =>
         id === undefined
-          ? client.program.create({ data: { ...data, id: input.content.id } })
+          ? client.program.create({ data: { ...data, id: programId } })
           : client.program.update({ where: { id }, data }),
       )
-      return { ...row, content: json<ServiceDto>(row.content) }
+      return { ...row, content: programContent(row.content) }
     } catch (error: unknown) {
       throw contentError(error)
     }

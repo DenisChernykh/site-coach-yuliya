@@ -22,15 +22,16 @@ const failure = (
 )
 export function ContactsPage() {
   const query = useContacts()
+  const socials = useSocials()
   return (
     <section className="space-y-6">
-      <h1 className="text-2xl font-semibold">Контакты</h1>
-      {query.isPending ? (
+      <h1 className="text-2xl font-semibold">Контакты и социальные сети</h1>
+      {query.isPending || socials.isPending ? (
         <p>Загружаем…</p>
-      ) : query.isError ? (
+      ) : query.isError || socials.isError ? (
         failure
       ) : (
-        <ContactsForm initial={query.data} />
+        <ContactsForm initial={query.data!} socials={socials.data!} />
       )}
     </section>
   )

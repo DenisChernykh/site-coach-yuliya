@@ -20,9 +20,8 @@ import { useSaveArticle } from '../model/mutations'
 import { ContentFields } from './content-fields'
 import { useContentNavigationGuard } from '../model/use-content-navigation-guard'
 
-const primaryMetadataKeys = ['slug', 'title', 'topic', 'description']
+const primaryMetadataKeys = ['title', 'topic', 'description']
 const metadataKeys = [
-  'slug',
   'title',
   'description',
   'topic',
@@ -99,6 +98,12 @@ export function ArticleForm({
             </div>
           </AlertDescription>
         </Alert>
+      )}
+      {(save.data?.content.slug ?? article?.content.slug) && (
+        <p className="text-sm break-all text-muted-foreground">
+          Адрес статьи: /journal/
+          {save.data?.content.slug ?? article?.content.slug}/
+        </p>
       )}
       <fieldset className="space-y-6" disabled={save.isPending}>
         <Controller

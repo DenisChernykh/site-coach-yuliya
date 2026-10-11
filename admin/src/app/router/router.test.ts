@@ -62,6 +62,7 @@ beforeEach(() => {
     })),
   })
   server.use(
+    http.get(`${apiOrigin}/v1/admin/social-links`, () => HttpResponse.json([])),
     http.get(`${apiOrigin}/v1/admin/publication`, () =>
       HttpResponse.json({
         status: 'IDLE',

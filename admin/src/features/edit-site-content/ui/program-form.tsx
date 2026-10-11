@@ -78,7 +78,6 @@ export function ProgramForm({
             <ContentFields
               value={field.value as ContentValue}
               onChange={field.onChange}
-              lockedId={program !== undefined}
             />
           )}
         />

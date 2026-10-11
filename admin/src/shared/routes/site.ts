@@ -5,6 +5,5 @@ export const siteNavigation = [
   { path: '/contacts', label: 'Контакты' },
   { path: '/home', label: 'Главная страница' },
   { path: '/faq', label: 'Частые вопросы' },
-  { path: '/socials', label: 'Социальные сети' },
   { path: '/site', label: 'Настройки сайта' },
 ] as const
