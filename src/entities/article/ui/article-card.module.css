@@ -1,0 +1,131 @@
+.card {
+  min-width: 0;
+}
+.inner {
+  display: grid;
+  align-items: center;
+  gap: 60px;
+}
+.cover {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.cover:hover img {
+  transform: scale(1.025);
+}
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.copy h2 {
+  font-size: 48px;
+  line-height: 1.06;
+}
+.description {
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+.feature {
+  padding-block: 24px 64px;
+}
+.feature .inner {
+  grid-template-columns: minmax(0, 640fr) minmax(0, 580fr);
+}
+.feature .cover {
+  height: 420px;
+}
+.feature .copy {
+  gap: 22px;
+}
+.feature .description {
+  font-size: 16px;
+}
+.row {
+  padding-block: 48px 72px;
+  background: var(--card);
+}
+.row .inner {
+  grid-template-columns: 440px minmax(0, 1fr);
+}
+.row .cover {
+  height: 280px;
+}
+.row .copy {
+  gap: 20px;
+}
+.row .copy h2 {
+  max-width: 620px;
+}
+.row .description {
+  font-size: 17px;
+}
+.feature .copy > a,
+.row .copy > a {
+  font-size: 14px;
+  font-weight: 600;
+}
+.preview .inner {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.preview .cover {
+  height: 270px;
+}
+.preview .copy {
+  gap: 16px;
+}
+.preview .copy h2 {
+  font-size: 36px;
+  white-space: pre-line;
+}
+.preview .description {
+  font-size: 15px;
+}
+@media (max-width: 1100px) {
+  .inner {
+    gap: 40px;
+  }
+  .row .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+  .feature .copy h2,
+  .row .copy h2 {
+    font-size: 40px;
+  }
+}
+@media (max-width: 767px) {
+  .feature,
+  .row {
+    padding-block: 36px;
+  }
+  .feature .inner,
+  .row .inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .feature .cover,
+  .row .cover {
+    height: auto;
+    aspect-ratio: 342 / 235;
+  }
+  .feature .copy h2,
+  .row .copy h2 {
+    font-size: 36px;
+  }
+  .preview .cover {
+    height: auto;
+    aspect-ratio: 342 / 205;
+  }
+  .preview .copy h2 {
+    font-size: 32px;
+  }
+}

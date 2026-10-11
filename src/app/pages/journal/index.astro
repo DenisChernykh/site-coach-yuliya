@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/base-layout.astro';
+import { JournalIsland } from '../../islands/journal-island';
+import { resolveArticleImages } from '../../data/article-images';
+import { JournalPage } from '@/pages/journal';
+import { loadSiteSettings } from '@/entities/site';
+import { loadArticles } from '@/entities/article';
+const [settings, rawArticles] = await Promise.all([
+  loadSiteSettings(),
+  loadArticles(),
+]);
+const articles = await resolveArticleImages(rawArticles, 960);
+---
+
+<BaseLayout settings={settings} title="Журнал о своём пути — Юля Валишина">
+  <JournalPage><JournalIsland client:load articles={articles} /></JournalPage>
+</BaseLayout>

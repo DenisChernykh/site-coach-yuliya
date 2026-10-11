@@ -1,0 +1,103 @@
+---
+import type { SocialLinkDto } from '@/entities/social-link';
+import { Button, buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  socials: SocialLinkDto[];
+}
+const { socials } = Astro.props;
+const telegram = socials.find((item) => item.id === 'telegram')?.url;
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="page-container contact-grid">
+    <div class="contact-copy">
+      <p class="eyebrow">Первый шаг</p>
+      <h2 id="contact-title">Начнём<br />со знакомства?</h2>
+      <p class="contact-note">
+        До 30 минут · онлайн · бесплатно<br />{' '}Поговорим о твоём запросе и
+        поймём,<br />{' '}какой формат тебе подходит.
+      </p>
+      {
+        telegram ? (
+          <a
+            href={telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+            class:list={[
+              buttonVariants(),
+              'h-14 w-fit gap-[18px] px-6 text-sm',
+            ]}
+          >
+            Написать в Telegram <ArrowUpRight size={18} aria-hidden="true" />
+          </a>
+        ) : (
+          <Button
+            disabled
+            className="h-14 w-fit gap-[18px] px-6 text-sm disabled:opacity-60"
+          >
+            Написать в Telegram{' '}
+            <ArrowUpRight className="size-[18px]" aria-hidden="true" />
+          </Button>
+        )
+      }
+      {
+        !telegram && (
+          <p class="fine-print">Telegram подключим после получения адреса.</p>
+        )
+      }
+    </div>
+    <div class="contact-form"><slot /></div>
+  </div>
+</section>
+<style>
+  .contact {
+    background: var(--secondary);
+    padding-block: 72px;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 500px;
+    gap: 96px;
+    align-items: start;
+  }
+  .contact-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  h2 {
+    font-size: 72px;
+  }
+  .contact-note {
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  @media (max-width: 1100px) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+    h2 {
+      font-size: 60px;
+    }
+  }
+  @media (max-width: 767px) {
+    .contact {
+      padding-block: 44px;
+    }
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    h2 {
+      font-size: 42px;
+    }
+    .contact-note {
+      font-size: 17px;
+    }
+    .contact-note br {
+      display: none;
+    }
+  }
+</style>

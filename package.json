@@ -1,0 +1,56 @@
+{
+  "name": "site-coach-yuliya",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": "11.15.1"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro check && astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "typecheck": "astro check",
+    "api:sync": "node scripts/openapi/sync.mjs",
+    "api:generate": "orval && node scripts/openapi/generate-docs.mjs && prettier --write src/shared/api/generated docs/api.md",
+    "api:update": "pnpm api:sync && pnpm api:generate",
+    "api:check": "node scripts/openapi/check-generated.mjs",
+    "format": "prettier --write src tests scripts/openapi '*.{json,mjs,ts}' docs/architecture.md README.md",
+    "format:check": "prettier --check src tests scripts/openapi '*.{json,mjs,ts}' docs/architecture.md README.md",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "pnpm api:check && pnpm format:check && pnpm test && pnpm build",
+    "design:check": "python3 scripts/build_preview.py --check && python3 scripts/validate.py"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.0.1",
+    "@base-ui/react": "^1.6.0",
+    "@fontsource-variable/manrope": "^5.2.0",
+    "@fontsource/cormorant-garamond": "^5.2.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/react-query": "^5.101.4",
+    "astro": "^7.3.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.27.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "shadcn": "^4.15.0",
+    "sharp": "^0.35.5",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "orval": "8.41.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "tsx": "^4.23.1",
+    "typescript": "~6.0.2"
+  }
+}

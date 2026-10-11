@@ -1,0 +1,305 @@
+---
+import type { ArticleDto } from '@/entities/article';
+import { routes } from '@/shared/routes';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  article: ArticleDto;
+}
+const { article } = Astro.props;
+---
+
+<article>
+  <header class="article-header page-container">
+    <nav class="breadcrumb" aria-label="Хлебные крошки">
+      <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><a
+        href={routes.journal}>Журнал</a
+      ><span aria-hidden="true">/</span><span aria-current="page"
+        >{article.topicLabel}</span
+      >
+    </nav>
+    <p class="eyebrow">{article.topicLabel}</p>
+    <h1>{article.title}</h1>
+    <p class="article-description">{article.description}</p>
+    <p class="article-author">
+      Юля Валишина · коуч по реализации и проявленности
+    </p>
+  </header>
+  <img
+    class="article-cover"
+    src={article.coverImage}
+    alt={article.coverAlt}
+    width={1440}
+    height={420}
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div class="page-container article-layout">
+    <aside class="article-aside">
+      <nav aria-label="Оглавление статьи">
+        <p class="eyebrow">В этой статье</p>
+        <ol>
+          {
+            article.sections.map((section, index) => (
+              <li>
+                <a href={`#${section.id}`}>
+                  {String(index + 1).padStart(2, '0')}
+                  <span>{section.summary}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      <h2>Хочешь обсудить<br />свой поиск?</h2>
+      <a
+        href={routes.contact}
+        class:list={[buttonVariants(), 'h-12 gap-[18px] px-6 text-sm w-fit']}
+        >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
+      >
+    </aside>
+    <div class="article-body">
+      <p>{article.intro}</p>
+      <section class="article-story">
+        <h2>{article.storyTitle}</h2>{
+          article.story.map((paragraph) => <p>{paragraph}</p>)
+        }
+      </section>
+      <blockquote>
+        <p>{article.quote}</p><footer>{article.quoteNote}</footer>
+      </blockquote>
+      {
+        article.sections.map((section, index) => (
+          <section id={section.id} class="article-chapter">
+            <h2>
+              {String(index + 1).padStart(2, '0')} / {section.title}
+            </h2>
+            {section.paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </section>
+        ))
+      }
+      <section class="article-practice">
+        <p class="eyebrow">Попробуй сегодня</p><h2>
+          {article.practiceTitle}
+        </h2><ul>
+          {article.practiceQuestions.map((question) => <li>— {question}</li>)}
+        </ul>
+      </section>
+      <section class="article-cta">
+        <h2>{article.ctaTitle}</h2><p>{article.ctaDescription}</p><a
+          href={routes.contact}
+          class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
+          >Бесплатно познакомиться <ArrowUpRight
+            size={18}
+            aria-hidden="true"
+          /></a
+        >
+        <p class="fine-print">
+          Макет статьи: редакционная адаптация материала из задания на «ты».
+        </p>
+      </section>
+    </div>
+  </div>
+</article>
+<style>
+  .article-header {
+    padding-block: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .breadcrumb {
+    margin: 0;
+  }
+  h1 {
+    font-size: 72px;
+    line-height: 1.06;
+    white-space: pre-line;
+  }
+  .article-description {
+    font-size: 20px;
+    color: var(--muted-foreground);
+    max-width: 1000px;
+    line-height: 1.5;
+  }
+  .article-author {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .article-cover {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+  }
+  .article-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 96px;
+    padding-block: 64px 72px;
+    padding-right: 80px;
+    align-items: start;
+  }
+  .article-aside {
+    position: sticky;
+    top: 32px;
+  }
+  .article-aside ol {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .article-aside li a {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  .article-aside li a:hover {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .article-aside h2 {
+    font-size: 26px;
+    line-height: 1.2;
+    margin-block: 18px;
+  }
+  .article-body {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+    font-size: 19px;
+    line-height: 1.8;
+    color: var(--foreground);
+  }
+  .article-body section {
+    scroll-margin-top: 32px;
+  }
+  .article-body h2 {
+    font-size: 34px;
+    color: var(--foreground);
+    margin-bottom: 14px;
+  }
+  .article-body .article-story h2 {
+    font-size: 38px;
+    margin-bottom: 28px;
+  }
+  .article-body p + p {
+    margin-top: 16px;
+  }
+  blockquote {
+    margin: 0;
+    padding: 28px 32px;
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+  blockquote p {
+    font-family: var(--font-heading);
+    font-size: 36px;
+    font-style: italic;
+    line-height: 1.06;
+  }
+  blockquote footer {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .article-body .article-practice {
+    padding: 32px;
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+  }
+  .article-practice .eyebrow {
+    line-height: 1.5;
+  }
+  .article-practice h2 {
+    margin-top: 18px;
+    margin-bottom: 18px;
+  }
+  .article-practice ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  .article-body .article-cta {
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .article-cta h2 {
+    font-size: 40px;
+    margin: 0;
+    white-space: pre-line;
+  }
+  .article-cta p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .article-cta a {
+    max-width: 100%;
+  }
+  .article-cta .fine-print {
+    font-size: 11px;
+    margin: 0;
+  }
+  @media (max-width: 1100px) {
+    .article-layout {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 40px;
+      padding-right: 0;
+    }
+    h1 {
+      font-size: 60px;
+    }
+  }
+  @media (max-width: 767px) {
+    .article-header {
+      padding-block: 44px;
+      gap: 28px;
+    }
+    h1 {
+      font-size: 42px;
+    }
+    .article-cover {
+      height: 230px;
+    }
+    .article-layout {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-block: 44px;
+    }
+    .article-aside {
+      display: none;
+    }
+    .article-body {
+      font-size: 17px;
+    }
+    .article-body .article-story h2 {
+      font-size: 32px;
+    }
+    blockquote {
+      padding: 24px;
+    }
+    .article-body .article-practice {
+      padding: 24px;
+    }
+    blockquote p {
+      font-size: 32px;
+    }
+  }
+</style>

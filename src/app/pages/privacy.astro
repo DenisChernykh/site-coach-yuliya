@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { PrivacyPage } from '@/pages/privacy';
+import { loadSiteSettings } from '@/entities/site';
+const settings = await loadSiteSettings();
+---
+
+<BaseLayout settings={settings} title="Конфиденциальность — Юля Валишина"
+  ><PrivacyPage /></BaseLayout
+>

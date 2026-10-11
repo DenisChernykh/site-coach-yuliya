@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/base-layout.astro';
+import { resolveArticleImages } from '../../data/article-images';
+import { ArticlePage } from '@/pages/article';
+import { loadSiteSettings } from '@/entities/site';
+import { loadArticles, type ArticleDto } from '@/entities/article';
+
+export const getStaticPaths = (async () => {
+  const articles = await loadArticles();
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  article: ArticleDto;
+}
+const { article: rawArticle } = Astro.props;
+const [settings, articles] = await Promise.all([
+  loadSiteSettings(),
+  resolveArticleImages([rawArticle], 1440),
+]);
+const article = articles[0]!;
+---
+
+<BaseLayout
+  settings={settings}
+  title={`${article.title} — Юля Валишина`}
+  description={article.description}
+>
+  <ArticlePage article={article} />
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import { loadContacts, type SiteSettingsDto } from '@/entities/site';
+import { SiteHeader } from '@/widgets/site-header';
+import { SiteFooter } from '@/widgets/site-footer';
+import { SocialLinks } from '@/widgets/social-links';
+import { loadSocialLinks, type SocialLinkDto } from '@/entities/social-link';
+import '../styles/index.css';
+
+interface Props {
+  settings: SiteSettingsDto;
+  socials?: SocialLinkDto[];
+  title?: string;
+  description?: string;
+}
+const {
+  settings,
+  title = settings.name,
+  description = settings.description,
+  socials: initialSocials,
+} = Astro.props;
+const socials = initialSocials ?? (await loadSocialLinks());
+const contacts = await loadContacts();
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F7F9F8" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+    <SiteHeader settings={settings} />
+    <main id="main-content"><slot /></main>
+    <SiteFooter settings={settings} contacts={contacts} />
+    <SocialLinks client:load items={socials} />
+  </body>
+</html>

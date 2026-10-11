@@ -1,0 +1,35 @@
+.card {
+  transition:
+    background-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+.card:focus-within {
+  background: var(--secondary);
+  box-shadow: 0 12px 28px -12px
+    color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.card [data-slot='button'] svg {
+  transition: transform 260ms ease;
+}
+.card [data-slot='button']:focus-visible svg {
+  transform: translate(2px, -2px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    background: var(--secondary);
+    box-shadow: 0 12px 28px -12px
+      color-mix(in srgb, var(--primary) 22%, transparent);
+    transform: translateY(-6px);
+  }
+  .card:hover [data-slot='button'] svg {
+    transform: translate(2px, -2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card [data-slot='button'] svg {
+    transition: none;
+    transform: none !important;
+  }
+}

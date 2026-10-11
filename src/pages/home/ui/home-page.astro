@@ -1,0 +1,909 @@
+---
+import { Image } from 'astro:assets';
+import type { HomePageDto } from '@/entities/site';
+import type { ServiceDto } from '@/entities/service';
+import type { FaqItemDto } from '@/entities/faq';
+import type { SocialLinkDto } from '@/entities/social-link';
+import { ArticleCard, type ArticleDto } from '@/entities/article';
+import { VideoIntroduction } from '@/features/video-introduction';
+import { StoryDialog } from '@/features/read-story';
+import { Pricing } from '@/widgets/pricing';
+import { WorkProcess } from '@/widgets/work-process';
+import { WorkBoundaries } from '@/widgets/work-boundaries';
+import { Faq } from '@/widgets/faq';
+import { Contact } from '@/widgets/contact';
+import { portrait, art } from '@/shared/assets';
+import { routes } from '@/shared/routes';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  data: HomePageDto;
+  services: ServiceDto[];
+  faq: FaqItemDto[];
+  socials: SocialLinkDto[];
+  articles: ArticleDto[];
+}
+const { data, services, faq, socials, articles } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="page-container hero-grid">
+    <div class="hero-content">
+      <p class="eyebrow">{data.hero.eyebrow}</p>
+      <h1 id="hero-title">
+        {
+          data.hero.headingLines.map((line, index) => (
+            <span
+              class:list={[
+                index === data.hero.headingLines.length - 1 && 'italic-line',
+              ]}
+            >
+              {line}
+            </span>
+          ))
+        }
+      </h1>
+      <p class="hero-description">{data.hero.description}</p>
+      <div class="hero-actions">
+        <a href="#contact" class:list={[buttonVariants(), 'hero-cta']}
+          >Бесплатно познакомиться <ArrowUpRight
+            size={18}
+            aria-hidden="true"
+          /></a
+        >
+        <a href={routes.coaching} class="text-link"
+          >Индивидуальный коучинг <span aria-hidden="true">↗</span></a
+        >
+      </div>
+      <p class="meeting-note">{data.hero.meetingNote}</p>
+    </div>
+    <figure class="hero-figure">
+      <div class="hero-media">
+        <Image
+          src={portrait}
+          alt="Демонстрационный портрет для макета сайта Юли Валишиной"
+          width={1040}
+          height={1212}
+          format="webp"
+          quality={85}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="video-trigger"><VideoIntroduction client:load /></div>
+      </div>
+      <figcaption>Демонстрационный AI-портрет · заменить фото Юли</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="concerns" aria-labelledby="concerns-title">
+  <div class="page-container">
+    <div class="concerns-heading">
+      <h2 id="concerns-title">
+        Не обязательно знать ответ.<br />Достаточно начать с вопроса.
+      </h2><p>На любом этапе можно<br />{' '}найти свой следующий шаг.</p>
+    </div>
+    <div class="concerns-grid">
+      {
+        data.concerns.map((concern, index) => (
+          <article>
+            <>
+              <span class="small-number">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3>{concern.title}</h3>
+              <p>{concern.description}</p>
+              <a href="#contact" class="text-link">
+                Это про меня <span aria-hidden="true">↗</span>
+              </a>
+            </>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about" aria-labelledby="about-title">
+  <div class="page-container about-grid">
+    <Image
+      src={portrait}
+      alt="Демонстрационный портрет коуча"
+      width={780}
+      height={876}
+      format="webp"
+      loading="lazy"
+    />
+    <div class="about-copy">
+      <p class="eyebrow">{data.about.eyebrow}</p><h2 id="about-title">
+        {data.about.title}
+      </h2>{data.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}<a
+        href="#approach"
+        class="text-link"
+        >Моя история и подход <span aria-hidden="true">↗</span></a
+      >
+    </div>
+  </div>
+</section>
+
+<section id="approach" class="approach" aria-labelledby="approach-title">
+  <div class="page-container approach-grid">
+    <div class="approach-copy">
+      <p class="eyebrow">{data.approach.eyebrow}</p><h2 id="approach-title">
+        {data.approach.title}
+      </h2><p>{data.approach.description}</p><blockquote>
+        {data.approach.quote}
+      </blockquote>
+    </div>
+    <ol class="approach-steps">
+      {
+        data.approach.steps.map((step, index) => (
+          <li>
+            <>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </>
+              </div>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<Pricing services={services} />
+<WorkProcess steps={data.process} />
+<WorkBoundaries />
+
+<section class="section-space cases" aria-labelledby="cases-title">
+  <div class="page-container cases-inner">
+    <div class="cases-heading">
+      <h2 id="cases-title" class="section-heading">
+        У каждого пути<br />свой поворот.
+      </h2><p class="fine-print">
+        Истории из материалов Юли.<br />{' '}Публикация — после согласия
+        клиенток.
+      </p>
+    </div>
+    <div class="cases-grid">
+      {
+        data.caseStudies.map((story, index) => (
+          <article
+            class:list={[
+              'case-card',
+              index % 2 === 0 ? 'bg-accent' : 'bg-secondary',
+            ]}
+          >
+            <>
+              <h3>{story.title}</h3>
+              <dl>
+                <>
+                  <div>
+                    <>
+                      <dt>С чем пришла</dt>
+                      <dd>{story.request}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>Что исследовали</dt>
+                      <dd>{story.exploration}</dd>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <dt>Следующий шаг</dt>
+                      <dd>{story.result}</dd>
+                    </>
+                  </div>
+                </>
+              </dl>
+              <StoryDialog client:visible story={story} />
+            </>
+          </article>
+        ))
+      }
+    </div>
+    <p class="fine-print">
+      Пересказ исходных кейсов без имён. Опыт индивидуален; одинаковый результат
+      не гарантируется.
+    </p>
+  </div>
+</section>
+
+<section class="art-practice" aria-labelledby="art-title">
+  <div class="page-container art-grid">
+    <figure>
+      <Image
+        src={art}
+        alt="Создание коллажа из бумаги и фотографий за светлым столом"
+        width={1200}
+        height={912}
+        format="webp"
+        loading="lazy"
+      /><figcaption>Демонстрационный AI-снимок творческого процесса</figcaption>
+    </figure>
+    <div class="art-copy">
+      <p class="eyebrow">{data.artPractice.eyebrow}</p><h2
+        id="art-title"
+        class="section-heading"
+      >
+        {data.artPractice.title}
+      </h2><p>{data.artPractice.description}</p><div class="art-details">
+        {data.artPractice.details.map((detail) => <p>{detail}</p>)}
+      </div><a
+        href="#contact"
+        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
+        >Узнать о следующей встрече <ArrowUpRight
+          size={18}
+          aria-hidden="true"
+        /></a
+      ><p class="fine-print">Ближайшая дата и стоимость уточняются.</p>
+    </div>
+  </div>
+</section>
+<section class="other-formats" aria-label="Другие способы начать">
+  <div class="page-container products-grid">
+    {
+      data.products.map((product) => (
+        <article>
+          <>
+            <p class="eyebrow">{product.eyebrow}</p>
+            <h2>{product.title}</h2>
+            <p>{product.description}</p>
+            <a href="#contact" class="text-link">
+              {product.actionLabel} <span aria-hidden="true">↗</span>
+            </a>
+          </>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="journal-preview" aria-labelledby="journal-preview-title">
+  <div class="page-container">
+    <div class="journal-heading">
+      <div>
+        <p class="eyebrow">Мысли и практики</p><h2
+          id="journal-preview-title"
+          class="section-heading"
+        >
+          Чуть ближе к себе.
+        </h2>
+      </div><a href={routes.journal} class="text-link"
+        >Открыть журнал <span aria-hidden="true">↗</span></a
+      >
+    </div>
+    <div class="articles-grid">
+      {articles.slice(0, 2).map((article) => <ArticleCard article={article} />)}
+    </div>
+  </div>
+</section>
+
+<Faq items={faq} />
+<Contact socials={socials}><slot name="contact-form" /></Contact>
+
+<style>
+  .hero {
+    padding-block: 64px 56px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 520px;
+    gap: 68px;
+    align-items: center;
+  }
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: flex-start;
+    animation: hero-enter 0.65s both;
+  }
+  h1 {
+    font-size: 94px;
+    line-height: 0.94;
+    letter-spacing: -1.8px;
+  }
+  h1 span {
+    display: block;
+  }
+  h1 .italic-line {
+    font-size: 98px;
+    font-style: italic;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+  .hero-description {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+    white-space: pre-line;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .hero-cta {
+    height: 56px;
+    padding-inline: 24px;
+    gap: 18px;
+    font-size: 14px;
+  }
+  .meeting-note {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  .hero-figure {
+    animation: hero-enter 0.85s 0.12s both;
+  }
+  .hero-media {
+    position: relative;
+    height: 606px;
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+  .hero-media img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .video-trigger {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
+  }
+  figcaption {
+    font-size: 10px;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .concerns {
+    padding-block: 56px 80px;
+  }
+  .concerns-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+  }
+  .concerns-heading h2 {
+    font-size: 52px;
+  }
+  .concerns-heading > p {
+    width: 300px;
+    max-width: 100%;
+    font-size: 14px;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .concerns-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+  }
+  .concerns-grid article {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .small-number {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  .concerns-grid h3 {
+    font-size: 32px;
+    margin-top: 18px;
+  }
+  .concerns-grid p {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+    white-space: pre-line;
+  }
+  .concerns-grid a {
+    margin-top: 18px;
+  }
+  .about {
+    padding-block: 64px;
+    background: var(--secondary);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 390px minmax(0, 1fr);
+    align-items: center;
+    gap: 100px;
+  }
+  .about-grid img {
+    width: 390px;
+    height: 438px;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .about-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .about-copy h2 {
+    font-size: 66px;
+    white-space: pre-line;
+  }
+  .about-copy > p:not(.eyebrow) {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  .about-copy a {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .approach {
+    padding-block: 80px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .approach-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 550px;
+    gap: 104px;
+    align-items: start;
+  }
+  .approach-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .approach-copy .eyebrow,
+  .approach-copy > p:not(.eyebrow) {
+    color: var(--secondary);
+  }
+  .approach-copy h2 {
+    font-size: 64px;
+    white-space: pre-line;
+  }
+  .approach-copy > p:not(.eyebrow) {
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  blockquote {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 25px;
+    line-height: 1.3;
+    font-style: italic;
+    color: var(--accent);
+    white-space: pre-line;
+  }
+  .approach-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .approach-steps li {
+    display: flex;
+    gap: 28px;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--secondary) 15%, transparent);
+    padding-block: 20px;
+  }
+  .approach-steps li > span {
+    width: 28px;
+    flex-shrink: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--accent);
+  }
+  .approach-steps h3 {
+    font-size: 30px;
+  }
+  .approach-steps p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--secondary);
+    line-height: 1.5;
+  }
+  .cases-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .cases-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 80px;
+  }
+  .cases-heading .fine-print {
+    width: 350px;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .cases-heading h2 {
+    font-size: 56px;
+  }
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .case-card {
+    border-radius: var(--radius);
+    padding: 36px;
+  }
+  .case-card h3 {
+    font-size: 38px;
+  }
+  .case-card dl {
+    margin: 18px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .case-card dl > div {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .case-card dt {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .case-card dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .art-practice {
+    padding-block: 72px;
+    background: var(--card);
+  }
+  .art-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 604fr) minmax(0, 612fr);
+    gap: 64px;
+    align-items: center;
+  }
+  .art-grid img {
+    width: 100%;
+    aspect-ratio: 604/448;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .art-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .art-copy h2 {
+    white-space: pre-line;
+  }
+  .art-copy > p:not(.eyebrow, .fine-print) {
+    color: var(--muted-foreground);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .art-details {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .art-copy .fine-print {
+    font-size: 12px;
+  }
+  .other-formats {
+    padding-block: 24px 64px;
+    background: var(--card);
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 56px;
+  }
+  .products-grid article {
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .products-grid h2 {
+    margin-top: 14px;
+    font-size: 34px;
+  }
+  .products-grid p:not(.eyebrow) {
+    margin-top: 14px;
+    font-size: 15px;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .products-grid a {
+    margin-top: 14px;
+    font-weight: 600;
+  }
+  .journal-preview {
+    padding-block: 72px;
+  }
+  .journal-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 36px;
+  }
+  .journal-heading h2 {
+    margin-top: 14px;
+    font-size: 56px;
+  }
+  .journal-heading > a {
+    font-size: 14px;
+  }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (max-width: 1250px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+    h1 {
+      font-size: 80px;
+    }
+    h1 .italic-line {
+      font-size: 84px;
+    }
+    .hero-actions {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .about-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 60px;
+    }
+    .about-grid img {
+      width: 100%;
+    }
+  }
+  @media (max-width: 1050px) {
+    .hero-media {
+      height: 560px;
+    }
+    h1 {
+      font-size: 72px;
+    }
+    h1 .italic-line {
+      font-size: 76px;
+    }
+    .hero-description {
+      white-space: normal;
+    }
+    .concerns-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .approach-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 50px;
+    }
+    .approach-copy h2 {
+      font-size: 52px;
+    }
+    .cases-heading {
+      gap: 40px;
+    }
+    .cases-heading .fine-print {
+      width: 260px;
+    }
+  }
+  @media (max-width: 767px) {
+    .hero,
+    .concerns,
+    .about,
+    .approach,
+    .art-practice,
+    .journal-preview {
+      padding-block: 44px;
+    }
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .hero-content {
+      gap: 28px;
+    }
+    h1 {
+      font-size: 60px;
+      letter-spacing: -1.8px;
+    }
+    h1 .italic-line {
+      font-size: 60px;
+    }
+    .hero-description {
+      font-size: 17px;
+    }
+    .hero-actions {
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .hero-cta {
+      max-width: 100%;
+    }
+    .meeting-note {
+      font-size: 12px;
+    }
+    .hero-media {
+      height: auto;
+      aspect-ratio: 342/398;
+    }
+    .hero-media img {
+      height: 100%;
+    }
+    .video-trigger {
+      bottom: 14px;
+      left: 12px;
+      right: 12px;
+    }
+    .video-trigger :global(button) {
+      font-size: 11px;
+      height: 54px;
+      padding-inline: 12px;
+      gap: 8px;
+    }
+    .concerns-heading h2 {
+      font-size: 42px;
+    }
+    .concerns-heading {
+      gap: 24px;
+    }
+    .concerns-heading > p br {
+      display: none;
+    }
+    .concerns-heading > p {
+      width: 100%;
+    }
+    .concerns-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+    .concerns-grid h3 {
+      font-size: 32px;
+    }
+    .concerns-grid article {
+      padding-block: 24px 0;
+    }
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .about-grid img {
+      height: auto;
+      aspect-ratio: 342/350;
+    }
+    .about-copy h2 {
+      font-size: 42px;
+    }
+    .about-copy > p:not(.eyebrow) {
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    .approach-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .approach-copy h2 {
+      font-size: 42px;
+    }
+    .approach-copy > p:not(.eyebrow) {
+      font-size: 17px;
+    }
+    blockquote {
+      font-size: 25px;
+    }
+    .approach-steps li {
+      padding-block: 20px;
+    }
+    .cases-heading {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .cases-heading h2 {
+      font-size: 42px;
+    }
+    .cases-heading .fine-print {
+      width: 100%;
+    }
+    .cases-heading .fine-print br {
+      display: none;
+    }
+    .cases-inner {
+      gap: 28px;
+    }
+    .cases-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .case-card {
+      padding: 36px;
+    }
+    .case-card h3 {
+      font-size: 32px;
+    }
+    .art-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .art-grid img {
+      aspect-ratio: 342/255;
+    }
+    .art-copy {
+      gap: 22px;
+      min-width: 0;
+    }
+    .art-copy > p:not(.eyebrow, .fine-print) {
+      font-size: 16px;
+    }
+    .art-copy a {
+      max-width: 100%;
+    }
+    .other-formats {
+      padding-block: 44px;
+    }
+    .products-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .journal-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .articles-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .journal-heading h2 {
+      font-size: 42px;
+    }
+  }
+  @media (max-width: 359px) {
+    .hero-actions > a:first-child {
+      padding-inline: 16px;
+    }
+    .art-copy a {
+      padding-inline: 16px;
+      gap: 12px;
+      font-size: 13px;
+    }
+    h1,
+    h1 .italic-line {
+      font-size: 52px;
+    }
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+import { Image } from 'astro:assets';
+import type { HomePageDto } from '@/entities/site';
+import type { ServiceDto } from '@/entities/service';
+import type { FaqItemDto } from '@/entities/faq';
+import type { SocialLinkDto } from '@/entities/social-link';
+import { Pricing } from '@/widgets/pricing';
+import { WorkProcess } from '@/widgets/work-process';
+import { WorkBoundaries } from '@/widgets/work-boundaries';
+import { Faq } from '@/widgets/faq';
+import { Contact } from '@/widgets/contact';
+import { portrait } from '@/shared/assets';
+import { routes } from '@/shared/routes';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  data: HomePageDto;
+  services: ServiceDto[];
+  faq: FaqItemDto[];
+  socials: SocialLinkDto[];
+}
+const { data, services, faq, socials } = Astro.props;
+---
+
+<section class="coaching-hero" aria-labelledby="coaching-title">
+  <div class="page-container coaching-grid">
+    <div class="coaching-copy">
+      <nav class="breadcrumb" aria-label="Хлебные крошки">
+        <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
+          aria-current="page">Индивидуальный коучинг</span
+        >
+      </nav>
+      <p class="eyebrow">Онлайн · 60 минут · от 3 000 ₽</p>
+      <h1 id="coaching-title">
+        Твоё направление.<br />Твои решения.<br />Твоя опора.
+      </h1>
+      <p class="description">
+        Пространство, где можно исследовать свои вопросы, увидеть новые варианты
+        и выбрать действия, которые подходят тебе.
+      </p>
+      <a
+        href="#contact"
+        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
+        >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+      >
+      <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
+    </div>
+    <Image
+      src={portrait}
+      alt="Демонстрационный портрет для макета коучинга"
+      width={840}
+      height={1060}
+      format="webp"
+      quality={85}
+      loading="eager"
+      class="coaching-portrait"
+    />
+  </div>
+</section>
+<section class="requests" aria-labelledby="requests-title">
+  <div class="page-container requests-grid">
+    <div>
+      <h2 id="requests-title">
+        От «не знаю»<br />к своему<br />следующему шагу.
+      </h2><p class="requests-intro">
+        Не обязательно сразу ставить большую цель. Можно начать с того, что
+        сейчас вызывает вопросы.
+      </p>
+    </div>
+    <div class="request-list">
+      <article>
+        <h3>Найти подходящее направление</h3><p>
+          Понять свои интересы и ценности, собрать несколько гипотез и выбрать,
+          как их проверить.
+        </p>
+      </article>
+      <article>
+        <h3>Поддержать себя в переменах</h3><p>
+          Исследовать сомнения и реакции на трудности, найти собственные опоры.
+        </p>
+      </article>
+      <article>
+        <h3>Начать проявляться</h3><p>
+          Разобраться со страхом видимости, увидеть свою экспертность и выбрать
+          комфортный формат действий.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+<Pricing services={services} />
+<WorkProcess steps={data.process} />
+<WorkBoundaries />
+<Faq items={faq} />
+<Contact socials={socials}><slot name="contact-form" /></Contact>
+<style>
+  .coaching-hero {
+    padding-block: 56px 64px;
+  }
+  .coaching-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 450px;
+    gap: 100px;
+    align-items: center;
+  }
+  .coaching-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .breadcrumb {
+    margin-bottom: 0;
+  }
+  h1 {
+    font-size: 76px;
+    line-height: 1.06;
+  }
+  .description {
+    font-size: 18px;
+    color: var(--muted-foreground);
+    line-height: 1.65;
+  }
+  .coaching-portrait {
+    width: 450px;
+    height: 525px;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .coaching-copy .fine-print {
+    font-size: 12px;
+  }
+  .requests {
+    padding-block: 60px;
+    background: var(--secondary);
+  }
+  .requests-grid {
+    display: grid;
+    grid-template-columns: 430px minmax(0, 1fr);
+    gap: 96px;
+  }
+  .requests h2 {
+    font-size: 56px;
+  }
+  .requests-intro {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 20px;
+    max-width: 430px;
+  }
+  .request-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .request-list article {
+    padding-block: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .request-list h3 {
+    font-size: 30px;
+  }
+  .request-list p {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  @media (max-width: 1100px) {
+    .coaching-grid {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 50px;
+    }
+    h1 {
+      font-size: 60px;
+    }
+    .coaching-portrait {
+      width: 100%;
+    }
+    .requests-grid {
+      grid-template-columns: 1fr 1.3fr;
+      gap: 50px;
+    }
+  }
+  @media (max-width: 767px) {
+    .coaching-hero,
+    .requests {
+      padding-block: 44px;
+    }
+    .coaching-grid,
+    .requests-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    h1 {
+      font-size: 42px;
+    }
+    .coaching-portrait {
+      height: auto;
+      aspect-ratio: 342/398;
+    }
+    .description {
+      font-size: 18px;
+    }
+    .coaching-copy > a {
+      max-width: 100%;
+    }
+    .requests h2 {
+      font-size: 42px;
+    }
+  }
+</style>

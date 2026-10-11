@@ -1,0 +1,62 @@
+---
+import { routes } from '@/shared/routes';
+---
+
+<section class="page-container privacy-page">
+  <nav class="breadcrumb" aria-label="Хлебные крошки">
+    <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
+      aria-current="page">Конфиденциальность</span
+    >
+  </nav>
+  <h1>Конфиденциальность</h1>
+  <p>
+    Сайт работает в демонстрационном режиме. Форма показывает пример заявки:
+    введённые данные не отправляются и не сохраняются на сервере или в хранилище
+    браузера.
+  </p>
+  <h2 id="consent">Согласие на обработку данных</h2>
+  <p>
+    В демонстрации чекбокс позволяет проверить состояние формы. Для записи и
+    отправки данных будет опубликована политика с реквизитами оператора и
+    условиями обработки.
+  </p>
+  <p>
+    Сейчас реальные заявки через сайт не принимаются. Перед запуском будут
+    добавлены контакты Юли и согласованные документы.
+  </p>
+  <a href={routes.home} class="text-link"
+    >Вернуться на главную <span aria-hidden="true">↗</span></a
+  >
+</section>
+<style>
+  .privacy-page {
+    padding-block: 56px 100px;
+    max-width: 900px;
+  }
+  h1 {
+    font-size: 64px;
+    margin-bottom: 32px;
+  }
+  h2 {
+    font-size: 36px;
+    margin-block: 36px 20px;
+  }
+  p {
+    margin-top: 20px;
+    color: var(--muted-foreground);
+  }
+  .text-link {
+    margin-top: 32px;
+  }
+  @media (max-width: 767px) {
+    .privacy-page {
+      padding-block: 44px;
+    }
+    h1 {
+      font-size: clamp(28px, 8vw, 42px);
+    }
+    h2 {
+      font-size: 32px;
+    }
+  }
+</style>

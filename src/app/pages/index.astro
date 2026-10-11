@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { ConsultationIsland } from '../islands/consultation-island';
+import { resolveArticleImages } from '../data/article-images';
+import { HomePage } from '@/pages/home';
+import { loadHomePage, loadSiteSettings } from '@/entities/site';
+import { loadServices } from '@/entities/service';
+import { loadFaq } from '@/entities/faq';
+import { loadSocialLinks } from '@/entities/social-link';
+import { loadArticles } from '@/entities/article';
+const [settings, home, services, faq, socials, rawArticles] = await Promise.all(
+  [
+    loadSiteSettings(),
+    loadHomePage(),
+    loadServices(),
+    loadFaq(),
+    loadSocialLinks(),
+    loadArticles(),
+  ],
+);
+const articles = await resolveArticleImages(rawArticles, 960);
+---
+
+<BaseLayout
+  settings={settings}
+  socials={socials}
+  title="Юля Валишина — от поиска себя к проявленности"
+>
+  <HomePage
+    data={home}
+    services={services}
+    faq={faq}
+    socials={socials}
+    articles={articles}
+  >
+    <ConsultationIsland slot="contact-form" client:load services={services} />
+  </HomePage>
+</BaseLayout>

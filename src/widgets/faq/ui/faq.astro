@@ -1,0 +1,63 @@
+---
+import type { FaqItemDto } from '@/entities/faq';
+import { FaqList } from '@/features/faq';
+interface Props {
+  items: FaqItemDto[];
+}
+const { items } = Astro.props;
+---
+
+<section class="faq" aria-labelledby="faq-title">
+  <div class="page-container faq-grid">
+    <div>
+      <p class="eyebrow">О чём часто спрашивают</p><h2 id="faq-title">
+        Можно прийти<br />с вопросами.
+      </h2><p class="faq-note">
+        Даже если пока сложно<br />{' '}сформулировать свой запрос.
+      </p>
+    </div>
+    <FaqList client:visible items={items} />
+  </div>
+</section>
+<style>
+  .faq {
+    padding-block: 64px 80px;
+    border-top: 1px solid var(--border);
+  }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 400px minmax(0, 1fr);
+    gap: 96px;
+  }
+  h2 {
+    font-size: 50px;
+    margin-top: 20px;
+  }
+  .faq-note {
+    margin-top: 20px;
+    font-size: 15px;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  @media (max-width: 1100px) {
+    .faq-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      gap: 50px;
+    }
+  }
+  @media (max-width: 767px) {
+    .faq {
+      padding-block: 44px;
+    }
+    .faq-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    h2 {
+      font-size: 42px;
+    }
+    .faq-note br {
+      display: none;
+    }
+  }
+</style>

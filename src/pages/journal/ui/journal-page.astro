@@ -1,0 +1,116 @@
+---
+import { routes } from '@/shared/routes';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+---
+
+<section class="journal-page">
+  <div class="page-container journal-header">
+    <nav class="breadcrumb" aria-label="Хлебные крошки">
+      <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
+        aria-current="page">Журнал</span
+      >
+    </nav>
+    <p class="eyebrow">Мысли и практики</p>
+    <div class="journal-intro">
+      <h1>Журнал<br />о своём пути.</h1>
+      <p class="journal-description">
+        О поиске своего дела, опоре на себя и смелости проявляться. Читай в
+        своём темпе и забирай то, что откликается.
+      </p>
+    </div>
+  </div>
+  <slot />
+</section>
+<section class="journal-cta">
+  <div class="page-container journal-cta-inner">
+    <div>
+      <h2>Хочется обсудить<br />свою историю?</h2><p>
+        Начнём с бесплатного знакомства до 30 минут.
+      </p>
+    </div><a
+      href={routes.contact}
+      class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
+      >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+    >
+  </div>
+</section>
+<style>
+  .journal-page {
+    padding-top: 56px;
+  }
+  .journal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .breadcrumb {
+    margin: 0;
+  }
+  .journal-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 500px;
+    gap: 100px;
+    align-items: end;
+  }
+  h1 {
+    font-size: 76px;
+    line-height: 1.06;
+  }
+  .journal-description {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+  .journal-cta {
+    background: var(--secondary);
+    padding-block: 56px;
+  }
+  .journal-cta-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 80px;
+  }
+  .journal-cta h2 {
+    font-size: 48px;
+  }
+  .journal-cta p {
+    margin-top: 14px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  @media (max-width: 1100px) {
+    .journal-intro {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+  @media (max-width: 767px) {
+    .journal-page {
+      padding-top: 36px;
+    }
+    .journal-cta {
+      padding-block: 36px;
+    }
+    .journal-intro {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    h1 {
+      font-size: 52px;
+    }
+    .journal-cta-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .journal-cta h2 {
+      font-size: 36px;
+    }
+    .journal-cta a {
+      align-self: center;
+      max-width: 100%;
+    }
+  }
+</style>

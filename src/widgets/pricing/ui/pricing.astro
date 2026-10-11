@@ -1,0 +1,129 @@
+---
+import { ServiceCard, type ServiceDto } from '@/entities/service';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  services: ServiceDto[];
+}
+const { services } = Astro.props;
+---
+
+<section id="formats" class="section-space" aria-labelledby="formats-title">
+  <div class="page-container pricing-inner">
+    <div class="pricing-heading">
+      <div>
+        <p class="eyebrow">Индивидуальный коучинг</p><h2
+          id="formats-title"
+          class="section-heading"
+        >
+          Место для твоих<br />вопросов и решений.
+        </h2>
+      </div>
+      <p class="format-note">
+        Онлайн · 60 минут<br />От одной встречи к регулярной работе
+      </p>
+    </div>
+    <div class="pricing-grid">
+      {services.map((service) => <ServiceCard service={service} />)}
+    </div>
+    <div class="intro-offer">
+      <div>
+        <h3>Можно начать с бесплатного знакомства.</h3><p>
+          До 30 минут: обсудим запрос и подберём подходящий формат.
+        </p>
+      </div>
+      <a
+        href="#contact"
+        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
+        >Бесплатно познакомиться <ArrowUpRight
+          size={18}
+          aria-hidden="true"
+        /></a
+      >
+    </div>
+    <p class="fine-print">
+      Оплата до начала работы. Условия переноса и отмены согласуем заранее. Цены
+      из задания — подтвердить перед публикацией.
+    </p>
+  </div>
+</section>
+<style>
+  .pricing-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .pricing-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 60px;
+  }
+  .pricing-heading h2 {
+    margin-top: 16px;
+  }
+  .format-note {
+    color: var(--muted-foreground);
+    font-size: 14px;
+    line-height: 1.5;
+    min-width: 350px;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+  }
+  .intro-offer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+  }
+  .intro-offer h3 {
+    font-size: 30px;
+  }
+  .intro-offer p {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  @media (max-width: 1100px) {
+    .pricing-heading {
+      gap: 30px;
+    }
+    .format-note {
+      min-width: 260px;
+    }
+  }
+  @media (max-width: 900px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+    }
+    .pricing-heading,
+    .intro-offer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+  }
+  @media (max-width: 767px) {
+    .pricing-inner {
+      gap: 28px;
+    }
+    .pricing-grid {
+      gap: 24px;
+    }
+    .intro-offer h3 {
+      font-size: 30px;
+    }
+    .intro-offer a {
+      max-width: 100%;
+    }
+    .pricing-heading h2 {
+      margin-top: 14px;
+    }
+  }
+</style>
