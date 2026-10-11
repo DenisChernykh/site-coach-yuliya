@@ -1,0 +1,12 @@
+[
+  {"number": "00", "id": "z2OS7H", "name": "Воздух — стили и компоненты", "width": 1440, "height": 360, "export": "design-system.png"},
+  {"number": "01", "id": "bi8Au", "name": "Главная / Desktop 1440", "width": 1440, "height": 7773, "export": "home-desktop.png"},
+  {"number": "02", "id": "K8lEy", "name": "Главная / Mobile 390", "width": 390, "height": 12954, "export": "home-mobile.png"},
+  {"number": "03", "id": "M4zljY", "name": "Индивидуальный коучинг / Desktop 1440", "width": 1440, "height": 4092, "export": "coaching-desktop.png"},
+  {"number": "04", "id": "f3pMlw", "name": "Индивидуальный коучинг / Mobile 390", "width": 390, "height": 6874, "export": "coaching-mobile.png"},
+  {"number": "05", "id": "YF7oS", "name": "Журнал / Desktop 1440", "width": 1440, "height": 1813, "export": "journal-desktop.png"},
+  {"number": "06", "id": "FUDex", "name": "Журнал / Mobile 390", "width": 390, "height": 2397, "export": "journal-mobile.png"},
+  {"number": "07", "id": "P234tt", "name": "Шаблон статьи / Desktop 1440", "width": 1440, "height": 3271, "export": "journal-article-desktop.png"},
+  {"number": "08", "id": "a80248", "name": "Шаблон статьи / Mobile 390", "width": 390, "height": 4353, "export": "journal-article-mobile.png"},
+  {"number": "09", "id": "s8sk7", "name": "Меню и состояния заявки", "width": 1200, "height": 693, "export": "interface-states.png"}
+]

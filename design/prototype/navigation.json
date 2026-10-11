@@ -1,0 +1,1038 @@
+[
+  {
+    "slug": "index",
+    "title": "Главная",
+    "mode": "desktop",
+    "image": "home",
+    "links": [
+      {
+        "x": 80,
+        "y": 30.5,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 574.5,
+        "y": 40,
+        "width": 52,
+        "height": 20,
+        "href": "index.html#about",
+        "label": "Обо мне"
+      },
+      {
+        "x": 658.5,
+        "y": 40,
+        "width": 47,
+        "height": 20,
+        "href": "index.html#approach",
+        "label": "Подход"
+      },
+      {
+        "x": 737.5,
+        "y": 40,
+        "width": 50,
+        "height": 20,
+        "href": "coaching.html",
+        "label": "Коучинг"
+      },
+      {
+        "x": 819.5,
+        "y": 40,
+        "width": 48,
+        "height": 20,
+        "href": "journal.html",
+        "label": "Журнал"
+      },
+      {
+        "x": 1132,
+        "y": 28,
+        "width": 228,
+        "height": 44,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 80,
+        "y": 663.5,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 368,
+        "y": 681,
+        "width": 173,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Индивидуальный коучинг ↗"
+      },
+      {
+        "x": 80,
+        "y": 1241,
+        "width": 400,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 520,
+        "y": 1241,
+        "width": 400,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 960,
+        "y": 1241,
+        "width": 400,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 570,
+        "y": 1789,
+        "width": 790,
+        "height": 22,
+        "href": "index.html#about",
+        "label": "Моя история и подход ↗"
+      },
+      {
+        "x": 108,
+        "y": 3144,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 543,
+        "y": 3144,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 978,
+        "y": 3144,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 1096,
+        "y": 3289.5,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 116,
+        "y": 4694,
+        "width": 556,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Читать историю ↗"
+      },
+      {
+        "x": 768,
+        "y": 4694,
+        "width": 556,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Читать историю ↗"
+      },
+      {
+        "x": 748,
+        "y": 5299.5,
+        "width": 282,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Узнать о следующей встрече"
+      },
+      {
+        "x": 1234,
+        "y": 5896,
+        "width": 126,
+        "height": 22,
+        "href": "journal.html",
+        "label": "Открыть журнал ↗"
+      },
+      {
+        "x": 80,
+        "y": 6428,
+        "width": 624,
+        "height": 21,
+        "href": "finding-your-work.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 736,
+        "y": 6428,
+        "width": 624,
+        "height": 21,
+        "href": "showing-up.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 80,
+        "y": 7355,
+        "width": 223,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Написать в Telegram"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "about",
+        "y": 1342
+      },
+      {
+        "id": "approach",
+        "y": 1908
+      },
+      {
+        "id": "pricing",
+        "y": 2464
+      },
+      {
+        "id": "stories",
+        "y": 4093
+      },
+      {
+        "id": "art",
+        "y": 4880
+      },
+      {
+        "id": "journal",
+        "y": 5755
+      },
+      {
+        "id": "contact",
+        "y": 6954
+      }
+    ],
+    "width": 1440,
+    "height": 7773
+  },
+  {
+    "slug": "index",
+    "title": "Главная",
+    "mode": "mobile",
+    "image": "home",
+    "links": [
+      {
+        "x": 24,
+        "y": 22,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 342,
+        "y": 28,
+        "width": 24,
+        "height": 24,
+        "action": "menu",
+        "label": "Открыть меню"
+      },
+      {
+        "x": 24,
+        "y": 517,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 24,
+        "y": 597,
+        "width": 173,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Индивидуальный коучинг ↗"
+      },
+      {
+        "x": 24,
+        "y": 1640,
+        "width": 342,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 24,
+        "y": 1867,
+        "width": 342,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 24,
+        "y": 2094,
+        "width": 342,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Это про меня ↗"
+      },
+      {
+        "x": 24,
+        "y": 2985,
+        "width": 342,
+        "height": 22,
+        "href": "index.html#about",
+        "label": "Моя история и подход ↗"
+      },
+      {
+        "x": 48,
+        "y": 4661,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 48,
+        "y": 5122,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 48,
+        "y": 5551,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 24,
+        "y": 5815,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 60,
+        "y": 7824,
+        "width": 270,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Читать историю ↗"
+      },
+      {
+        "x": 60,
+        "y": 8373,
+        "width": 270,
+        "height": 21,
+        "href": "coaching.html",
+        "label": "Читать историю ↗"
+      },
+      {
+        "x": 24,
+        "y": 9222,
+        "width": 282,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Узнать о следующей встрече"
+      },
+      {
+        "x": 24,
+        "y": 10041,
+        "width": 126,
+        "height": 22,
+        "href": "journal.html",
+        "label": "Открыть журнал ↗"
+      },
+      {
+        "x": 24,
+        "y": 10549,
+        "width": 342,
+        "height": 21,
+        "href": "finding-your-work.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 24,
+        "y": 11018,
+        "width": 342,
+        "height": 21,
+        "href": "showing-up.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 24,
+        "y": 12059,
+        "width": 223,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Написать в Telegram"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "about",
+        "y": 2159
+      },
+      {
+        "id": "approach",
+        "y": 3051
+      },
+      {
+        "id": "pricing",
+        "y": 4021
+      },
+      {
+        "id": "stories",
+        "y": 7134
+      },
+      {
+        "id": "art",
+        "y": 8536
+      },
+      {
+        "id": "journal",
+        "y": 9896
+      },
+      {
+        "id": "contact",
+        "y": 11748
+      }
+    ],
+    "width": 390,
+    "height": 12954
+  },
+  {
+    "slug": "coaching",
+    "title": "Индивидуальный коучинг",
+    "mode": "desktop",
+    "image": "coaching",
+    "links": [
+      {
+        "x": 80,
+        "y": 30.5,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 574.5,
+        "y": 40,
+        "width": 52,
+        "height": 20,
+        "href": "index.html#about",
+        "label": "Обо мне"
+      },
+      {
+        "x": 658.5,
+        "y": 40,
+        "width": 47,
+        "height": 20,
+        "href": "index.html#approach",
+        "label": "Подход"
+      },
+      {
+        "x": 737.5,
+        "y": 40,
+        "width": 50,
+        "height": 20,
+        "href": "coaching.html",
+        "label": "Коучинг"
+      },
+      {
+        "x": 819.5,
+        "y": 40,
+        "width": 48,
+        "height": 20,
+        "href": "journal.html",
+        "label": "Журнал"
+      },
+      {
+        "x": 1132,
+        "y": 28,
+        "width": 228,
+        "height": 44,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 80,
+        "y": 591,
+        "width": 229,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Обсудить мой запрос"
+      },
+      {
+        "x": 108,
+        "y": 1891,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 543,
+        "y": 1891,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 978,
+        "y": 1891,
+        "width": 354,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 1096,
+        "y": 2036.5,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 80,
+        "y": 3674,
+        "width": 223,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Написать в Telegram"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "pricing",
+        "y": 1211
+      },
+      {
+        "id": "contact",
+        "y": 3273
+      }
+    ],
+    "width": 1440,
+    "height": 4092
+  },
+  {
+    "slug": "coaching",
+    "title": "Индивидуальный коучинг",
+    "mode": "mobile",
+    "image": "coaching",
+    "links": [
+      {
+        "x": 24,
+        "y": 22,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 342,
+        "y": 28,
+        "width": 24,
+        "height": 24,
+        "action": "menu",
+        "label": "Открыть меню"
+      },
+      {
+        "x": 24,
+        "y": 511,
+        "width": 229,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Обсудить мой запрос"
+      },
+      {
+        "x": 48,
+        "y": 2536,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 48,
+        "y": 2997,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 48,
+        "y": 3426,
+        "width": 294,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Обсудить формат"
+      },
+      {
+        "x": 24,
+        "y": 3690,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      },
+      {
+        "x": 24,
+        "y": 5979,
+        "width": 223,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Написать в Telegram"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "pricing",
+        "y": 1893
+      },
+      {
+        "id": "contact",
+        "y": 5668
+      }
+    ],
+    "width": 390,
+    "height": 6874
+  },
+  {
+    "slug": "journal",
+    "title": "Журнал",
+    "mode": "desktop",
+    "image": "journal",
+    "links": [
+      {
+        "x": 80,
+        "y": 30.5,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 574.5,
+        "y": 40,
+        "width": 52,
+        "height": 20,
+        "href": "index.html#about",
+        "label": "Обо мне"
+      },
+      {
+        "x": 658.5,
+        "y": 40,
+        "width": 47,
+        "height": 20,
+        "href": "index.html#approach",
+        "label": "Подход"
+      },
+      {
+        "x": 737.5,
+        "y": 40,
+        "width": 50,
+        "height": 20,
+        "href": "coaching.html",
+        "label": "Коучинг"
+      },
+      {
+        "x": 819.5,
+        "y": 40,
+        "width": 48,
+        "height": 20,
+        "href": "journal.html",
+        "label": "Журнал"
+      },
+      {
+        "x": 1132,
+        "y": 28,
+        "width": 228,
+        "height": 44,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 100,
+        "y": 438,
+        "width": 95,
+        "height": 20,
+        "href": "#search",
+        "label": "Все материалы"
+      },
+      {
+        "x": 247,
+        "y": 438,
+        "width": 117,
+        "height": 20,
+        "href": "#search",
+        "label": "Поиск своего дела"
+      },
+      {
+        "x": 416,
+        "y": 438,
+        "width": 98,
+        "height": 20,
+        "href": "#visibility",
+        "label": "Проявленность"
+      },
+      {
+        "x": 780,
+        "y": 858,
+        "width": 580,
+        "height": 22,
+        "href": "finding-your-work.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 580,
+        "y": 1319,
+        "width": 780,
+        "height": 22,
+        "href": "showing-up.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 1131,
+        "y": 1524,
+        "width": 229,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Обсудить мой запрос"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "search",
+        "y": 518
+      },
+      {
+        "id": "visibility",
+        "y": 1026
+      }
+    ],
+    "width": 1440,
+    "height": 1813
+  },
+  {
+    "slug": "journal",
+    "title": "Журнал",
+    "mode": "mobile",
+    "image": "journal",
+    "links": [
+      {
+        "x": 24,
+        "y": 22,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 342,
+        "y": 28,
+        "width": 24,
+        "height": 24,
+        "action": "menu",
+        "label": "Открыть меню"
+      },
+      {
+        "x": 44,
+        "y": 455,
+        "width": 95,
+        "height": 20,
+        "href": "#search",
+        "label": "Все материалы"
+      },
+      {
+        "x": 44,
+        "y": 515,
+        "width": 117,
+        "height": 20,
+        "href": "#search",
+        "label": "Поиск своего дела"
+      },
+      {
+        "x": 44,
+        "y": 575,
+        "width": 98,
+        "height": 20,
+        "href": "#visibility",
+        "label": "Проявленность"
+      },
+      {
+        "x": 24,
+        "y": 1232,
+        "width": 342,
+        "height": 22,
+        "href": "finding-your-work.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 24,
+        "y": 1855,
+        "width": 342,
+        "height": 22,
+        "href": "showing-up.html",
+        "label": "Читать статью ↗"
+      },
+      {
+        "x": 80.5,
+        "y": 2111,
+        "width": 229,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Обсудить мой запрос"
+      }
+    ],
+    "anchors": [
+      {
+        "id": "search",
+        "y": 643
+      },
+      {
+        "id": "visibility",
+        "y": 1290
+      }
+    ],
+    "width": 390,
+    "height": 2397
+  },
+  {
+    "slug": "finding-your-work",
+    "title": "Как найти дело по душе",
+    "mode": "desktop",
+    "image": "journal-article",
+    "links": [
+      {
+        "x": 80,
+        "y": 30.5,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 574.5,
+        "y": 40,
+        "width": 52,
+        "height": 20,
+        "href": "index.html#about",
+        "label": "Обо мне"
+      },
+      {
+        "x": 658.5,
+        "y": 40,
+        "width": 47,
+        "height": 20,
+        "href": "index.html#approach",
+        "label": "Подход"
+      },
+      {
+        "x": 737.5,
+        "y": 40,
+        "width": 50,
+        "height": 20,
+        "href": "coaching.html",
+        "label": "Коучинг"
+      },
+      {
+        "x": 819.5,
+        "y": 40,
+        "width": 48,
+        "height": 20,
+        "href": "journal.html",
+        "label": "Журнал"
+      },
+      {
+        "x": 1132,
+        "y": 28,
+        "width": 228,
+        "height": 44,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 80,
+        "y": 1334,
+        "width": 228,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 436,
+        "y": 2973,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      }
+    ],
+    "anchors": [],
+    "width": 1440,
+    "height": 3271
+  },
+  {
+    "slug": "finding-your-work",
+    "title": "Как найти дело по душе",
+    "mode": "mobile",
+    "image": "journal-article",
+    "links": [
+      {
+        "x": 24,
+        "y": 22,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 342,
+        "y": 28,
+        "width": 24,
+        "height": 24,
+        "action": "menu",
+        "label": "Открыть меню"
+      },
+      {
+        "x": 24,
+        "y": 3991,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      }
+    ],
+    "anchors": [],
+    "width": 390,
+    "height": 4353
+  },
+  {
+    "slug": "showing-up",
+    "title": "Как начать проявляться",
+    "mode": "desktop",
+    "image": "showing-up",
+    "links": [
+      {
+        "x": 80,
+        "y": 30.5,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 574.5,
+        "y": 40,
+        "width": 52,
+        "height": 20,
+        "href": "index.html#about",
+        "label": "Обо мне"
+      },
+      {
+        "x": 658.5,
+        "y": 40,
+        "width": 47,
+        "height": 20,
+        "href": "index.html#approach",
+        "label": "Подход"
+      },
+      {
+        "x": 737.5,
+        "y": 40,
+        "width": 50,
+        "height": 20,
+        "href": "coaching.html",
+        "label": "Коучинг"
+      },
+      {
+        "x": 819.5,
+        "y": 40,
+        "width": 48,
+        "height": 20,
+        "href": "journal.html",
+        "label": "Журнал"
+      },
+      {
+        "x": 1132,
+        "y": 28,
+        "width": 228,
+        "height": 44,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 80,
+        "y": 1354,
+        "width": 228,
+        "height": 48,
+        "href": "index.html#contact",
+        "label": "Давай познакомимся"
+      },
+      {
+        "x": 436,
+        "y": 2939,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      }
+    ],
+    "anchors": [],
+    "width": 1440,
+    "height": 3237
+  },
+  {
+    "slug": "showing-up",
+    "title": "Как начать проявляться",
+    "mode": "mobile",
+    "image": "showing-up",
+    "links": [
+      {
+        "x": 24,
+        "y": 22,
+        "width": 139,
+        "height": 25,
+        "href": "index.html",
+        "label": "Юля Валишина"
+      },
+      {
+        "x": 342,
+        "y": 28,
+        "width": 24,
+        "height": 24,
+        "action": "menu",
+        "label": "Открыть меню"
+      },
+      {
+        "x": 24,
+        "y": 3881,
+        "width": 264,
+        "height": 56,
+        "href": "index.html#contact",
+        "label": "Бесплатно познакомиться"
+      }
+    ],
+    "anchors": [],
+    "width": 390,
+    "height": 4243
+  }
+]

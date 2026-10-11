@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "purpose": "Демонстрационные изображения для макета в pen.dev",
+  "assets": [
+    {
+      "slug": "portrait",
+      "prompt": "Use case: photorealistic-natural. Asset type: vertical hero portrait for a Russian personal coaching website mockup. Create a photorealistic editorial portrait of a fictional adult woman, around 32, shoulder-length dark brown hair, natural face, subtle warm smile, direct calm gaze. She wears a powder blue linen shirt, seated casually in a bright modern studio next to a sheer white curtain. Waist-up to mid-thigh framing, centered face in upper third, natural hands gently resting, plenty of breathing room. Directional soft daylight, pale cool grey backdrop, refined magazine photography, realistic skin texture, gentle grain. Palette light airy white and powder blue, subtle blush warmth. Vertical 4:5 composition. No text, no logos, no watermark, no business suit, no glamorous retouching, no crystals. This is a fictional demo model, not a depiction of the actual coach."
+    },
+    {
+      "slug": "art",
+      "prompt": "Use case: photorealistic-natural. Asset type: horizontal editorial photograph for art practice workshop website. Close-up overhead diagonal view of an adult woman's hands making a thoughtful paper collage at a white wooden table. Small paint swatches, magazines with abstract nature imagery, clean scissors, scraps of powder blue and dusty rose paper, a ceramic cup, a few pencils. Beautiful candid craft process, no visible faces, understated bright daylight, tactile paper edges and linen textures, refined editorial magazine photography. Color palette white #F7F9F8, sky blue #C9DAE8 and muted rose #E4C4CE. Landscape 3:2 image with a clear composition. No readable text, no logos, no mystical symbols, no glitter, no watermark."
+    },
+    {
+      "slug": "landscape",
+      "prompt": "Use case: photorealistic-natural. Asset type: wide editorial journal cover about finding one's own direction. A solitary quiet path along a pale blue lake leading toward a soft distant horizon, a few tall dried meadow stems in the foreground, open sky and fine haze, no people, no buildings. Contemporary fine-art film landscape photography, natural quiet morning light, delicate grain, cool powder blue and silver off-white tones, tiny dusty pink dawn tint, refined airy composition. Landscape 3:2. No text, no logos, no watermark, no saturated sunset colors."
+    }
+  ]
+}
