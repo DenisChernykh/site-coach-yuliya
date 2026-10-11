@@ -737,6 +737,9 @@
             "type": "array"
           },
           "id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
             "type": "string"
           },
           "price": {
@@ -765,6 +768,10 @@
       },
       "ArticleDto": {
         "properties": {
+          "bodyMarkdown": {
+            "maxLength": 50000,
+            "type": "string"
+          },
           "coverAlt": {
             "type": "string"
           },

@@ -1,0 +1,112 @@
+name: Deploy to NetAngels
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Что выложить
+        type: choice
+        options: [all, backend, site]
+        default: all
+      initialize_admin:
+        description: Создать первого администратора (только при первом деплое)
+        type: boolean
+        default: false
+      content_revision:
+        description: Версия контента (заполняется автоматически бэкендом)
+        type: number
+        default: 0
+
+permissions:
+  contents: read
+
+concurrency:
+  group: netangels-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: production
+    services:
+      postgres:
+        image: postgres:18.4-trixie@sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a
+        env:
+          POSTGRES_DB: coach_yuliya
+          POSTGRES_USER: coach_yuliya
+          POSTGRES_PASSWORD: local-development-only
+        ports: ['55438:5432']
+        options: --health-cmd "pg_isready -U coach_yuliya -d coach_yuliya" --health-interval 2s --health-timeout 3s --health-retries 30
+      redis:
+        image: redis:8.8.0-trixie@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b
+        ports: ['6388:6379']
+        options: --health-cmd "redis-cli ping" --health-interval 2s --health-timeout 3s --health-retries 30
+    env:
+      NETANGELS_SSH_HOST: ${{ vars.NETANGELS_SSH_HOST }}
+      NETANGELS_SSH_USER: ${{ vars.NETANGELS_SSH_USER }}
+      NETANGELS_SSH_PORT: ${{ vars.NETANGELS_SSH_PORT }}
+      NETANGELS_API_DOMAIN: ${{ vars.NETANGELS_API_DOMAIN }}
+      NETANGELS_SITE_DOMAIN: ${{ vars.NETANGELS_SITE_DOMAIN }}
+      NETANGELS_API_SITE_ID: ${{ vars.NETANGELS_API_SITE_ID }}
+      NETANGELS_STATIC_SITE_ID: ${{ vars.NETANGELS_STATIC_SITE_ID }}
+      NETANGELS_APP_DIR: ${{ vars.NETANGELS_APP_DIR }}
+      NETANGELS_WWW_DIR: ${{ vars.NETANGELS_WWW_DIR }}
+      PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+      - name: Install pnpm
+        run: npm install --global pnpm@11.15.1
+      - name: Verify runtime contract
+        run: |
+          node --version
+          pnpm --version
+      - name: Check and build admin
+        if: inputs.target != 'site'
+        working-directory: admin
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm check
+          mkdir -p ../backend/admin-ui
+          cp -R dist/. ../backend/admin-ui/
+      - name: Check and build backend
+        if: inputs.target != 'site'
+        working-directory: backend
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm check:quick
+          ADMIN_STATIC_DIR="$PWD/admin-ui" node scripts/check-site-e2e.mjs
+      - name: Deploy backend
+        if: inputs.target != 'site'
+        run: node backend/scripts/netangels/deploy.mjs
+        env:
+          NETANGELS_SSH_PRIVATE_KEY: ${{ secrets.NETANGELS_SSH_PRIVATE_KEY }}
+          NETANGELS_SSH_KNOWN_HOSTS: ${{ secrets.NETANGELS_SSH_KNOWN_HOSTS }}
+          NETANGELS_API_KEY: ${{ secrets.NETANGELS_API_KEY }}
+          DEPLOY_TARGET: backend
+          INITIALIZE_ADMIN: ${{ inputs.initialize_admin }}
+          INITIAL_ADMIN_EMAIL: ${{ secrets.INITIAL_ADMIN_EMAIL }}
+          INITIAL_ADMIN_PASSWORD: ${{ secrets.INITIAL_ADMIN_PASSWORD }}
+      - name: Check and build site from live content
+        if: inputs.target != 'backend'
+        run: |
+          pnpm install --frozen-lockfile
+          node backend/scripts/netangels/read-content-version.mjs
+          pnpm check
+        env:
+          PUBLIC_DATA_SOURCE: api
+          PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_URL }}
+      - name: Deploy site
+        if: inputs.target != 'backend'
+        run: node backend/scripts/netangels/deploy.mjs
+        env:
+          NETANGELS_SSH_PRIVATE_KEY: ${{ secrets.NETANGELS_SSH_PRIVATE_KEY }}
+          NETANGELS_SSH_KNOWN_HOSTS: ${{ secrets.NETANGELS_SSH_KNOWN_HOSTS }}
+          NETANGELS_API_KEY: ${{ secrets.NETANGELS_API_KEY }}
+          DEPLOY_TARGET: site

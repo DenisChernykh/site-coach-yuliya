@@ -1,0 +1,277 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  engineType   = "client"
+  runtime      = "nodejs"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+  RETIRED
+}
+
+enum PasswordResetTokenSource {
+  SELF_SERVICE
+  ADMINISTRATOR
+}
+
+enum ApprovalRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OutboxMessageStatus {
+  PENDING
+  CLAIMED
+  PUBLISHED
+  BLOCKED
+}
+
+model User {
+  id                      String                  @id @default(uuid()) @db.Uuid
+  email                   String
+  normalizedEmail         String                  @unique @map("normalized_email")
+  status                  UserStatus              @default(ACTIVE)
+  accountRevision         Int                     @default(0) @map("account_revision")
+  sessionGeneration       BigInt                  @default(0) @map("session_generation")
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
+  emailVerifiedAt         DateTime?               @map("email_verified_at")
+  retiredAt               DateTime?               @map("retired_at")
+  credential              PasswordCredential?
+  roles                   UserRole[]
+  emailVerificationToken  EmailVerificationToken?
+  passwordResetToken      PasswordResetToken?
+  invitationToken         AccountInvitationToken?
+  createdApprovalRequests ApprovalRequest[]       @relation("ApprovalRequestCreator")
+  decidedApprovalRequests ApprovalRequest[]       @relation("ApprovalRequestDecider")
+
+  @@map("users")
+}
+
+model ApprovalRequest {
+  id              String                @id @default(uuid()) @db.Uuid
+  title           String                @db.VarChar(120)
+  description     String                @db.VarChar(2000)
+  status          ApprovalRequestStatus @default(PENDING)
+  createdByUserId String                @map("created_by_user_id") @db.Uuid
+  decidedByUserId String?               @map("decided_by_user_id") @db.Uuid
+  createdAt       DateTime              @default(now()) @map("created_at")
+  decidedAt       DateTime?             @map("decided_at")
+  createdBy       User                  @relation("ApprovalRequestCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  decidedBy       User?                 @relation("ApprovalRequestDecider", fields: [decidedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([createdByUserId])
+  @@map("approval_requests")
+}
+
+model PasswordCredential {
+  userId       String   @id @map("user_id") @db.Uuid
+  passwordHash String   @map("password_hash")
+  version      Int      @default(0)
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_credentials")
+}
+
+model EmailVerificationToken {
+  userId      String   @id @map("user_id") @db.Uuid
+  tokenDigest String   @unique @map("token_digest") @db.VarChar(43)
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  userId      String                   @id @map("user_id") @db.Uuid
+  tokenDigest String                   @unique @map("token_digest") @db.VarChar(43)
+  expiresAt   DateTime                 @map("expires_at")
+  createdAt   DateTime                 @map("created_at")
+  source      PasswordResetTokenSource @default(SELF_SERVICE)
+  user        User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
+
+model AccountInvitationToken {
+  userId      String   @id @map("user_id") @db.Uuid
+  tokenDigest String   @unique @map("token_digest") @db.VarChar(43)
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account_invitation_tokens")
+}
+
+model UserRole {
+  userId    String   @map("user_id") @db.Uuid
+  roleKey   String   @map("role_key")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleKey])
+  @@map("user_roles")
+}
+
+model AuthSecurityState {
+  id                        Int       @id
+  globalSessionEpoch        BigInt    @default(0) @map("global_session_epoch")
+  adminBootstrapCompletedAt DateTime? @map("admin_bootstrap_completed_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  @@map("auth_security_state")
+}
+
+model OutboxMessage {
+  id            String              @id @db.Uuid
+  destination   String              @db.VarChar(100)
+  type          String              @db.VarChar(120)
+  version       Int
+  partitionKey  String?             @map("partition_key") @db.VarChar(200)
+  correlationId String?             @map("correlation_id") @db.VarChar(200)
+  occurredAt    DateTime            @map("occurred_at")
+  payload       Json
+  payloadSizeBytes Int              @map("payload_size_bytes")
+  status        OutboxMessageStatus @default(PENDING)
+  attemptCount  Int                 @default(0) @map("attempt_count")
+  nextAttemptAt DateTime            @default(now()) @map("next_attempt_at")
+  claimToken    String?             @map("claim_token") @db.Uuid
+  claimedBy     String?             @map("claimed_by") @db.VarChar(160)
+  claimedUntil  DateTime?           @map("claimed_until")
+  publishedAt   DateTime?           @map("published_at")
+  blockedAt     DateTime?           @map("blocked_at")
+  lastErrorCode String?             @map("last_error_code") @db.VarChar(100)
+  redrivePublished Boolean          @default(false) @map("redrive_published")
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+
+  @@index([destination, status, nextAttemptAt, claimedUntil])
+  @@index([status, publishedAt])
+  @@map("outbox_messages")
+}
+
+enum ConsultationStatus {
+  NEW
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+enum TelegramDeliveryStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
+}
+
+model SiteContent {
+  id        String   @id
+  settings  Json
+  contacts  Json
+  home      Json
+  faq       Json
+  socials   Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_content")
+}
+
+model Article {
+  id        String   @id @default(uuid()) @db.Uuid
+  slug      String   @unique @db.VarChar(100)
+  topic     String   @db.VarChar(100)
+  content   Json
+  published Boolean  @default(false)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([published, topic, sortOrder])
+  @@map("articles")
+}
+
+model Program {
+  id        String   @id @db.VarChar(100)
+  content   Json
+  published Boolean  @default(false)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([published, sortOrder])
+  @@map("programs")
+}
+
+model Consultation {
+  id            String             @id @default(uuid()) @db.Uuid
+  name          String             @db.VarChar(80)
+  contact       String             @db.VarChar(120)
+  message       String             @db.VarChar(2000)
+  serviceId     String?            @map("service_id") @db.VarChar(100)
+  serviceTitle  String?            @map("service_title") @db.VarChar(300)
+  consentAt     DateTime           @default(now()) @map("consent_at")
+  consentVersion String            @map("consent_version") @db.VarChar(100)
+  status        ConsultationStatus @default(NEW)
+  adminNote     String             @default("") @map("admin_note") @db.VarChar(4000)
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  delivery      TelegramDelivery?
+
+  @@index([status, createdAt])
+  @@map("consultations")
+}
+
+model TelegramDelivery {
+  consultationId String                 @id @map("consultation_id") @db.Uuid
+  consultation   Consultation           @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  status         TelegramDeliveryStatus @default(PENDING)
+  attempts       Int                    @default(0)
+  nextAttemptAt  DateTime               @default(now()) @map("next_attempt_at")
+  claimToken     String?                @map("claim_token") @db.Uuid
+  claimedUntil   DateTime?              @map("claimed_until")
+  sentAt         DateTime?              @map("sent_at")
+  messageId      String?                @map("message_id")
+  lastErrorCode  String?                @map("last_error_code") @db.VarChar(100)
+  updatedAt      DateTime               @updatedAt @map("updated_at")
+
+  @@index([status, nextAttemptAt, claimedUntil])
+  @@map("telegram_deliveries")
+}
+
+enum SitePublicationStatus {
+  IDLE
+  PENDING
+  DISPATCHING
+  BUILDING
+  FAILED
+}
+
+model SitePublication {
+  id                String                @id
+  requestedRevision Int                   @default(0) @map("requested_revision")
+  deployedRevision  Int                   @default(0) @map("deployed_revision")
+  activeRevision    Int?                  @map("active_revision")
+  status            SitePublicationStatus @default(IDLE)
+  requestedAt       DateTime?             @map("requested_at")
+  dispatchedAt      DateTime?             @map("dispatched_at")
+  attempts          Int                   @default(0)
+  nextAttemptAt     DateTime              @default(now()) @map("next_attempt_at")
+  claimToken        String?               @map("claim_token") @db.Uuid
+  claimedUntil      DateTime?             @map("claimed_until")
+  workflowRunId     String?               @map("workflow_run_id") @db.VarChar(30)
+  lastErrorCode     String?               @map("last_error_code") @db.VarChar(100)
+  updatedAt         DateTime              @updatedAt @map("updated_at")
+
+  @@map("site_publications")
+}

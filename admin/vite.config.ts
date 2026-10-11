@@ -1,0 +1,67 @@
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import { fileURLToPath, URL } from 'node:url'
+import { loadEnv } from 'vite'
+import { defineConfig } from 'vitest/config'
+
+/** Проверяет server-only origin локального backend для Vite proxy. */
+export function parseDevApiProxyTarget(value: string | undefined): string {
+  const candidate = value ?? 'http://localhost:3000'
+  let url: URL
+
+  try {
+    url = new URL(candidate)
+  } catch {
+    throw new Error('DEV_API_PROXY_TARGET must be an absolute HTTP(S) origin')
+  }
+
+  if (
+    !['http:', 'https:'].includes(url.protocol) ||
+    url.username !== '' ||
+    url.password !== '' ||
+    url.pathname !== '/' ||
+    url.search !== '' ||
+    url.hash !== ''
+  ) {
+    throw new Error('DEV_API_PROXY_TARGET must be an absolute HTTP(S) origin')
+  }
+
+  return url.origin
+}
+
+export default defineConfig(({ command, mode }) => {
+  const server =
+    command === 'serve'
+      ? (() => {
+          const env = loadEnv(mode, process.cwd(), '')
+          const target = parseDevApiProxyTarget(env.DEV_API_PROXY_TARGET)
+
+          return {
+            port: 5173,
+            strictPort: true,
+            proxy: {
+              '^/v1(?:/|$)': { target, changeOrigin: true },
+              '^/health(?:/|$)': { target, changeOrigin: true },
+            },
+          }
+        })()
+      : undefined
+
+  return {
+    base: '/admin/',
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    server,
+    test: {
+      clearMocks: true,
+      exclude: ['**/node_modules/**', '**/dist/**', '**/reference/**'],
+      css: true,
+      environment: 'jsdom',
+      setupFiles: ['./src/shared/lib/testing/setup-tests.ts'],
+    },
+  }
+})

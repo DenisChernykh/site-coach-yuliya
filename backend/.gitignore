@@ -1,0 +1,14 @@
+node_modules/
+.worktrees/
+dist/
+src/generated/prisma/
+coverage/
+test/fixtures/openapi-client/.generated/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.admin-credentials.json
+release.json
+admin-ui/

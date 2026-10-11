@@ -1,0 +1,61 @@
+services:
+  postgres:
+    ports: !reset []
+
+  redis-auth:
+    command:
+      - redis-server
+      - --appendonly
+      - 'yes'
+      - --appendfsync
+      - always
+      - --maxmemory-policy
+      - noeviction
+      - --requirepass
+      - ${REDIS_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports: !reset []
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli ping | grep PONG
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  migrator:
+    image: ${IMAGE}
+    build: !reset null
+    command:
+      - node
+      - node_modules/prisma/build/index.js
+      - migrate
+      - deploy
+      - --config
+      - prisma.config.ts
+    env_file:
+      - ${SMOKE_ENV_FILE}
+    environment: !reset {}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: 'no'
+
+  api:
+    image: ${IMAGE}
+    build: !reset null
+    develop: !reset null
+    env_file:
+      - ${SMOKE_ENV_FILE}
+    environment: !reset {}
+    profiles: !reset []
+    ports: !override
+      - '127.0.0.1::3000'
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      redis-auth:
+        condition: service_healthy
+    restart: 'no'

@@ -1,5 +1,6 @@
 ---
 import type { ArticleDto } from '@/entities/article';
+import { MarkdownArticleBody, markdownHeadings } from '@/entities/article';
 import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
@@ -7,6 +8,13 @@ interface Props {
   article: ArticleDto;
 }
 const { article } = Astro.props;
+const toc =
+  article.bodyMarkdown !== undefined
+    ? markdownHeadings(article.bodyMarkdown).map(({ id, title }) => ({
+        id,
+        summary: title,
+      }))
+    : article.sections;
 ---
 
 <article>
@@ -40,7 +48,7 @@ const { article } = Astro.props;
         <p class="eyebrow">В этой статье</p>
         <ol>
           {
-            article.sections.map((section, index) => (
+            toc.map((section, index) => (
               <li>
                 <a href={`#${section.id}`}>
                   {String(index + 1).padStart(2, '0')}
@@ -59,34 +67,52 @@ const { article } = Astro.props;
       >
     </aside>
     <div class="article-body">
-      <p>{article.intro}</p>
-      <section class="article-story">
-        <h2>{article.storyTitle}</h2>{
-          article.story.map((paragraph) => <p>{paragraph}</p>)
-        }
-      </section>
-      <blockquote>
-        <p>{article.quote}</p><footer>{article.quoteNote}</footer>
-      </blockquote>
       {
-        article.sections.map((section, index) => (
-          <section id={section.id} class="article-chapter">
-            <h2>
-              {String(index + 1).padStart(2, '0')} / {section.title}
-            </h2>
-            {section.paragraphs.map((paragraph) => (
-              <p>{paragraph}</p>
+        article.bodyMarkdown !== undefined ? (
+          <MarkdownArticleBody markdown={article.bodyMarkdown} />
+        ) : (
+          <>
+            <p>{article.intro}</p>
+            <section class="article-story">
+              <h2>{article.storyTitle}</h2>
+              {article.story.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </section>
+            <blockquote>
+              <>
+                <p>{article.quote}</p>
+                <footer>{article.quoteNote}</footer>
+              </>
+            </blockquote>
+            {article.sections.map((section, index) => (
+              <section id={section.id} class="article-chapter">
+                <h2>
+                  {String(index + 1).padStart(2, '0')} / {section.title}
+                </h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </section>
             ))}
-          </section>
-        ))
+          </>
+        )
       }
-      <section class="article-practice">
-        <p class="eyebrow">Попробуй сегодня</p><h2>
-          {article.practiceTitle}
-        </h2><ul>
-          {article.practiceQuestions.map((question) => <li>— {question}</li>)}
-        </ul>
-      </section>
+      {
+        (article.practiceTitle || article.practiceQuestions.length > 0) && (
+          <section class="article-practice">
+            <>
+              <p class="eyebrow">Попробуй сегодня</p>
+              <h2>{article.practiceTitle}</h2>
+              <ul>
+                {article.practiceQuestions.map((question) => (
+                  <li>— {question}</li>
+                ))}
+              </ul>
+            </>
+          </section>
+        )
+      }
       <section class="article-cta">
         <h2>{article.ctaTitle}</h2><p>{article.ctaDescription}</p><a
           href={routes.contact}
@@ -96,14 +122,51 @@ const { article } = Astro.props;
             aria-hidden="true"
           /></a
         >
-        <p class="fine-print">
-          Макет статьи: редакционная адаптация материала из задания на «ты».
-        </p>
       </section>
     </div>
   </div>
 </article>
 <style>
+  .article-body :global(.markdown-article-body) {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-wrap: anywhere;
+  }
+  .article-body :global(.markdown-article-body h2) {
+    font-size: 34px;
+    margin: 12px 0 0;
+  }
+  .article-body :global(.markdown-article-body h3) {
+    font-size: 27px;
+    margin-top: 8px;
+  }
+  .article-body :global(.markdown-article-body ul),
+  .article-body :global(.markdown-article-body ol) {
+    padding-left: 28px;
+    margin: 0;
+  }
+  .article-body :global(.markdown-article-body ul) {
+    list-style: disc;
+  }
+  .article-body :global(.markdown-article-body ol) {
+    list-style: decimal;
+  }
+  .article-body :global(.markdown-article-body a) {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .article-body :global(.markdown-article-body blockquote) {
+    border-left: 3px solid var(--primary);
+    padding-left: 24px;
+    margin: 0;
+    color: var(--muted-foreground);
+  }
+  .article-body :global(.markdown-article-body pre) {
+    overflow: auto;
+    padding: 16px;
+    background: var(--muted);
+  }
   .article-header {
     padding-block: 48px 40px;
     display: flex;

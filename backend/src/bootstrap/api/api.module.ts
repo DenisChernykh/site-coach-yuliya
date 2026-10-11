@@ -1,0 +1,48 @@
+import { Module, type DynamicModule } from '@nestjs/common'
+
+import { RuntimeConfigModule } from '@/platform/config/runtime-config.module'
+import type { ApplicationRuntimeConfig } from '@/platform/config/runtime-config.types'
+import { DatabaseModule } from '@/platform/database/database.module'
+import { HealthModule } from '@/platform/http/health/health.module'
+import { LifecycleModule } from '@/platform/lifecycle/lifecycle.module'
+import { IdentityAccessModule } from '@/modules/identity-access/composition/identity-access.module'
+import { CoachSiteModule } from '@/modules/coach-site/composition/coach-site.module'
+import { buildCoachSiteConfig } from '@/platform/config/coach-site.config'
+import { RedisModule } from '@/platform/redis/redis.module'
+import { LoggingModule } from '@/platform/logging/logging.module'
+import { HttpErrorsModule } from '@/platform/http/errors/http-errors.module'
+
+import { API_HTTP_PROBLEM_CONTRIBUTIONS } from './api-http-problems'
+import { API_ROLE_DEFINITIONS } from './api-auth.roles'
+
+/**
+ * Определяет composition root API process без прямых driver imports.
+ */
+@Module({})
+export class ApiModule {
+  /**
+   * Composes the API graph around one already validated runtime config.
+   *
+   * @param config - Immutable API process configuration.
+   * @returns Dynamic API root with global typed config registration.
+   */
+  public static forRoot(config: ApplicationRuntimeConfig): DynamicModule {
+    return {
+      module: ApiModule,
+      imports: [
+        RuntimeConfigModule.forRoot(config),
+        LoggingModule.forRoot(),
+        DatabaseModule,
+        RedisModule,
+        LifecycleModule,
+        HealthModule,
+        HttpErrorsModule.forRoot(API_HTTP_PROBLEM_CONTRIBUTIONS),
+        IdentityAccessModule.forRoot({
+          roleDefinitions: API_ROLE_DEFINITIONS,
+        }),
+        CoachSiteModule.forRoot(config.coachSite ?? buildCoachSiteConfig({})),
+      ],
+      providers: [],
+    }
+  }
+}

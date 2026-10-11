@@ -1,0 +1,1163 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "contact": {},
+    "description": "Заявки, уведомления Telegram, статьи, программы и контактные данные.",
+    "title": "Юлия Валишина — API сайта и админки",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/site": {
+      "get": {
+        "operationId": "getSiteSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteSettingsDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Настройки сайта",
+        "tags": [
+          "site"
+        ]
+      }
+    },
+    "/v1/contacts": {
+      "get": {
+        "operationId": "getContacts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDetailsDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Контактные данные",
+        "tags": [
+          "contacts"
+        ]
+      }
+    },
+    "/v1/home": {
+      "get": {
+        "operationId": "getHomePage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomePageDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Контент главной",
+        "tags": [
+          "home"
+        ]
+      }
+    },
+    "/v1/services": {
+      "get": {
+        "operationId": "getServices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Опубликованные программы",
+        "tags": [
+          "services"
+        ]
+      }
+    },
+    "/v1/articles": {
+      "get": {
+        "operationId": "getArticles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "topic",
+            "required": false,
+            "schema": {
+              "enum": [
+                "finding-work",
+                "showing-up"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ArticleDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Опубликованные статьи",
+        "tags": [
+          "articles"
+        ]
+      }
+    },
+    "/v1/articles/{slug}": {
+      "get": {
+        "operationId": "getArticle",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleDto"
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "NOT_FOUND": {
+                    "summary": "Resource not found",
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "detail": "The requested resource does not exist.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 404,
+                      "title": "Resource not found",
+                      "type": "https://nest-js-starter.invalid/problems/not-found"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Resource not found"
+          }
+        },
+        "security": [],
+        "summary": "Опубликованная статья",
+        "tags": [
+          "articles"
+        ]
+      }
+    },
+    "/v1/faq": {
+      "get": {
+        "operationId": "getFaq",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FaqItemDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Частые вопросы",
+        "tags": [
+          "faq"
+        ]
+      }
+    },
+    "/v1/social-links": {
+      "get": {
+        "operationId": "getSocialLinks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SocialLinkDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Социальные сети",
+        "tags": [
+          "social-links"
+        ]
+      }
+    },
+    "/v1/consultations": {
+      "post": {
+        "operationId": "createConsultation",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultationResultDto"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_PROGRAM": {
+                    "summary": "Invalid program",
+                    "value": {
+                      "code": "INVALID_PROGRAM",
+                      "detail": "The selected program is not available.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 400,
+                      "title": "Invalid program",
+                      "type": "https://nest-js-starter.invalid/problems/invalid-program"
+                    }
+                  },
+                  "MALFORMED_REQUEST": {
+                    "summary": "Malformed request",
+                    "value": {
+                      "code": "MALFORMED_REQUEST",
+                      "detail": "The request could not be parsed.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 400,
+                      "title": "Malformed request",
+                      "type": "https://nest-js-starter.invalid/problems/malformed-request"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Malformed request; Invalid program"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "Validation failed",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "detail": "One or more request fields are invalid.",
+                      "errors": [
+                        {
+                          "code": "invalid_email",
+                          "detail": "The field must be a valid email address.",
+                          "pointer": "/email"
+                        }
+                      ],
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 422,
+                      "title": "Validation failed",
+                      "type": "https://nest-js-starter.invalid/problems/validation-failed"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemResponseDto"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "RATE_LIMIT_EXCEEDED": {
+                    "summary": "Rate limit exceeded",
+                    "value": {
+                      "code": "RATE_LIMIT_EXCEEDED",
+                      "detail": "Too many requests were submitted in the allowed interval.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 429,
+                      "title": "Rate limit exceeded",
+                      "type": "https://nest-js-starter.invalid/problems/rate-limit-exceeded"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Rate limit exceeded"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "DEPENDENCY_UNAVAILABLE": {
+                    "summary": "Dependency unavailable",
+                    "value": {
+                      "code": "DEPENDENCY_UNAVAILABLE",
+                      "detail": "A required service is temporarily unavailable.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 503,
+                      "title": "Dependency unavailable",
+                      "type": "https://nest-js-starter.invalid/problems/dependency-unavailable"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Dependency unavailable"
+          }
+        },
+        "security": [],
+        "summary": "Сохранить заявку на знакомство",
+        "tags": [
+          "consultations"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SiteSettingsDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "navigation": {
+            "items": {
+              "$ref": "#/components/schemas/NavigationItemDto"
+            },
+            "type": "array"
+          },
+          "profession": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "profession",
+          "description",
+          "navigation"
+        ],
+        "type": "object"
+      },
+      "NavigationItemDto": {
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "href"
+        ],
+        "type": "object"
+      },
+      "ContactDetailsDto": {
+        "properties": {
+          "address": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "maxLength": 254,
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "maxLength": 80,
+            "nullable": true,
+            "type": "string"
+          },
+          "telegramUrl": {
+            "maxLength": 500,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "phone",
+          "telegramUrl",
+          "address"
+        ],
+        "type": "object"
+      },
+      "HomePageDto": {
+        "properties": {
+          "about": {
+            "$ref": "#/components/schemas/AboutDto"
+          },
+          "approach": {
+            "$ref": "#/components/schemas/ApproachDto"
+          },
+          "artPractice": {
+            "$ref": "#/components/schemas/ArtPracticeDto"
+          },
+          "caseStudies": {
+            "items": {
+              "$ref": "#/components/schemas/CaseStudyDto"
+            },
+            "type": "array"
+          },
+          "concerns": {
+            "items": {
+              "$ref": "#/components/schemas/ConcernDto"
+            },
+            "type": "array"
+          },
+          "hero": {
+            "$ref": "#/components/schemas/HeroDto"
+          },
+          "process": {
+            "items": {
+              "$ref": "#/components/schemas/StepDto"
+            },
+            "type": "array"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ProductDto"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "hero",
+          "concerns",
+          "about",
+          "approach",
+          "process",
+          "caseStudies",
+          "artPractice",
+          "products"
+        ],
+        "type": "object"
+      },
+      "AboutDto": {
+        "properties": {
+          "eyebrow": {
+            "type": "string"
+          },
+          "paragraphs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eyebrow",
+          "title",
+          "paragraphs"
+        ],
+        "type": "object"
+      },
+      "ApproachDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/StepDto"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eyebrow",
+          "title",
+          "description",
+          "quote",
+          "steps"
+        ],
+        "type": "object"
+      },
+      "StepDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ],
+        "type": "object"
+      },
+      "ArtPracticeDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "details": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eyebrow",
+          "title",
+          "description",
+          "details"
+        ],
+        "type": "object"
+      },
+      "CaseStudyDto": {
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "exploration": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "request": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "request",
+          "exploration",
+          "result",
+          "details"
+        ],
+        "type": "object"
+      },
+      "ConcernDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description"
+        ],
+        "type": "object"
+      },
+      "HeroDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "headingLines": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "meetingNote": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eyebrow",
+          "headingLines",
+          "description",
+          "meetingNote"
+        ],
+        "type": "object"
+      },
+      "ProductDto": {
+        "properties": {
+          "actionLabel": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "eyebrow",
+          "title",
+          "description",
+          "actionLabel"
+        ],
+        "type": "object"
+      },
+      "ServiceDto": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "eyebrow": {
+            "type": "string"
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "price": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "priceNote": {
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 300,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "eyebrow",
+          "title",
+          "description",
+          "price",
+          "priceNote",
+          "features",
+          "featured"
+        ],
+        "type": "object"
+      },
+      "ArticleDto": {
+        "properties": {
+          "bodyMarkdown": {
+            "maxLength": 50000,
+            "type": "string"
+          },
+          "coverAlt": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "ctaDescription": {
+            "type": "string"
+          },
+          "ctaTitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "string"
+          },
+          "listingDescription": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "practiceQuestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "practiceTitle": {
+            "type": "string"
+          },
+          "previewDescription": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "previewTitle": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          },
+          "quoteNote": {
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/ArticleSectionDto"
+            },
+            "type": "array"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "story": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "storyTitle": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "enum": [
+              "finding-work",
+              "showing-up"
+            ],
+            "type": "string"
+          },
+          "topicLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "topic",
+          "topicLabel",
+          "title",
+          "description",
+          "coverImage",
+          "coverAlt",
+          "intro",
+          "storyTitle",
+          "story",
+          "quote",
+          "quoteNote",
+          "sections",
+          "practiceTitle",
+          "practiceQuestions",
+          "ctaTitle",
+          "ctaDescription"
+        ],
+        "type": "object"
+      },
+      "ArticleSectionDto": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "paragraphs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "paragraphs"
+        ],
+        "type": "object"
+      },
+      "ProblemResponseDto": {
+        "properties": {
+          "code": {
+            "enum": [
+              "AUTHENTICATION_REQUIRED",
+              "AUTHORIZATION_DENIED",
+              "AUTH_ACCOUNT_ETAG_MALFORMED",
+              "AUTH_ACCOUNT_PRECONDITION_FAILED",
+              "AUTH_ACCOUNT_PRECONDITION_REQUIRED",
+              "AUTH_TOKEN_INVALID_OR_EXPIRED",
+              "CONFLICT",
+              "DEPENDENCY_UNAVAILABLE",
+              "EMAIL_VERIFICATION_REQUIRED",
+              "INTERNAL_ERROR",
+              "INVALID_PROGRAM",
+              "MALFORMED_REQUEST",
+              "NOT_FOUND",
+              "PAYLOAD_TOO_LARGE",
+              "RATE_LIMIT_EXCEEDED",
+              "UNSUPPORTED_MEDIA_TYPE",
+              "VALIDATION_FAILED"
+            ],
+            "example": "AUTHENTICATION_REQUIRED",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "type": "string"
+          },
+          "detail": {
+            "example": "Valid authentication is required for this request.",
+            "type": "string"
+          },
+          "instance": {
+            "example": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+            "format": "uri-reference",
+            "type": "string"
+          },
+          "requestId": {
+            "example": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+            "type": "string"
+          },
+          "status": {
+            "example": 401,
+            "maximum": 599,
+            "minimum": 400,
+            "type": "number"
+          },
+          "title": {
+            "example": "Authentication required",
+            "type": "string"
+          },
+          "type": {
+            "example": "https://nest-js-starter.invalid/problems/authentication-required",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "instance",
+          "code",
+          "requestId"
+        ],
+        "type": "object"
+      },
+      "FaqItemDto": {
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "question",
+          "answer"
+        ],
+        "type": "object"
+      },
+      "SocialLinkDto": {
+        "properties": {
+          "id": {
+            "enum": [
+              "telegram",
+              "vk",
+              "rutube",
+              "ok"
+            ],
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "format": "uri",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "url"
+        ],
+        "type": "object"
+      },
+      "ConsultationRequestDto": {
+        "properties": {
+          "consent": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "contact": {
+            "maxLength": 120,
+            "minLength": 5,
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 2,
+            "type": "string"
+          },
+          "serviceId": {
+            "maxLength": 100,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "contact",
+          "consent"
+        ],
+        "type": "object"
+      },
+      "ConsultationResultDto": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "preview",
+              "accepted"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ],
+        "type": "object"
+      },
+      "ValidationProblemResponseDto": {
+        "properties": {
+          "code": {
+            "enum": [
+              "AUTHENTICATION_REQUIRED",
+              "AUTHORIZATION_DENIED",
+              "AUTH_ACCOUNT_ETAG_MALFORMED",
+              "AUTH_ACCOUNT_PRECONDITION_FAILED",
+              "AUTH_ACCOUNT_PRECONDITION_REQUIRED",
+              "AUTH_TOKEN_INVALID_OR_EXPIRED",
+              "CONFLICT",
+              "DEPENDENCY_UNAVAILABLE",
+              "EMAIL_VERIFICATION_REQUIRED",
+              "INTERNAL_ERROR",
+              "INVALID_PROGRAM",
+              "MALFORMED_REQUEST",
+              "NOT_FOUND",
+              "PAYLOAD_TOO_LARGE",
+              "RATE_LIMIT_EXCEEDED",
+              "UNSUPPORTED_MEDIA_TYPE",
+              "VALIDATION_FAILED"
+            ],
+            "example": "AUTHENTICATION_REQUIRED",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "type": "string"
+          },
+          "detail": {
+            "example": "Valid authentication is required for this request.",
+            "type": "string"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/ProblemFieldErrorResponseDto"
+            },
+            "type": "array"
+          },
+          "instance": {
+            "example": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+            "format": "uri-reference",
+            "type": "string"
+          },
+          "requestId": {
+            "example": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+            "type": "string"
+          },
+          "status": {
+            "example": 401,
+            "maximum": 599,
+            "minimum": 400,
+            "type": "number"
+          },
+          "title": {
+            "example": "Authentication required",
+            "type": "string"
+          },
+          "type": {
+            "example": "https://nest-js-starter.invalid/problems/authentication-required",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "instance",
+          "code",
+          "requestId",
+          "errors"
+        ],
+        "type": "object"
+      },
+      "ProblemFieldErrorResponseDto": {
+        "properties": {
+          "code": {
+            "example": "invalid_email",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "type": "string"
+          },
+          "detail": {
+            "example": "The field must be a valid email address.",
+            "type": "string"
+          },
+          "pointer": {
+            "example": "/email",
+            "pattern": "^(?:|/(?:[^~/]|~0|~1)*)$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pointer",
+          "code",
+          "detail"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

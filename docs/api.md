@@ -147,6 +147,7 @@
 
 | Поле                 | Тип                 | Обязательно |
 | -------------------- | ------------------- | ----------- |
+| `bodyMarkdown`       | string              | нет         |
 | `coverAlt`           | string              | да          |
 | `coverImage`         | string              | да          |
 | `ctaDescription`     | string              | да          |

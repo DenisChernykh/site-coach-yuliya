@@ -11,6 +11,11 @@ export type ServiceDto = {
   eyebrow: string;
   featured: boolean;
   features: string[];
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @pattern ^[a-z0-9]+(?:-[a-z0-9]+)*$
+   */
   id: string;
   /** @minimum 0 */
   price: number;

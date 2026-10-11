@@ -12,12 +12,12 @@ export function ArticleCard({
 }) {
   const title =
     variant === 'preview'
-      ? (article.previewTitle ?? article.title)
+      ? article.previewTitle || article.title
       : article.title;
   const description =
     variant === 'preview'
-      ? (article.previewDescription ?? article.description)
-      : (article.listingDescription ?? article.description);
+      ? article.previewDescription || article.description
+      : article.listingDescription || article.description;
   return (
     <article className={`${styles.card} ${styles[variant]}`}>
       <div

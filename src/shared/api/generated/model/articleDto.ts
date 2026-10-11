@@ -9,6 +9,8 @@ import type { ArticleDtoTopic } from './articleDtoTopic.ts';
 import type { ArticleSectionDto } from './articleSectionDto.ts';
 
 export type ArticleDto = {
+  /** @maxLength 50000 */
+  bodyMarkdown?: string;
   coverAlt: string;
   coverImage: string;
   ctaDescription: string;
