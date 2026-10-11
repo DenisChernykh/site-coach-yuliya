@@ -523,6 +523,12 @@ export class SocialLinkDto {
 }
 
 export class ConsultationRequestDto {
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsString()
+  @Length(0, 2000)
+  @ApiPropertyOptional({ type: String, maxLength: 2000 })
+  public readonly website?: string
+
   @IsString()
   @Transform(({ value }: { value: unknown }) =>
     typeof value === 'string' ? value.trim() : value,

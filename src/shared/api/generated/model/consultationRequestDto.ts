@@ -22,4 +22,6 @@ export type ConsultationRequestDto = {
   name: string;
   /** @maxLength 100 */
   serviceId?: string;
+  /** @maxLength 2000 */
+  website?: string;
 };

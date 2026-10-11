@@ -7,6 +7,7 @@ export function createCorsOptions(
   const allowed = new Set(allowedOrigins)
   return {
     credentials: true,
+    exposedHeaders: ['Retry-After'],
     origin: (origin, callback) => {
       callback(null, origin === undefined || allowed.has(origin))
     },

@@ -20,6 +20,8 @@ export const createConsultationBodyNameMax = 80
 
 export const createConsultationBodyServiceIdMax = 100
 
+export const createConsultationBodyWebsiteMax = 2000
+
 export const CreateConsultationBody = zod.strictObject({
   consent: zod.literal(true),
   contact: zod
@@ -32,6 +34,7 @@ export const CreateConsultationBody = zod.strictObject({
     .min(createConsultationBodyNameMin)
     .max(createConsultationBodyNameMax),
   serviceId: zod.string().max(createConsultationBodyServiceIdMax).optional(),
+  website: zod.string().max(createConsultationBodyWebsiteMax).optional(),
 })
 
 export const CreateConsultation201Response = zod.strictObject({

@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ApiError, isMockMode } from '../src/shared/api/client/api-fetch';
+import {
+  ApiError,
+  createApiError,
+  isMockMode,
+} from '../src/shared/api/client/api-fetch';
 import { getSiteSettings } from '../src/shared/api/generated/site/site';
 import { getHomePage } from '../src/shared/api/generated/home/home';
 import {
@@ -83,6 +87,9 @@ test('consultation validates input and never claims delivery in mock mode', asyn
     { ...valid, contact: '123' },
     { ...valid, message: 'a'.repeat(2001) },
     { ...valid, serviceId: 42 },
+    { ...valid, website: null },
+    { ...valid, website: 42 },
+    { ...valid, website: 'x'.repeat(2001) },
   ]) {
     await assert.rejects(
       handleMockRequest('/v1/consultations', {
@@ -98,6 +105,30 @@ test('consultation validates input and never claims delivery in mock mode', asyn
   await assert.rejects(
     handleMockRequest('/v1/consultations', { method: 'POST', body: '{' }),
     ApiError,
+  );
+});
+
+test('rate-limit errors retain status and bounded retry metadata without exposing response text', () => {
+  const error = createApiError(
+    new Response('private backend detail', {
+      status: 429,
+      headers: { 'Retry-After': '42' },
+    }),
+  );
+  assert.equal(error.status, 429);
+  assert.equal(error.retryAfterSeconds, 42);
+  assert.doesNotMatch(error.message, /private/);
+  for (const header of ['', '-1', '0', 'Infinity', '9007199254740992']) {
+    assert.equal(
+      createApiError(
+        new Response(null, { status: 429, headers: { 'Retry-After': header } }),
+      ).retryAfterSeconds,
+      undefined,
+    );
+  }
+  assert.equal(
+    createApiError(new Response(null, { status: 500 })).retryAfterSeconds,
+    undefined,
   );
 });
 

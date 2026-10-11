@@ -47,12 +47,27 @@ describe('site HTTP input validation', () => {
     { ...valid, name: 'x' },
     { ...valid, message: 'x'.repeat(2001) },
     { ...valid, adminNote: 'Injected' },
+    { ...valid, website: null },
+    { ...valid, website: 42 },
+    { ...valid, website: 'x'.repeat(2001) },
   ])(
     'rejects invalid consultation fields without persisting them',
     async (input) => {
       expect(
         await validate(plainToInstance(ConsultationRequestDto, input), options),
       ).not.toHaveLength(0)
+    },
+  )
+
+  it.each(['', 'https://spam.example'])(
+    'accepts the trap field for server-side screening: %s',
+    async (website) => {
+      expect(
+        await validate(
+          plainToInstance(ConsultationRequestDto, { ...valid, website }),
+          options,
+        ),
+      ).toHaveLength(0)
     },
   )
 

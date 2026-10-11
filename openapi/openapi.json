@@ -1043,6 +1043,10 @@
           "serviceId": {
             "maxLength": 100,
             "type": "string"
+          },
+          "website": {
+            "maxLength": 2000,
+            "type": "string"
           }
         },
         "required": [

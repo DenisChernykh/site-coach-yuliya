@@ -8,6 +8,7 @@ import { createServer } from 'node:net'
 import { once } from 'node:events'
 import { setTimeout as delay } from 'node:timers/promises'
 import { Pool } from 'pg'
+import { createClient } from 'redis'
 import {
   buildPostgresCommandConfig,
   buildApiRuntimeConfig,
@@ -66,7 +67,9 @@ const env = {
   API_PORT: String(port),
   API_DOCS_MODE: 'public',
   PUBLIC_API_URL: origin,
-  CORS_ORIGINS: origin,
+  CORS_ORIGINS: process.env.BROWSER_SITE_ORIGIN
+    ? `${origin},${process.env.BROWSER_SITE_ORIGIN}`
+    : origin,
   TRUST_PROXY_CIDRS: '',
   DATABASE_URL: databaseUrl,
   REDIS_AUTH_URL: 'redis://127.0.0.1:6388',
@@ -232,6 +235,24 @@ try {
     },
     400,
   )
+  const trapped = await http(
+    '/v1/consultations',
+    'POST',
+    {
+      name: 'Бот',
+      contact: '@spam_example',
+      consent: true,
+      website: 'https://spam.example',
+      serviceId: 'unknown-program',
+    },
+    201,
+  )
+  assert.equal(trapped.body.status, 'accepted')
+  assert.equal(
+    (await pool.query('SELECT count(*)::int AS total FROM consultations'))
+      .rows[0].total,
+    0,
+  )
   const accepted = await http(
     '/v1/consultations',
     'POST',
@@ -277,13 +298,23 @@ try {
     ).body.total,
     1,
   )
-  for (let index = 0; index < 4; index += 1)
-    await http(
+  for (let index = 0; index < 4; index += 1) {
+    const attempt = await http(
       '/v1/consultations',
       'POST',
       { name: 'Тест', contact: '@test_example', consent: true },
-      index < 3 ? 201 : 429,
+      index < 2 ? 201 : 429,
     )
+    if (index >= 2) {
+      assert.equal(
+        attempt.response.headers.get('access-control-expose-headers'),
+        'Retry-After',
+      )
+      const retryAfter = Number(attempt.response.headers.get('retry-after'))
+      assert.ok(retryAfter >= 1 && retryAfter <= 600)
+      assert.equal(attempt.body.code, 'RATE_LIMIT_EXCEEDED')
+    }
+  }
   process.stdout.write(
     'PASS durable consultations, program snapshots, validation, filters, status and rate limit\n',
   )
@@ -297,7 +328,7 @@ try {
   provider = new PrismaClientProvider(config, context)
   await provider.connect(AbortSignal.timeout(5000))
   const transaction = new PrismaTransactionAdapter(provider, context, config)
-  const requests = new PrismaConsultationsAdapter(provider)
+  const requests = new PrismaConsultationsAdapter(provider, transaction)
   const claims = (
     await Promise.all([
       requests.claimDelivery(new Date()),
@@ -584,7 +615,103 @@ try {
   const count = await pool.query(
     'SELECT count(*)::int AS total FROM consultations',
   )
-  assert.equal(count.rows[0].total, 4)
+  assert.equal(count.rows[0].total, 2)
+  const repeated = {
+    name: 'Повтор',
+    contact: '@repeat_check',
+    consent: true,
+    message: 'Текст',
+  }
+  const otherRequests = new PrismaConsultationsAdapter(provider, transaction)
+  const repeatedRows = await Promise.all(
+    Array.from({ length: 4 }, (_, index) =>
+      (index % 2 === 0 ? requests : otherRequests).create(repeated, null),
+    ),
+  )
+  assert.equal(new Set(repeatedRows.map((row) => row.id)).size, 1)
+  assert.equal(
+    (
+      await pool.query(
+        'SELECT count(*)::int AS total FROM consultations WHERE contact = $1',
+        [repeated.contact],
+      )
+    ).rows[0].total,
+    1,
+  )
+  assert.equal(
+    (
+      await pool.query(
+        'SELECT count(*)::int AS total FROM telegram_deliveries WHERE consultation_id = $1',
+        [repeatedRows[0].id],
+      )
+    ).rows[0].total,
+    1,
+  )
+  assert.equal(
+    (
+      await requests.create(
+        {
+          ...repeated,
+          name: ' Повтор ',
+          contact: ' @repeat_check ',
+          message: ' Текст ',
+        },
+        null,
+      )
+    ).id,
+    repeatedRows[0].id,
+  )
+  assert.notEqual(
+    (await requests.create({ ...repeated, message: 'Другой запрос' }, null)).id,
+    repeatedRows[0].id,
+  )
+  assert.notEqual(
+    (
+      await requests.create(
+        { ...repeated, serviceId: initial.programs[0].id },
+        initial.programs[0].title,
+      )
+    ).id,
+    repeatedRows[0].id,
+  )
+  await pool.query(
+    "UPDATE consultations SET created_at = now() - interval '11 minutes' WHERE id = $1",
+    [repeatedRows[0].id],
+  )
+  assert.notEqual(
+    (await requests.create(repeated, null)).id,
+    repeatedRows[0].id,
+  )
+  const retried = { ...repeated, contact: '@rollback_check' }
+  await assert.rejects(
+    transaction.run(async () => {
+      await requests.create(retried, null)
+      throw new Error('Simulated persistence rollback')
+    }),
+    /Simulated persistence rollback/,
+  )
+  assert.equal(
+    (
+      await pool.query(
+        'SELECT count(*)::int AS total FROM consultations WHERE contact = $1',
+        [retried.contact],
+      )
+    ).rows[0].total,
+    0,
+  )
+  await requests.create(retried, null)
+  assert.equal(
+    (
+      await pool.query(
+        'SELECT count(*)::int AS total FROM consultations WHERE contact = $1',
+        [retried.contact],
+      )
+    ).rows[0].total,
+    1,
+  )
+  process.stdout.write(
+    'PASS honeypot, concurrent durable deduplication, expiry, distinct requests and rollback recovery\n',
+  )
   await http('/v1/auth/logout', 'POST', {}, 204, true)
   await http('/v1/admin/consultations', 'GET', undefined, 401, true)
   assert.ok(!logs.includes(credentials.password))
@@ -592,6 +719,17 @@ try {
     'PASS publication changes during build, successful acknowledgement and logout\n',
   )
   if (process.env.BROWSER_ACCEPTANCE_STATE) {
+    const redis = createClient({ url: env.REDIS_AUTH_URL })
+    await redis.connect()
+    try {
+      const keys = await redis.keys(
+        `${env.REDIS_KEY_PREFIX}:test:consultations:*`,
+      )
+      assert.equal(keys.length, 1)
+      await redis.pExpire(keys[0], 120_000)
+    } finally {
+      redis.destroy()
+    }
     await writeFile(
       process.env.BROWSER_ACCEPTANCE_STATE,
       JSON.stringify({ origin, credentials, pid: process.pid }),

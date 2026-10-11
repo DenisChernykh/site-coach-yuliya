@@ -133,6 +133,7 @@ describe('hardened HTTP bootstrap', () => {
       .set('Origin', 'https://allowed.example')
       .expect('access-control-allow-origin', 'https://allowed.example')
       .expect('access-control-allow-credentials', 'true')
+      .expect('access-control-expose-headers', 'Retry-After')
     const blocked = await request(server)
       .get('/health/live')
       .set('Origin', 'https://blocked.example')

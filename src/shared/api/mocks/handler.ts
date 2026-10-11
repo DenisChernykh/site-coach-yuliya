@@ -72,6 +72,8 @@ export async function handleMockRequest<T>(
       input.contact.trim().length < 5 ||
       input.contact.length > 120 ||
       input.consent !== true ||
+      (input.website !== undefined &&
+        (typeof input.website !== 'string' || input.website.length > 2000)) ||
       (input.message !== undefined &&
         (typeof input.message !== 'string' || input.message.length > 2000)) ||
       (input.serviceId !== undefined &&

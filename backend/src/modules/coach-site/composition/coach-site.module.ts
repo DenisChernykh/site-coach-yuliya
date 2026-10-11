@@ -113,11 +113,12 @@ export class CoachSiteModule {
         },
         {
           provide: PrismaConsultationsAdapter,
-          inject: [PrismaClientProvider],
+          inject: [PrismaClientProvider, TRANSACTION_PORT],
           useFactory: (
             database: PrismaClientProvider,
+            transaction: TransactionPort,
           ): PrismaConsultationsAdapter =>
-            new PrismaConsultationsAdapter(database),
+            new PrismaConsultationsAdapter(database, transaction),
         },
         {
           provide: RedisConsultationLimiter,

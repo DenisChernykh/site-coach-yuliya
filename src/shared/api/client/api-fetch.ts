@@ -3,6 +3,7 @@ export class ApiError extends Error {
     public readonly code: string,
     message: string,
     public readonly status: number,
+    public readonly retryAfterSeconds?: number,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -13,6 +14,22 @@ export type ErrorType<T> = ApiError & { payload?: T };
 export type BodyType<T> = T;
 
 export const isMockMode = import.meta.env?.PUBLIC_DATA_SOURCE !== 'api';
+
+export function createApiError(response: Response): ApiError {
+  const retryAfter = response.headers.get('Retry-After');
+  const seconds =
+    retryAfter !== null && /^\d+$/.test(retryAfter)
+      ? Number(retryAfter)
+      : undefined;
+  return new ApiError(
+    'REQUEST_FAILED',
+    'Не удалось выполнить запрос. Попробуй ещё раз.',
+    response.status,
+    seconds !== undefined && Number.isSafeInteger(seconds) && seconds > 0
+      ? seconds
+      : undefined,
+  );
+}
 
 export async function apiFetch<T>(
   path: string,
@@ -36,11 +53,7 @@ export async function apiFetch<T>(
   headers.set('Accept', 'application/json');
   const response = await fetch(baseUrl + path, { ...options, headers });
   if (!response.ok) {
-    throw new ApiError(
-      'REQUEST_FAILED',
-      'Не удалось выполнить запрос. Попробуй ещё раз.',
-      response.status,
-    );
+    throw createApiError(response);
   }
   if (!response.headers.get('content-type')?.includes('application/json')) {
     throw new ApiError(

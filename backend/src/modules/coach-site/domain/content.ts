@@ -131,6 +131,7 @@ export interface SocialLinkDto {
 }
 
 export interface ConsultationRequestDto {
+  readonly website?: string
   readonly name: string
   readonly contact: string
   readonly message?: string

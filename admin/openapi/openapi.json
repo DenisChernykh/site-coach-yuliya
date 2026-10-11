@@ -650,6 +650,10 @@
           "serviceId": {
             "maxLength": 100,
             "type": "string"
+          },
+          "website": {
+            "maxLength": 2000,
+            "type": "string"
           }
         },
         "required": [
@@ -997,9 +1001,9 @@
           }
         },
         "required": [
-          "content",
           "published",
           "sortOrder",
+          "content",
           "id",
           "updatedAt"
         ],
@@ -1027,9 +1031,9 @@
           }
         },
         "required": [
-          "content",
           "published",
           "sortOrder",
+          "content",
           "id",
           "updatedAt"
         ],

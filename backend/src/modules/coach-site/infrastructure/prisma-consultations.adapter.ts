@@ -1,9 +1,11 @@
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
+import { Prisma } from '@/generated/prisma/client'
 import type {
   Consultation as ConsultationRow,
   TelegramDelivery as DeliveryRow,
 } from '@/generated/prisma/client'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
+import type { TransactionPort } from '@/shared/application/transaction.port'
 import type { ConsultationRequestDto } from '../domain/content'
 import type {
   ClaimedDelivery,
@@ -41,27 +43,49 @@ function mapConsultation(
 }
 
 export class PrismaConsultationsAdapter implements ConsultationsPort {
-  public constructor(private readonly database: PrismaClientProvider) {}
+  public constructor(
+    private readonly database: PrismaClientProvider,
+    private readonly transaction: TransactionPort,
+  ) {}
 
   public async create(
     input: ConsultationRequestDto,
     serviceTitle: string | null,
   ): Promise<Consultation> {
-    return mapConsultation(
-      await this.database.withClient((client) =>
-        client.consultation.create({
+    const fields = {
+      name: input.name.trim(),
+      contact: input.contact.trim(),
+      message: input.message?.trim() ?? '',
+      serviceId: input.serviceId?.trim() ?? null,
+    }
+    const digest = createHash('sha256')
+      .update(JSON.stringify(['coach-consultation', fields]))
+      .digest()
+    const lockId = digest.readBigInt64BE()
+    return this.transaction.run(() =>
+      this.database.withClient(async (client) => {
+        await client.$executeRaw(
+          Prisma.sql`SELECT pg_advisory_xact_lock(${lockId}::bigint)`,
+        )
+        const existing = await client.consultation.findFirst({
+          where: {
+            ...fields,
+            createdAt: { gte: new Date(Date.now() - 600_000) },
+          },
+          include: { delivery: true },
+        })
+        if (existing !== null) return mapConsultation(existing)
+        const created = await client.consultation.create({
           data: {
-            name: input.name,
-            contact: input.contact,
-            message: input.message ?? '',
-            serviceId: input.serviceId ?? null,
+            ...fields,
             serviceTitle,
             consentVersion: '2026-10-11',
             delivery: { create: {} },
           },
           include: { delivery: true },
-        }),
-      ),
+        })
+        return mapConsultation(created)
+      }),
     )
   }
 

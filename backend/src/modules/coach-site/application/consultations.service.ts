@@ -22,6 +22,12 @@ export class ConsultationsService {
     ip: string,
   ): Promise<ConsultationResultDto> {
     await this.limiter.consume(ip)
+    const result: ConsultationResultDto = {
+      status: 'accepted',
+      message: 'Заявка сохранена. Юля свяжется с тобой по указанному контакту.',
+    }
+    if (input.website !== undefined && input.website.trim() !== '')
+      return result
     let title: string | null = null
     if (input.serviceId !== undefined) {
       const program = await this.content.findPublishedProgram(input.serviceId)
@@ -29,10 +35,7 @@ export class ConsultationsService {
       title = program.title
     }
     await this.requests.create(input, title)
-    return {
-      status: 'accepted',
-      message: 'Заявка сохранена. Юля свяжется с тобой по указанному контакту.',
-    }
+    return result
   }
 }
 

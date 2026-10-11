@@ -214,6 +214,7 @@
 | `message`   | string  | нет         |
 | `name`      | string  | да          |
 | `serviceId` | string  | нет         |
+| `website`   | string  | нет         |
 
 ### ConsultationResultDto
 

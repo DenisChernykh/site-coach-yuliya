@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type SubmitEvent } from 'react';
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react';
 import type { ServiceDto } from '@/entities/service';
-import { useCreateConsultation } from '@/shared/api';
+import { ApiError, useCreateConsultation } from '@/shared/api';
 import { routes } from '@/shared/routes';
 import {
   Button,
@@ -49,6 +49,7 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
     const name = String(values.get('name') ?? '').trim();
     const contact = String(values.get('contact') ?? '').trim();
     const message = String(values.get('message') ?? '').trim();
+    const website = String(values.get('website') ?? '');
     const nextErrors: Errors = {};
     if (name.length < 2)
       nextErrors.name = 'Напиши своё имя — хотя бы два символа.';
@@ -63,7 +64,7 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
       return;
     }
     mutation.mutate({
-      data: { name, contact, message, consent: true, serviceId },
+      data: { name, contact, message, website, consent: true, serviceId },
     });
   }
 
@@ -109,6 +110,20 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
     <Card className="rounded-md p-5 ring-0 md:p-8">
       <CardContent className="p-0">
         <form onSubmit={submit} noValidate aria-label="Заявка на знакомство">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-[10000px] h-px w-px overflow-hidden"
+          >
+            <label htmlFor={`${id}-website`}>Сайт</label>
+            <input
+              id={`${id}-website`}
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              maxLength={2000}
+            />
+          </div>
           <h3 className="mb-[18px] font-sans text-lg font-medium leading-[1.5]">
             Или оставь пару слов о себе
           </h3>
@@ -221,7 +236,10 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
             {mutation.isError ? (
               <Alert variant="destructive">
                 <AlertDescription>
-                  Не получилось отправить заявку. Попробуй ещё раз.
+                  {mutation.error instanceof ApiError &&
+                  mutation.error.status === 429
+                    ? `Слишком много попыток отправки. Подожди ${mutation.error.retryAfterSeconds !== undefined ? Math.min(10, Math.ceil(mutation.error.retryAfterSeconds / 60)) : 10} мин. и попробуй снова.`
+                    : 'Не получилось отправить заявку. Попробуй ещё раз.'}
                 </AlertDescription>
               </Alert>
             ) : null}

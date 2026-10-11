@@ -22,7 +22,10 @@ export const COACH_SITE_HTTP_PROBLEMS: HttpProblemContribution = Object.freeze({
       return { code: 'CONFLICT' }
     if (error instanceof InvalidProgramError) return { code: 'INVALID_PROGRAM' }
     if (error instanceof ConsultationRateLimitError)
-      return { code: 'RATE_LIMIT_EXCEEDED' }
+      return {
+        code: 'RATE_LIMIT_EXCEEDED',
+        retryAfterSeconds: Math.max(1, Math.ceil(error.retryAfterMs / 1000)),
+      }
     return undefined
   },
 })

@@ -16,6 +16,7 @@ describe('createCorsOptions', () => {
     origin('https://blocked.example', callback)
     expect(callback).toHaveBeenLastCalledWith(null, false)
     expect(options.credentials).toBe(true)
+    expect(options.exposedHeaders).toEqual(['Retry-After'])
     expect(callback).not.toHaveBeenCalledWith(null, '*')
   })
 })
