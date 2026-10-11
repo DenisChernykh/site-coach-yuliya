@@ -7,21 +7,25 @@
  */
 
 export type SocialLinkDtoId =
-  | 'telegram'
-  | 'whatsapp'
-  | 'max'
-  | 'vk'
-  | 'ok'
-  | 'instagram'
-  | 'facebook'
-  | 'threads'
-  | 'x'
-  | 'youtube'
-  | 'rutube'
-  | 'tiktok'
-  | 'dzen'
-  | 'linkedin'
-  | 'pinterest'
-  | 'viber'
-  | 'discord'
-  | 'twitch';
+  (typeof SocialLinkDtoId)[keyof typeof SocialLinkDtoId];
+
+export const SocialLinkDtoId = {
+  telegram: 'telegram',
+  whatsapp: 'whatsapp',
+  max: 'max',
+  vk: 'vk',
+  ok: 'ok',
+  instagram: 'instagram',
+  facebook: 'facebook',
+  threads: 'threads',
+  x: 'x',
+  youtube: 'youtube',
+  rutube: 'rutube',
+  tiktok: 'tiktok',
+  dzen: 'dzen',
+  linkedin: 'linkedin',
+  pinterest: 'pinterest',
+  viber: 'viber',
+  discord: 'discord',
+  twitch: 'twitch',
+} as const;

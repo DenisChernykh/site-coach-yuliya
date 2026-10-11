@@ -11,21 +11,16 @@ import {
 import {
   adminAccountInvitationSchema,
   adminAuthCreateAccountInvitation,
-  ApiProblemError,
   isProblemCode,
   type CreateAccountInvitationRequestDto,
 } from '@/shared/api'
 import { useZodForm } from '@/shared/lib/form'
 import { Alert, AlertDescription, Button, TextField } from '@/shared/ui'
 
-import { mapInvitationValidationErrors } from '../model/invitation-errors'
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof ApiProblemError) {
-    return `Не удалось создать приглашение. Код запроса: ${error.requestId}`
-  }
-  return 'Не удалось создать приглашение.'
-}
+import {
+  getErrorMessage,
+  mapInvitationValidationErrors,
+} from '../model/invitation-errors'
 
 export function InviteAccountForm() {
   const queryClient = useQueryClient()

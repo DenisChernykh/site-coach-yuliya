@@ -1,3 +1,5 @@
+import { ApiProblemError } from '@/shared/api'
+
 type InvitationField = 'email' | 'roleKeys'
 
 type ValidationProblem = Readonly<{
@@ -18,4 +20,11 @@ export function mapInvitationValidationErrors(problem: ValidationProblem) {
     }
   }
   return result
+}
+
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof ApiProblemError) {
+    return `Не удалось создать приглашение. Код запроса: ${error.requestId}`
+  }
+  return 'Не удалось создать приглашение.'
 }

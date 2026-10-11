@@ -6,4 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ArticleDtoTopic = 'finding-work' | 'showing-up';
+export type ArticleDtoTopic =
+  (typeof ArticleDtoTopic)[keyof typeof ArticleDtoTopic];
+
+export const ArticleDtoTopic = {
+  'finding-work': 'finding-work',
+  'showing-up': 'showing-up',
+} as const;

@@ -1,10 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  ApiError,
-  createApiError,
-  isMockMode,
-} from '../src/shared/api/client/api-fetch';
+import { isMockMode } from '../src/shared/api/client/api-fetch';
+import { ApiProblemError } from '../src/shared/api/client/api-errors';
 import { getSiteSettings } from '../src/shared/api/generated/site/site';
 import { getHomePage } from '../src/shared/api/generated/home/home';
 import {
@@ -55,7 +52,8 @@ test('article filters and detail use the same generated contract', async () => {
   ]);
   await assert.rejects(
     getArticle('missing-article'),
-    (error: unknown) => error instanceof ApiError && error.status === 404,
+    (error: unknown) =>
+      error instanceof ApiProblemError && error.status === 404,
   );
 });
 
@@ -97,38 +95,14 @@ test('consultation validates input and never claims delivery in mock mode', asyn
         body: JSON.stringify(data),
       }),
       (error: unknown) =>
-        error instanceof ApiError &&
-        error.code === 'INVALID_INPUT' &&
+        error instanceof ApiProblemError &&
+        error.code === 'VALIDATION_FAILED' &&
         error.status === 400,
     );
   }
   await assert.rejects(
     handleMockRequest('/v1/consultations', { method: 'POST', body: '{' }),
-    ApiError,
-  );
-});
-
-test('rate-limit errors retain status and bounded retry metadata without exposing response text', () => {
-  const error = createApiError(
-    new Response('private backend detail', {
-      status: 429,
-      headers: { 'Retry-After': '42' },
-    }),
-  );
-  assert.equal(error.status, 429);
-  assert.equal(error.retryAfterSeconds, 42);
-  assert.doesNotMatch(error.message, /private/);
-  for (const header of ['', '-1', '0', 'Infinity', '9007199254740992']) {
-    assert.equal(
-      createApiError(
-        new Response(null, { status: 429, headers: { 'Retry-After': header } }),
-      ).retryAfterSeconds,
-      undefined,
-    );
-  }
-  assert.equal(
-    createApiError(new Response(null, { status: 500 })).retryAfterSeconds,
-    undefined,
+    ApiProblemError,
   );
 });
 

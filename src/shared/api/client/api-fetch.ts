@@ -1,34 +1,50 @@
-export class ApiError extends Error {
-  constructor(
-    public readonly code: string,
-    message: string,
-    public readonly status: number,
-    public readonly retryAfterSeconds?: number,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
+import {
+  ApiNetworkError,
+  ApiProtocolError,
+  createApiError,
+  type ApiClientError,
+  type ProblemDocumentLike,
+} from './api-errors';
 
-export type ErrorType<T> = ApiError & { payload?: T };
+export type ErrorType<T> = ApiClientError<T & ProblemDocumentLike>;
 export type BodyType<T> = T;
 
 export const isMockMode = import.meta.env?.PUBLIC_DATA_SOURCE !== 'api';
 
-export function createApiError(response: Response): ApiError {
-  const retryAfter = response.headers.get('Retry-After');
-  const seconds =
-    retryAfter !== null && /^\d+$/.test(retryAfter)
-      ? Number(retryAfter)
-      : undefined;
-  return new ApiError(
-    'REQUEST_FAILED',
-    'Не удалось выполнить запрос. Попробуй ещё раз.',
-    response.status,
-    seconds !== undefined && Number.isSafeInteger(seconds) && seconds > 0
-      ? seconds
-      : undefined,
-  );
+export async function fetchApi<T>(
+  url: string,
+  options?: RequestInit,
+): Promise<T> {
+  options?.signal?.throwIfAborted();
+  const headers = new Headers(options?.headers);
+  headers.set('Accept', 'application/json, application/problem+json');
+  let response: Response;
+  try {
+    response = await fetch(url, { ...options, headers });
+  } catch (error) {
+    options?.signal?.throwIfAborted();
+    if (error instanceof DOMException && error.name === 'AbortError')
+      throw error;
+    throw new ApiNetworkError();
+  }
+  options?.signal?.throwIfAborted();
+  if (!response.ok) {
+    const error = await createApiError(response);
+    options?.signal?.throwIfAborted();
+    throw error;
+  }
+  const contentType = response.headers
+    .get('Content-Type')
+    ?.split(';', 1)[0]
+    ?.trim()
+    .toLowerCase();
+  if (contentType !== 'application/json') throw new ApiProtocolError();
+  try {
+    return (await response.json()) as T;
+  } catch {
+    options?.signal?.throwIfAborted();
+    throw new ApiProtocolError();
+  }
 }
 
 export async function apiFetch<T>(
@@ -42,25 +58,6 @@ export async function apiFetch<T>(
   }
 
   const baseUrl = import.meta.env.PUBLIC_API_BASE_URL?.replace(/\/$/, '');
-  if (!baseUrl) {
-    throw new ApiError(
-      'API_NOT_CONFIGURED',
-      'Не задан PUBLIC_API_BASE_URL.',
-      0,
-    );
-  }
-  const headers = new Headers(options?.headers);
-  headers.set('Accept', 'application/json');
-  const response = await fetch(baseUrl + path, { ...options, headers });
-  if (!response.ok) {
-    throw createApiError(response);
-  }
-  if (!response.headers.get('content-type')?.includes('application/json')) {
-    throw new ApiError(
-      'INVALID_RESPONSE',
-      'Сервер вернул ответ в неожиданном формате.',
-      response.status,
-    );
-  }
-  return response.json() as Promise<T>;
+  if (!baseUrl) throw new ApiProtocolError();
+  return fetchApi<T>(baseUrl + path, options);
 }

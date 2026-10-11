@@ -1,4 +1,15 @@
-export { ApiError, isMockMode } from './client/api-fetch';
+export { isMockMode } from './client/api-fetch';
+export {
+  ApiProblemError,
+  ApiNetworkError,
+  ApiProtocolError,
+  isProblemCode,
+} from './client/api-errors';
+export type {
+  ApiClientError,
+  ProblemCode,
+  ProblemDocumentLike,
+} from './client/api-errors';
 export { getSiteSettings } from './generated/site/site';
 export { getHomePage } from './generated/home/home';
 export { getServices } from './generated/services/services';

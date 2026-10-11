@@ -6,6 +6,7 @@ import {
   type ArticleDtoTopic,
 } from '@/entities/article';
 import { Button, Alert, AlertDescription } from '@/shared/ui';
+import { getJournalErrorMessage } from '../model/errors';
 
 const topics = [
   { value: 'all', label: 'Все материалы' },
@@ -47,7 +48,7 @@ export function JournalList({
       {query.isError ? (
         <Alert variant="destructive" className="page-container mb-6">
           <AlertDescription>
-            Не удалось обновить журнал. Попробуй открыть страницу ещё раз.
+            {getJournalErrorMessage(query.error)}
           </AlertDescription>
         </Alert>
       ) : null}

@@ -7,12 +7,7 @@ import {
 } from '@/entities/account'
 import { useCurrentSession } from '@/entities/session'
 import { InviteAccountForm } from '@/features/admin-invite-account'
-import {
-  ApiNetworkError,
-  ApiProblemError,
-  ApiProtocolError,
-  type AdminAccountResponseDtoState,
-} from '@/shared/api'
+import { type AdminAccountResponseDtoState } from '@/shared/api'
 import { adminAccountDetailsPath } from '@/shared/routes'
 import {
   Alert,
@@ -23,6 +18,8 @@ import {
   Spinner,
   TextField,
 } from '@/shared/ui'
+
+import { getListError } from '../model/errors'
 
 const pageSize = 25
 const accountStates: readonly AdminAccountResponseDtoState[] = [
@@ -43,20 +40,6 @@ function readState(
   return accountStates.includes(value as AdminAccountResponseDtoState)
     ? (value as AdminAccountResponseDtoState)
     : undefined
-}
-
-function getListError(error: unknown): string {
-  if (error instanceof ApiNetworkError)
-    return 'Не удалось подключиться к серверу.'
-  if (error instanceof ApiProtocolError)
-    return 'Сервер вернул некорректный ответ.'
-  if (error instanceof ApiProblemError && error.code === 'NOT_FOUND') {
-    return 'Управление аккаунтами недоступно.'
-  }
-  if (error instanceof ApiProblemError) {
-    return `Не удалось загрузить аккаунты. Код запроса: ${error.requestId}`
-  }
-  return 'Не удалось загрузить аккаунты.'
 }
 
 function AccountSearchForm({

@@ -3,9 +3,7 @@ import { Link, useLocation } from 'react-router'
 import { z } from 'zod'
 
 import {
-  ApiNetworkError,
   ApiProblemError,
-  ApiProtocolError,
   authAcceptAccountInvitationSchema,
   type AcceptAccountInvitationRequestDto,
 } from '@/shared/api'
@@ -14,6 +12,7 @@ import { useConsumedFragmentParameter } from '@/shared/lib/hooks'
 import { loginPath } from '@/shared/routes'
 import { Alert, AlertDescription, Button, PasswordField } from '@/shared/ui'
 
+import { getAcceptInvitationError } from '../model/errors'
 import { useAcceptAccountInvitation } from '../model/use-accept-account-invitation'
 
 const invitationTokenPattern = /^[A-Za-z0-9_-]{43}$/u
@@ -24,30 +23,6 @@ const acceptInvitationFormSchema = authAcceptAccountInvitationSchema
     path: ['passwordConfirmation'],
     message: 'Пароли не совпадают',
   })
-
-function getAcceptInvitationError(error: unknown): string {
-  if (
-    error instanceof ApiProblemError &&
-    error.code === 'AUTH_TOKEN_INVALID_OR_EXPIRED'
-  )
-    return 'Ссылка недействительна или устарела'
-  if (error instanceof ApiProblemError && error.code === 'RATE_LIMIT_EXCEEDED')
-    return 'Слишком много запросов. Повторите попытку позже.'
-  if (
-    error instanceof ApiProblemError &&
-    error.code === 'DEPENDENCY_UNAVAILABLE'
-  )
-    return 'Сервис временно недоступен.'
-  if (error instanceof ApiProblemError && error.code === 'NOT_FOUND')
-    return 'Приглашения сейчас недоступны.'
-  if (error instanceof ApiNetworkError)
-    return 'Не удалось подключиться к серверу.'
-  if (error instanceof ApiProtocolError)
-    return 'Сервер вернул некорректный ответ.'
-  if (error instanceof ApiProblemError)
-    return `Не удалось принять приглашение. Код запроса: ${error.requestId}`
-  return 'Не удалось принять приглашение.'
-}
 
 export function AcceptAccountInvitationForm() {
   const token = useConsumedFragmentParameter('token')

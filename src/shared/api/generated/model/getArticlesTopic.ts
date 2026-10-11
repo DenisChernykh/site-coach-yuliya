@@ -6,4 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetArticlesTopic = 'finding-work' | 'showing-up';
+export type GetArticlesTopic =
+  (typeof GetArticlesTopic)[keyof typeof GetArticlesTopic];
+
+export const GetArticlesTopic = {
+  'finding-work': 'finding-work',
+  'showing-up': 'showing-up',
+} as const;

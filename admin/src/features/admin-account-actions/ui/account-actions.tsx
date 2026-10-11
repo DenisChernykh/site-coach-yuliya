@@ -21,7 +21,6 @@ import {
   adminAuthResendAccountInvitation,
   adminAuthRetireAccount,
   adminAuthUpdateAccountStatus,
-  ApiProblemError,
   ApiProtocolError,
   isProblemCode,
   type CurrentUserResponseDto,
@@ -40,6 +39,8 @@ import {
 } from '@/shared/ui'
 import { adminAccountsPath } from '@/shared/routes'
 
+import { getActionError, getProtocolRecoveryMessage } from '../model/errors'
+
 type AccountActionsProps = Readonly<{
   currentUser: CurrentUserResponseDto
   snapshot: AccountDetailSnapshot
@@ -50,19 +51,6 @@ type AccountActionsContentProps = AccountActionsProps &
     message: string | null
     setMessage: (message: string | null) => void
   }>
-
-function getActionError(error: unknown): string {
-  if (
-    error instanceof ApiProblemError &&
-    error.code === 'AUTH_ACCOUNT_PRECONDITION_FAILED'
-  )
-    return 'Данные аккаунта изменились. Они обновлены.'
-  if (error instanceof ApiProblemError && error.code === 'CONFLICT')
-    return 'Действие недоступно для текущего состояния аккаунта.'
-  if (error instanceof ApiProblemError)
-    return `Не удалось выполнить действие. Код запроса: ${error.requestId}`
-  return 'Не удалось выполнить действие.'
-}
 
 function getDeliveryMessage(mailDelivery: 'delivered' | 'failed'): string {
   return mailDelivery === 'delivered'
@@ -117,11 +105,7 @@ function AccountActionsContent({
         removeAdminAccount(queryClient, snapshot.account.id)
       }
       await invalidateAdminAccountLists(queryClient)
-      setMessage(
-        refreshed
-          ? 'Сервер вернул некорректный ответ. Данные аккаунта перечитаны.'
-          : 'Сервер вернул некорректный ответ. Актуальные данные аккаунта получить не удалось.',
-      )
+      setMessage(getProtocolRecoveryMessage(refreshed))
       return
     }
     const refreshAccount =

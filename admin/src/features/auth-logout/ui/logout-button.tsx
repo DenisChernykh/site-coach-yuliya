@@ -1,6 +1,6 @@
-import { isProblemCode } from '@/shared/api'
 import { Alert, AlertDescription, Button } from '@/shared/ui'
 
+import { hasVisibleLogoutError } from '../model/errors'
 import { useLogout } from '../model/use-logout'
 
 /**
@@ -11,9 +11,7 @@ import { useLogout } from '../model/use-logout'
  */
 export function LogoutButton() {
   const logout = useLogout()
-  const visibleFailure =
-    logout.error !== null &&
-    !isProblemCode(logout.error, 'AUTHENTICATION_REQUIRED')
+  const visibleFailure = hasVisibleLogoutError(logout.error)
 
   return (
     <div>

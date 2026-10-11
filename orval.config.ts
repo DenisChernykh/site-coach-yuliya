@@ -13,7 +13,7 @@ export default defineConfig({
       urlEncodeParameters: true,
       override: {
         useTypeOverInterfaces: true,
-        enumGenerationType: 'union',
+        enumGenerationType: 'const',
         mutator: {
           path: './src/shared/api/client/api-fetch.ts',
           name: 'apiFetch',

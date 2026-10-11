@@ -6,4 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ConsultationResultDtoStatus = 'preview' | 'accepted';
+export type ConsultationResultDtoStatus =
+  (typeof ConsultationResultDtoStatus)[keyof typeof ConsultationResultDtoStatus];
+
+export const ConsultationResultDtoStatus = {
+  preview: 'preview',
+  accepted: 'accepted',
+} as const;

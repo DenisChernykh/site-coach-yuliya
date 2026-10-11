@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState, type SubmitEvent } from 'react';
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react';
 import type { ServiceDto } from '@/entities/service';
-import { ApiError, useCreateConsultation } from '@/shared/api';
+import { useCreateConsultation } from '@/shared/api';
+import { getConsultationErrorMessage } from '../model/errors';
 import { routes } from '@/shared/routes';
 import {
   Button,
@@ -236,10 +237,7 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
             {mutation.isError ? (
               <Alert variant="destructive">
                 <AlertDescription>
-                  {mutation.error instanceof ApiError &&
-                  mutation.error.status === 429
-                    ? `Слишком много попыток отправки. Подожди ${mutation.error.retryAfterSeconds !== undefined ? Math.min(10, Math.ceil(mutation.error.retryAfterSeconds / 60)) : 10} мин. и попробуй снова.`
-                    : 'Не получилось отправить заявку. Попробуй ещё раз.'}
+                  {getConsultationErrorMessage(mutation.error)}
                 </AlertDescription>
               </Alert>
             ) : null}

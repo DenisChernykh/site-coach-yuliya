@@ -1,4 +1,4 @@
-import { ApiError } from '../client/api-fetch';
+import { ApiProblemError } from '../client/api-errors';
 import {
   articles,
   faq,
@@ -59,7 +59,7 @@ export async function handleMockRequest<T>(
     try {
       input = JSON.parse(String(options?.body));
     } catch {
-      throw new ApiError('INVALID_INPUT', 'Проверь поля заявки.', 400);
+      throw mockProblem('VALIDATION_FAILED', url.pathname);
     }
     if (
       !input ||
@@ -79,11 +79,7 @@ export async function handleMockRequest<T>(
       (input.serviceId !== undefined &&
         (typeof input.serviceId !== 'string' || input.serviceId.length > 100))
     ) {
-      throw new ApiError(
-        'INVALID_INPUT',
-        'Проверь поля заявки и согласие.',
-        400,
-      );
+      throw mockProblem('VALIDATION_FAILED', url.pathname);
     }
     result = {
       status: 'preview',
@@ -92,7 +88,25 @@ export async function handleMockRequest<T>(
     };
   }
   if (result === undefined) {
-    throw new ApiError('NOT_FOUND', 'Материал не найден.', 404);
+    throw mockProblem('NOT_FOUND', url.pathname);
   }
   return structuredClone(result) as T;
+}
+
+function mockProblem(
+  code: 'VALIDATION_FAILED' | 'NOT_FOUND',
+  instance: string,
+) {
+  return new ApiProblemError(
+    {
+      type: `https://mock.invalid/problems/${code.toLowerCase().replaceAll('_', '-')}`,
+      title: code === 'NOT_FOUND' ? 'Not found' : 'Validation failed',
+      status: code === 'NOT_FOUND' ? 404 : 400,
+      detail: code === 'NOT_FOUND' ? 'Resource not found.' : 'Invalid input.',
+      instance,
+      code,
+      requestId: 'mock-request',
+    },
+    null,
+  );
 }

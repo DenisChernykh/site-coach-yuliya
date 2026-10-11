@@ -1,41 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 
-import {
-  ApiNetworkError,
-  ApiProblemError,
-  ApiProtocolError,
-  authConfirmEmailVerificationSchema,
-} from '@/shared/api'
+import { authConfirmEmailVerificationSchema } from '@/shared/api'
 import { useConsumedFragmentParameter } from '@/shared/lib/hooks'
 import { loginPath, resendEmailVerificationPath } from '@/shared/routes'
 import { Alert, AlertDescription } from '@/shared/ui'
 
+import { getConfirmError } from '../model/errors'
 import { useConfirmEmailVerification } from '../model/use-confirm-email-verification'
-
-function getConfirmError(error: unknown) {
-  if (
-    error instanceof ApiProblemError &&
-    error.code === 'AUTH_TOKEN_INVALID_OR_EXPIRED'
-  )
-    return 'Ссылка недействительна или устарела'
-  if (error instanceof ApiProblemError && error.code === 'RATE_LIMIT_EXCEEDED')
-    return 'Слишком много запросов. Повторите попытку позже.'
-  if (
-    error instanceof ApiProblemError &&
-    error.code === 'DEPENDENCY_UNAVAILABLE'
-  )
-    return 'Сервис временно недоступен.'
-  if (error instanceof ApiProblemError && error.code === 'NOT_FOUND')
-    return 'Регистрация и восстановление сейчас недоступны.'
-  if (error instanceof ApiNetworkError)
-    return 'Не удалось подключиться к серверу.'
-  if (error instanceof ApiProtocolError)
-    return 'Сервер вернул некорректный ответ.'
-  if (error instanceof ApiProblemError)
-    return `Не удалось подтвердить email. Код запроса: ${error.requestId}`
-  return 'Не удалось подтвердить email.'
-}
 
 export function ConfirmEmailVerificationStatus() {
   const token = useConsumedFragmentParameter('token')
