@@ -10,7 +10,7 @@ import { findTunnelOrigin } from './tunnel-output.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const backend = join(root, 'backend');
 const localOnly = process.argv.includes('--local');
-const provider = process.env.DEMO_TUNNEL_PROVIDER ?? 'localhost-run';
+const provider = process.env.DEMO_TUNNEL_PROVIDER ?? 'vscode';
 const state = { ready: false, origin: undefined };
 const children = new Set();
 let gateway;
@@ -144,6 +144,31 @@ async function cloudflareTunnel() {
   return readTunnelOrigin(tunnel);
 }
 
+async function vscodeTunnel() {
+  const client =
+    process.env.DEMO_VSCODE_CLI ??
+    (process.platform === 'darwin'
+      ? '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code-tunnel'
+      : 'code-tunnel');
+  const tunnel = start(
+    client,
+    [
+      '--cli-data-dir',
+      join(root, '.demo/vscode'),
+      'tunnel',
+      'forward-internal',
+      '--provider',
+      'github',
+    ],
+    { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } },
+  );
+  tunnel.stdin.on('error', () => void stop(1));
+  tunnel.stdin.write(
+    `${JSON.stringify([{ number: 8787, privacy: 'public', protocol: 'http' }])}\n`,
+  );
+  return readTunnelOrigin(tunnel);
+}
+
 async function localhostTunnel() {
   await mkdir(join(root, '.demo'), { recursive: true });
   const tunnel = start(
@@ -223,9 +248,9 @@ function readTunnelOrigin(tunnel) {
 }
 
 try {
-  if (!['cloudflare', 'localhost-run'].includes(provider)) {
+  if (!['cloudflare', 'localhost-run', 'vscode'].includes(provider)) {
     throw new Error(
-      'DEMO_TUNNEL_PROVIDER must be cloudflare or localhost-run.',
+      'DEMO_TUNNEL_PROVIDER must be vscode, cloudflare or localhost-run.',
     );
   }
   if (!process.version.startsWith('v24.')) {
@@ -238,6 +263,9 @@ try {
   await access(join(backend, '.env'));
   await access(join(backend, '.admin-credentials.json'));
   const localEnv = parseEnv(await readFile(join(backend, '.env'), 'utf8'));
+  if (process.platform === 'darwin') {
+    start('caffeinate', ['-i', '-w', String(process.pid)]);
+  }
   const telegramMode =
     process.env.TELEGRAM_NOTIFICATIONS_MODE ??
     localEnv.TELEGRAM_NOTIFICATIONS_MODE ??
@@ -261,9 +289,11 @@ try {
   });
   state.origin = localOnly
     ? new URL('http://127.0.0.1:8787')
-    : provider === 'localhost-run'
-      ? await localhostTunnel()
-      : await cloudflareTunnel();
+    : provider === 'vscode'
+      ? await vscodeTunnel()
+      : provider === 'localhost-run'
+        ? await localhostTunnel()
+        : await cloudflareTunnel();
   const origin = state.origin.origin;
   console.log(`Адрес демо: ${origin}`);
   start('node', ['dist/bootstrap/api/main.js'], {

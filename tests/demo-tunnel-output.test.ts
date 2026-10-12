@@ -34,3 +34,36 @@ test('Cloudflare API URLs in errors cannot become the customer URL', () => {
     'https://four-random-demo-words.trycloudflare.com',
   );
 });
+
+test('VS Code port format becomes the HTTPS address of the shared gateway', () => {
+  const event = JSON.stringify({
+    port_format: 'https://sample-tunnel-{port}.uks1.devtunnels.ms/',
+  });
+  assert.equal(
+    findTunnelOrigin(`Starting forwarding\n${event}\n`, 'vscode')?.origin,
+    'https://sample-tunnel-8787.uks1.devtunnels.ms',
+  );
+  assert.equal(findTunnelOrigin(event.slice(0, -2), 'vscode'), undefined);
+  assert.equal(
+    findTunnelOrigin(
+      'https://global.rel.tunnels.api.visualstudio.com',
+      'vscode',
+    ),
+    undefined,
+  );
+});
+
+test('VS Code rejects unsafe or unrelated port formats', () => {
+  for (const port_format of [
+    'http://sample-{port}.uks1.devtunnels.ms/',
+    'https://user:secret@sample-{port}.uks1.devtunnels.ms/',
+    'https://sample-{port}.uks1.devtunnels.ms.evil.example/',
+    'https://sample-{port}.uks1.devtunnels.ms/path',
+    'https://sample-{port}.uks1.devtunnels.ms/?token=secret',
+  ]) {
+    assert.equal(
+      findTunnelOrigin(JSON.stringify({ port_format }), 'vscode'),
+      undefined,
+    );
+  }
+});
