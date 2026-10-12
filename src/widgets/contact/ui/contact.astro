@@ -4,9 +4,11 @@ import { Button, buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
   socials: SocialLinkDto[];
+  telegramUrl?: string | null;
 }
-const { socials } = Astro.props;
-const telegram = socials.find((item) => item.id === 'telegram')?.url;
+const { socials, telegramUrl } = Astro.props;
+const telegram =
+  telegramUrl ?? socials.find((item) => item.id === 'telegram')?.url;
 ---
 
 <section id="contact" class="contact" aria-labelledby="contact-title">

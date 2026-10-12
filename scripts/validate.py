@@ -45,7 +45,9 @@ check([s['number'] for s in screens] == [f'{i:02d}' for i in range(len(screens))
       'Screen numbers must be sequential from 00')
 check(len({s['id'] for s in screens}) == len(screens), 'Duplicate pen.dev frame IDs')
 for screen in screens:
-    check_png(EXPORTS / screen['export'], (screen['width'], screen['height']))
+    if screen.get('export'):
+        expected = tuple(screen.get('exportSize', [screen['width'], screen['height']]))
+        check_png(EXPORTS / screen['export'], expected)
 
 variants = {(p['slug'], p['mode']): p for p in pages}
 check(len(variants) == len(pages), 'Duplicate page variants')

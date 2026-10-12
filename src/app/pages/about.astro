@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { AboutPage } from '@/pages/about';
+import { loadHomePage, loadSiteSettings } from '@/entities/site';
+const [settings, data] = await Promise.all([
+  loadSiteSettings(),
+  loadHomePage(),
+]);
+---
+
+<BaseLayout
+  settings={settings}
+  title="Обо мне — Юля Валишина"
+  description="История Юли Валишиной, её путь к коучингу и подход к работе: исследовать себя, выбирать свои решения и двигаться в своём темпе."
+>
+  <AboutPage data={data} />
+</BaseLayout>

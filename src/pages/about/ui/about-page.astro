@@ -1,0 +1,312 @@
+---
+import { Image } from 'astro:assets';
+import type { HomePageDto } from '@/entities/site';
+import { WorkBoundaries } from '@/widgets/work-boundaries';
+import { portrait } from '@/shared/assets';
+import { routes } from '@/shared/routes';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+import { story } from '../model/story';
+interface Props {
+  data: HomePageDto;
+}
+const { data } = Astro.props;
+---
+
+<section class="about-hero" aria-labelledby="about-page-title">
+  <div class="page-container hero-grid">
+    <div class="hero-copy">
+      <nav class="breadcrumb" aria-label="Хлебные крошки">
+        <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
+          aria-current="page">Обо мне</span
+        >
+      </nav>
+      <p class="eyebrow">{data.about.eyebrow}</p>
+      <h1 id="about-page-title">{data.about.title}</h1>
+      <p class="hero-description">
+        {data.about.paragraphs[1] ?? data.about.paragraphs[0]}
+      </p>
+      <a
+        href={routes.contact}
+        class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
+        >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
+      >
+      <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
+      <p class="fine-print">Демонстрационный AI-портрет · заменить фото Юли</p>
+    </div>
+    <Image
+      src={portrait}
+      alt="Демонстрационный портрет Юли для макета страницы обо мне"
+      width={840}
+      height={1060}
+      format="webp"
+      quality={85}
+      loading="eager"
+      class="portrait"
+    />
+  </div>
+</section>
+<section id="story" class="history" aria-labelledby="history-title">
+  <div class="page-container history-grid">
+    <div>
+      <h2 id="history-title">Не чужой маршрут.<br />Свой следующий шаг.</h2><p
+        class="history-intro"
+      >
+        {data.about.paragraphs[0]}
+      </p>
+    </div>
+    <ol class="story-list">
+      {
+        story.map((step) => (
+          <li>
+            <>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+<section
+  id="approach"
+  class="about-approach"
+  aria-labelledby="about-approach-title"
+>
+  <div class="page-container approach-grid">
+    <div class="approach-copy">
+      <p class="eyebrow">{data.approach.eyebrow}</p><h2
+        id="about-approach-title"
+      >
+        {data.approach.title}
+      </h2><p>{data.approach.description}</p><blockquote>
+        {data.approach.quote}
+      </blockquote>
+    </div>
+    <ol class="approach-steps">
+      {
+        data.approach.steps.map((step, index) => (
+          <li>
+            <>
+              <span class="step-number">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </>
+              </div>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+<WorkBoundaries />
+<section class="about-cta">
+  <div class="page-container cta-inner">
+    <div>
+      <h2>Хочется обсудить<br />свою историю?</h2><p>
+        Начнём с бесплатного знакомства до 30 минут.
+      </p>
+    </div><a
+      href={routes.contact}
+      class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
+      >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+    >
+  </div>
+</section>
+<style>
+  .about-hero {
+    padding-block: 56px 64px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 450px;
+    gap: 100px;
+    align-items: center;
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+  h1 {
+    font-size: 76px;
+    white-space: pre-line;
+  }
+  .hero-description {
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+  }
+  .portrait {
+    width: 450px;
+    height: 525px;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .history {
+    padding-block: 60px;
+    background: var(--secondary);
+  }
+  .history-grid {
+    display: grid;
+    grid-template-columns: 430px minmax(0, 1fr);
+    gap: 96px;
+  }
+  .history h2 {
+    font-size: 56px;
+  }
+  .history-intro {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .story-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .story-list li {
+    padding-block: 20px;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--foreground) 15%, transparent);
+  }
+  .story-list h3 {
+    font-size: 30px;
+  }
+  .story-list p {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .about-approach {
+    padding-block: 80px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .approach-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 626fr) minmax(0, 550fr);
+    gap: 104px;
+  }
+  .approach-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .approach-copy h2 {
+    font-size: 64px;
+    white-space: pre-line;
+  }
+  .approach-copy > p:not(.eyebrow) {
+    font-size: 17px;
+  }
+  .approach-copy blockquote {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 25px;
+    line-height: 1.3;
+    white-space: pre-line;
+  }
+  .approach-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .approach-steps li {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 28px;
+    padding-block: 20px;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--primary-foreground) 22%, transparent);
+  }
+  .step-number {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .approach-steps h3 {
+    font-size: 30px;
+  }
+  .approach-steps p {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .about-cta {
+    padding-block: 56px;
+  }
+  .cta-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 80px;
+  }
+  .cta-inner h2 {
+    font-size: 48px;
+  }
+  .cta-inner p {
+    margin-top: 14px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  @media (max-width: 1100px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) 40%;
+      gap: 40px;
+    }
+    .portrait {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 450 / 525;
+    }
+    h1 {
+      font-size: 60px;
+    }
+    .history-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: 40px;
+    }
+    .approach-grid {
+      gap: 48px;
+    }
+  }
+  @media (max-width: 767px) {
+    .about-hero,
+    .history,
+    .about-approach,
+    .about-cta {
+      padding-block: 44px;
+    }
+    .hero-grid,
+    .history-grid,
+    .approach-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    h1,
+    .history h2,
+    .approach-copy h2 {
+      font-size: 42px;
+    }
+    .portrait {
+      aspect-ratio: 342 / 398;
+    }
+    .cta-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .cta-inner h2 {
+      font-size: 36px;
+    }
+  }
+</style>

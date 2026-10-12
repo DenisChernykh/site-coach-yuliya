@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { ConsultationIsland } from '../islands/consultation-island';
+import { ContactsPage } from '@/pages/contacts';
+import { loadContacts, loadSiteSettings } from '@/entities/site';
+import { loadSocialLinks } from '@/entities/social-link';
+import { loadServices } from '@/entities/service';
+import { loadFaq } from '@/entities/faq';
+const [settings, contacts, socials, services, faq] = await Promise.all([
+  loadSiteSettings(),
+  loadContacts(),
+  loadSocialLinks(),
+  loadServices(),
+  loadFaq(),
+]);
+---
+
+<BaseLayout
+  settings={settings}
+  contacts={contacts}
+  socials={socials}
+  title="Контакты — Юля Валишина"
+  description="Связаться с Юлей Валишиной и записаться на бесплатное знакомство: обсудить запрос, индивидуальный коучинг или арт-практики."
+>
+  <ContactsPage contacts={contacts} socials={socials} faq={faq}>
+    <ConsultationIsland slot="contact-form" client:load services={services} />
+  </ContactsPage>
+</BaseLayout>

@@ -118,7 +118,7 @@ const { data, services, faq, socials, articles } = Astro.props;
       <p class="eyebrow">{data.about.eyebrow}</p><h2 id="about-title">
         {data.about.title}
       </h2>{data.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}<a
-        href="#approach"
+        href={routes.about}
         class="text-link"
         >Моя история и подход <span aria-hidden="true">↗</span></a
       >

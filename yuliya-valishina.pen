@@ -335,6 +335,17 @@
                   "fontFamily": "$font-ui",
                   "fontSize": 13,
                   "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "NU56r",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -7313,10 +7324,2785 @@
     },
     {
       "type": "frame",
-      "id": "M4zljY",
+      "id": "i5LrK5",
       "x": 2030,
       "y": 0,
-      "name": "03 · Индивидуальный коучинг / Desktop 1440",
+      "name": "03 · Обо мне / Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "fill": "$paper",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "D0Cad",
+          "name": "Навигация",
+          "width": "fill_container",
+          "stroke": "$line",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            28,
+            80
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "I3qQE5",
+              "name": "Логотип",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yAX7s",
+                  "name": "Имя",
+                  "fill": "$ink",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.15,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "hbI7v",
+                  "name": "Профессия",
+                  "fill": "$ink",
+                  "content": "КОУЧ ПО РЕАЛИЗАЦИИ И ПРОЯВЛЕННОСТИ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 9,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FZJjx",
+              "name": "Ссылки",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Oqqpl",
+                  "name": "Обо мне",
+                  "fill": "$ink",
+                  "content": "Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "lTkL3",
+                  "name": "Подход",
+                  "fill": "$ink",
+                  "content": "Подход",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "RDUt7",
+                  "name": "Коучинг",
+                  "fill": "$ink",
+                  "content": "Коучинг",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "KiiTF",
+                  "name": "Журнал",
+                  "fill": "$ink",
+                  "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "SBxMg",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "JdhMn",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Давай познакомимся",
+              "height": 44,
+              "x": 1132,
+              "y": 28,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Давай познакомимся"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FE54X",
+          "name": "Знакомство с Юлей",
+          "width": "fill_container",
+          "fill": "$paper",
+          "gap": 100,
+          "padding": [
+            56,
+            80,
+            64,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "J3t42",
+              "name": "Запрос и предложение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Lifrm",
+                  "name": "Хлебные крошки",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Главная / Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "fltCQ",
+                  "name": "ОНЛАЙН · 60 МИНУТ · ОТ 3 000 ₽",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ПРИВЕТ, Я ЮЛЯ ВАЛИШИНА",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "eZQmv",
+                  "name": "Твоё направление.\nТвои решения.\nТвоя опора.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Я тоже долго\nискала своё.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 76
+                },
+                {
+                  "type": "text",
+                  "id": "WjTLT",
+                  "name": "О коучинге",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Поэтому я не предлагаю тебе чужой маршрут. Мы вместе исследуем, что важно именно тебе, и находим действия, которые хочется пробовать.",
+                  "lineHeight": 1.65,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "FEeFo",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Обсудить мой запрос",
+                  "x": 0,
+                  "y": 354,
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Давай познакомимся"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "xHYFX",
+                  "name": "Знакомство без оплаты",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём со знакомства до 30 минут. Бесплатно.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "SKk4K",
+                  "name": "Подпись демонстрационного портрета",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Демонстрационный AI-портрет · заменить фото Юли",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "B1Orfs",
+              "x": 910,
+              "y": 56,
+              "name": "Скрытый черновик подписи",
+              "enabled": false,
+              "width": 450,
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zNf15",
+                  "name": "Подпись демонстрационного портрета",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Демонстрационный AI-портрет · заменить фото Юли",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rRXvg",
+              "name": "AI · портрет на странице коучинга",
+              "width": 450,
+              "height": 525,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "design/assets/portrait.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "layout": "vertical"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jACzR",
+          "name": "Моя история",
+          "width": "fill_container",
+          "fill": "$sky",
+          "gap": 96,
+          "padding": [
+            60,
+            80
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "PpRFV",
+              "name": "Введение",
+              "width": 430,
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "GSJqx",
+                  "name": "От «не знаю»\nк своему\nследующему шагу.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Не чужой маршрут.\nСвой следующий шаг.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 56
+                },
+                {
+                  "type": "text",
+                  "id": "YyQnB",
+                  "name": "Суть коучинга",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "После университета я поняла, что не хочу работать по специальности. Семь лет и семь направлений спустя я нашла близкое мне дело — коучинг.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LWx8K",
+              "name": "Запросы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mkPQ9",
+                  "name": "Найти подходящее направление",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HPM3Z",
+                      "name": "Найти подходящее направление",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Разрешить себе искать",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "GCF7g",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Я поняла, что не хочу работать по специальности. Пробовала разные направления и постепенно выясняла, что важно именно мне.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xNeaa",
+                  "name": "Поддержать себя в переменах",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kDc3Y",
+                      "name": "Поддержать себя в переменах",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2020 · Знакомство с коучингом",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "t0f9J",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Впервые познакомилась с коучингом, но тогда отложила эту идею. Интерес к вопросам и поддержке людей остался.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SLYvw",
+                  "name": "Начать проявляться",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "OlKmb",
+                      "name": "Начать проявляться",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2024 · Попробовать всерьёз",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "UCVow",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Вернулась к коучингу и решила попробовать. Оказалось, что мне близок сам процесс — помогать человеку находить свои ответы.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yYFrj",
+          "x": 0,
+          "y": 774,
+          "name": "Черновик истории (скрыт)",
+          "enabled": false,
+          "width": 1440,
+          "fill": "#C9DAE8",
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            64,
+            80
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "TVXR3",
+              "name": "История и контекст",
+              "width": "fill_container",
+              "gap": 96,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Xg0Hj",
+                  "name": "Заголовок истории",
+                  "width": 400,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mGZI3",
+                      "name": "МОЯ ИСТОРИЯ",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "МОЯ ИСТОРИЯ",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "xyfwj",
+                      "name": "Свой следующий шаг",
+                      "fill": "#20384C",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Не чужой маршрут.\nСвой следующий шаг.",
+                      "lineHeight": 1.06,
+                      "fontFamily": "Cormorant Garamond",
+                      "fontSize": 56,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "NPMvA",
+                  "name": "Семь лет поиска",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "После университета я поняла, что не хочу работать по специальности. Семь лет и семь направлений спустя я нашла близкое мне дело — коучинг.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KNKsk",
+              "name": "Этапы профессионального пути",
+              "width": "fill_container",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EWRrp",
+                  "name": "Разрешить себе искать",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "b0aiPR",
+                      "name": "ПОСЛЕ УНИВЕРСИТЕТА",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ПОСЛЕ УНИВЕРСИТЕТА",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "ngwhN",
+                      "name": "Разрешить себе искать — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Разрешить себе искать",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "WxpyV",
+                      "name": "Разрешить себе искать — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Я поняла, что не хочу работать по специальности. Пробовала разные направления и постепенно выясняла, что важно именно мне.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QBj5e",
+                  "name": "Знакомство с коучингом",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "w9ocb",
+                      "name": "2020",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2020",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "fwsLS",
+                      "name": "Знакомство с коучингом — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Знакомство с коучингом",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "avljz",
+                      "name": "Знакомство с коучингом — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Впервые познакомилась с коучингом, но тогда отложила эту идею. Интерес к вопросам и поддержке людей остался.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "et0Fm",
+                  "name": "Попробовать всерьёз",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Ey6MD",
+                      "name": "2024",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2024",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "d6xs7R",
+                      "name": "Попробовать всерьёз — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Попробовать всерьёз",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Fc4w2",
+                      "name": "Попробовать всерьёз — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Вернулась к коучингу и решила попробовать. Оказалось, что мне близок сам процесс — помогать человеку находить свои ответы.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "H0c6Y",
+          "name": "Подход · инструкция к себе",
+          "width": "fill_container",
+          "fill": "$ink",
+          "gap": 104,
+          "padding": 80,
+          "children": [
+            {
+              "type": "frame",
+              "id": "IS8xg",
+              "name": "Смысл подхода",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kEVGd",
+                  "name": "ИНСТРУКЦИЯ К СЕБЕ",
+                  "fill": "$sky",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ИНСТРУКЦИЯ К СЕБЕ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "KLO03",
+                  "name": "Не стать другой.\nЛучше понять себя.",
+                  "fill": "$paper",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Не стать другой.\nЛучше понять себя.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 64
+                },
+                {
+                  "type": "text",
+                  "id": "xsc8K",
+                  "name": "Определение метода",
+                  "fill": "$sky",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Твои ценности, мотиваторы и способы действовать уже есть. Мы учимся замечать их и опираться на них в повседневной жизни.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "HBUbZ",
+                  "name": "Метафора попутчика",
+                  "fill": "$rose",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Ты выбираешь направление.\nЯ рядом — с вопросами и фонариком.",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 25,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Fbz1J",
+              "name": "Четыре шага метода",
+              "width": 550,
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "uwoVG",
+                  "name": "Замечаю",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TJTrb",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "01",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "M5Xmhw",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mxGy6",
+                          "name": "Замечаю",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Замечаю",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "CgjtK",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Что чувствую, чего хочу, где мне хорошо.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JkgtI",
+                  "name": "Понимаю",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QJbzH",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "02",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WX9Mn",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "s645fc",
+                          "name": "Понимаю",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Понимаю",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "IF2dA",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Что для меня важно и что помогает двигаться.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QDCVs",
+                  "name": "Пробую",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hXgEk",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "03",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Kg2iN",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "enAKn",
+                          "name": "Пробую",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Пробую",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "K9EqCX",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Выбираю небольшое действие и проверяю его.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "X0dfNQ",
+                  "name": "Возвращаюсь к себе",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HdelD",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "04",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ljhQl",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "UV0LT",
+                          "name": "Возвращаюсь к себе",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Возвращаюсь к себе",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "O83Zn6",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Сверяюсь с собой и корректирую маршрут.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "aGhOn",
+          "name": "Принципы и доверие",
+          "width": "fill_container",
+          "fill": "$sky",
+          "gap": 80,
+          "padding": [
+            48,
+            80
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "lQyGL",
+              "name": "Можно не быть\n«собранной».",
+              "fill": "$ink",
+              "textGrowth": "fixed-width",
+              "width": 400,
+              "content": "Можно не быть\n«собранной».",
+              "lineHeight": 1.06,
+              "fontFamily": "$font-editorial",
+              "fontSize": 46
+            },
+            {
+              "type": "frame",
+              "id": "SYL27",
+              "name": "Профессиональные границы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "y1JTsG",
+                  "name": "Принципы",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Конфиденциально. Без оценок и готовых советов.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 19,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "j9ro9",
+                  "name": "Границы коучинга",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "На встрече можно сомневаться, говорить о чувствах и искать свой ответ. Коучинг не заменяет психотерапию; если запрос выходит за мои компетенции, я предложу обратиться к профильному специалисту.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "z5WVrM",
+                  "name": "Документы квалификации",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Обо мне и моём подходе ↗",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "OSU9S",
+          "x": 0,
+          "y": 2156,
+          "name": "Черновик приглашения (скрыт)",
+          "enabled": false,
+          "width": 1440,
+          "fill": "$paper",
+          "gap": 64,
+          "padding": [
+            64,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "LPpOg",
+              "name": "Текст приглашения",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "a7blQq",
+                  "name": "Приглашение — заголовок",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Можно познакомиться.\nИ выбрать свой первый шаг.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 48,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "mamrb",
+                  "name": "Приглашение — условия",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "До 30 минут · онлайн · бесплатно. Обсудим твой запрос и подходящий формат.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "vPoTk",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Бесплатно познакомиться",
+              "x": 1096,
+              "y": 106,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Бесплатно познакомиться"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WJaGQ",
+          "name": "Приглашение к знакомству",
+          "width": "fill_container",
+          "fill": "$paper",
+          "gap": 80,
+          "padding": [
+            56,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "f0tidg",
+              "name": "От чтения к диалогу",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rDYU2",
+                  "name": "Хочется обсудить\nсвою историю?",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Хочется обсудить\nсвою историю?",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 48,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Z8NlE",
+                  "name": "Приглашение",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём с бесплатного знакомства до 30 минут.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "BY8vR",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Обсудить мой запрос",
+              "descendants": {
+                "fBwYY": {
+                  "content": "Обсудить мой запрос"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "o2yaOC",
+          "name": "Подвал",
+          "width": "fill_container",
+          "fill": "$paper",
+          "gap": 64,
+          "padding": [
+            40,
+            80
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "aLwtl",
+              "name": "Имя и копирайт",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kxqIN",
+                  "name": "Юля Валишина",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 30
+                },
+                {
+                  "type": "text",
+                  "id": "t9vi4U",
+                  "name": "Копирайт",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "© 2026 · Коуч по реализации и проявленности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mDJH4",
+              "name": "Документы",
+              "layout": "vertical",
+              "gap": 9,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "TqyTR",
+                  "name": "Политика",
+                  "fill": "$muted",
+                  "content": "Политика конфиденциальности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Y6FPq",
+                  "name": "Условия",
+                  "fill": "$muted",
+                  "content": "Согласие на обработку данных · Условия работы",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pSy9Z",
+      "x": 3570,
+      "y": 0,
+      "name": "04 · Обо мне / Mobile 390",
+      "clip": true,
+      "width": 390,
+      "fill": "$paper",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "n04RK7",
+          "name": "Навигация",
+          "width": "fill_container",
+          "stroke": "$line",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 28,
+          "padding": [
+            22,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "cL2Da",
+              "name": "Логотип",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "k47ZF",
+                  "name": "Имя",
+                  "fill": "$ink",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.15,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "nLaAH",
+                  "name": "Профессия",
+                  "fill": "$ink",
+                  "content": "КОУЧ ПО РЕАЛИЗАЦИИ И ПРОЯВЛЕННОСТИ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 7,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qwn5f",
+              "x": 0,
+              "y": 0,
+              "name": "Ссылки",
+              "enabled": false,
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "S9Odkn",
+                  "name": "Обо мне",
+                  "fill": "$ink",
+                  "content": "Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "laNfV",
+                  "name": "Подход",
+                  "fill": "$ink",
+                  "content": "Подход",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "s3WW1W",
+                  "name": "Коучинг",
+                  "fill": "$ink",
+                  "content": "Коучинг",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "HD1n3",
+                  "name": "Журнал",
+                  "fill": "$ink",
+                  "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "e9TXAy",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Давай познакомимся",
+              "height": 44,
+              "enabled": false,
+              "x": 0,
+              "y": 0,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Давай познакомимся"
+                }
+              }
+            },
+            {
+              "type": "icon",
+              "id": "q6ijtm",
+              "name": "Открыть меню",
+              "width": 24,
+              "height": 24,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$ink"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "H3MG5N",
+          "name": "Знакомство с Юлей",
+          "width": "fill_container",
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "vr6TB",
+              "name": "Запрос и предложение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YBOWY",
+                  "name": "Хлебные крошки",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Главная / Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "QW6vE",
+                  "name": "ОНЛАЙН · 60 МИНУТ · ОТ 3 000 ₽",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ПРИВЕТ, Я ЮЛЯ ВАЛИШИНА",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "E3of1",
+                  "name": "Твоё направление.\nТвои решения.\nТвоя опора.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Я тоже долго\nискала своё.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 42
+                },
+                {
+                  "type": "text",
+                  "id": "q2ucAJ",
+                  "name": "О коучинге",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Поэтому я не предлагаю тебе чужой маршрут. Мы вместе исследуем, что важно именно тебе, и находим действия, которые хочется пробовать.",
+                  "lineHeight": 1.65,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "isqRd",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Обсудить мой запрос",
+                  "x": 0,
+                  "y": 342,
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Давай познакомимся"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "gLkuQ",
+                  "name": "Знакомство без оплаты",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём со знакомства до 30 минут. Бесплатно.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "P2tLUh",
+                  "name": "Подпись демонстрационного портрета",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Демонстрационный AI-портрет · заменить фото Юли",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "oBrnn",
+              "x": 24,
+              "y": 512,
+              "name": "Скрытый черновик подписи",
+              "enabled": false,
+              "width": 342,
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "G2ACCJ",
+                  "name": "Подпись демонстрационного портрета",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Демонстрационный AI-портрет · заменить фото Юли",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Be9qo",
+              "name": "AI · портрет на странице коучинга",
+              "width": "fill_container",
+              "height": 398,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "design/assets/portrait.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "layout": "vertical"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sCrCR",
+          "name": "Моя история",
+          "width": "fill_container",
+          "fill": "$sky",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "SRVem",
+              "name": "Введение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zvDoo",
+                  "name": "От «не знаю»\nк своему\nследующему шагу.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Не чужой маршрут.\nСвой следующий шаг.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 42
+                },
+                {
+                  "type": "text",
+                  "id": "SCPD0",
+                  "name": "Суть коучинга",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "После университета я поняла, что не хочу работать по специальности. Семь лет и семь направлений спустя я нашла близкое мне дело — коучинг.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "u5Hsq",
+              "name": "Запросы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "D3DH0",
+                  "name": "Найти подходящее направление",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "bnlhk",
+                      "name": "Найти подходящее направление",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Разрешить себе искать",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "k3vhs",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Я поняла, что не хочу работать по специальности. Пробовала разные направления и постепенно выясняла, что важно именно мне.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sSOkX",
+                  "name": "Поддержать себя в переменах",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "oKPLJ",
+                      "name": "Поддержать себя в переменах",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2020 · Знакомство с коучингом",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "d4c4vm",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Впервые познакомилась с коучингом, но тогда отложила эту идею. Интерес к вопросам и поддержке людей остался.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "csfKJ",
+                  "name": "Начать проявляться",
+                  "width": "fill_container",
+                  "stroke": "#20384C26",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "X1K7wg",
+                      "name": "Начать проявляться",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2024 · Попробовать всерьёз",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30
+                    },
+                    {
+                      "type": "text",
+                      "id": "K63O00",
+                      "name": "Описание запроса",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Вернулась к коучингу и решила попробовать. Оказалось, что мне близок сам процесс — помогать человеку находить свои ответы.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DqknI",
+          "x": 0,
+          "y": 1063,
+          "name": "Черновик истории (скрыт)",
+          "enabled": false,
+          "width": 390,
+          "fill": "$sky",
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "VC6ae",
+              "name": "История и контекст",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 28,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bKZol",
+                  "name": "Заголовок истории",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HqG84",
+                      "name": "МОЯ ИСТОРИЯ",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "МОЯ ИСТОРИЯ",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "DMU2u",
+                      "name": "Свой следующий шаг",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Не чужой маршрут.\nСвой следующий шаг.",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 42,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "QVMX0",
+                  "name": "Семь лет поиска",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "После университета я поняла, что не хочу работать по специальности. Семь лет и семь направлений спустя я нашла близкое мне дело — коучинг.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "r0VAnu",
+              "name": "Этапы профессионального пути",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Bd4B8",
+                  "name": "Разрешить себе искать",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S4TVUX",
+                      "name": "ПОСЛЕ УНИВЕРСИТЕТА",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ПОСЛЕ УНИВЕРСИТЕТА",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "aZNsf",
+                      "name": "Разрешить себе искать — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Разрешить себе искать",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "T8m0yt",
+                      "name": "Разрешить себе искать — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Я поняла, что не хочу работать по специальности. Пробовала разные направления и постепенно выясняла, что важно именно мне.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pMeHx",
+                  "name": "Знакомство с коучингом",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GJ3bM",
+                      "name": "2020",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2020",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "U299J",
+                      "name": "Знакомство с коучингом — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Знакомство с коучингом",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "L29dpj",
+                      "name": "Знакомство с коучингом — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Впервые познакомилась с коучингом, но тогда отложила эту идею. Интерес к вопросам и поддержке людей остался.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bGiQ1",
+                  "name": "Попробовать всерьёз",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "eXVft",
+                      "name": "2024",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2024",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 1.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "kKUwq",
+                      "name": "Попробовать всерьёз — заголовок",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Попробовать всерьёз",
+                      "lineHeight": 1.06,
+                      "fontFamily": "$font-editorial",
+                      "fontSize": 30,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Eh6lS",
+                      "name": "Попробовать всерьёз — описание",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Вернулась к коучингу и решила попробовать. Оказалось, что мне близок сам процесс — помогать человеку находить свои ответы.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RxbSf",
+          "name": "Подход · инструкция к себе",
+          "width": "fill_container",
+          "fill": "$ink",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "w920p",
+              "name": "Смысл подхода",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "i8bzRL",
+                  "name": "ИНСТРУКЦИЯ К СЕБЕ",
+                  "fill": "$sky",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ИНСТРУКЦИЯ К СЕБЕ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "lsVt5",
+                  "name": "Не стать другой.\nЛучше понять себя.",
+                  "fill": "$paper",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Не стать другой.\nЛучше понять себя.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 42
+                },
+                {
+                  "type": "text",
+                  "id": "ytyS9",
+                  "name": "Определение метода",
+                  "fill": "$sky",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Твои ценности, мотиваторы и способы действовать уже есть. Мы учимся замечать их и опираться на них в повседневной жизни.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Z2YjO",
+                  "name": "Метафора попутчика",
+                  "fill": "$rose",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Ты выбираешь направление.\nЯ рядом — с вопросами и фонариком.",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 25,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LHo0q",
+              "name": "Четыре шага метода",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BregN",
+                  "name": "Замечаю",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Qfjls",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "01",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "egvuv",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mh8H8",
+                          "name": "Замечаю",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Замечаю",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "EYhpl",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Что чувствую, чего хочу, где мне хорошо.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "B96sF0",
+                  "name": "Понимаю",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "aRzJF",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "02",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CBLxY",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "h3jNc",
+                          "name": "Понимаю",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Понимаю",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "QyyMD",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Что для меня важно и что помогает двигаться.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "G0VN61",
+                  "name": "Пробую",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ClxEP",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "03",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P6SJz6",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Pa24f",
+                          "name": "Пробую",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Пробую",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "AoVof",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Выбираю небольшое действие и проверяю его.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GyiOs",
+                  "name": "Возвращаюсь к себе",
+                  "width": "fill_container",
+                  "stroke": "#C9DAE833",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 28,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "NJHf3",
+                      "name": "Номер шага",
+                      "fill": "$rose",
+                      "textGrowth": "fixed-width",
+                      "width": 28,
+                      "content": "04",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RRue3",
+                      "name": "Шаг",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G9Q8q",
+                          "name": "Возвращаюсь к себе",
+                          "fill": "$paper",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Возвращаюсь к себе",
+                          "lineHeight": 1.06,
+                          "fontFamily": "$font-editorial",
+                          "fontSize": 30
+                        },
+                        {
+                          "type": "text",
+                          "id": "t6jvAi",
+                          "name": "Пояснение",
+                          "fill": "$sky",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Сверяюсь с собой и корректирую маршрут.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mKRV5",
+          "name": "Принципы и доверие",
+          "width": "fill_container",
+          "fill": "$sky",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "zpFfy",
+              "name": "Можно не быть\n«собранной».",
+              "fill": "$ink",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Можно не быть\n«собранной».",
+              "lineHeight": 1.06,
+              "fontFamily": "$font-editorial",
+              "fontSize": 38
+            },
+            {
+              "type": "frame",
+              "id": "jqG0I",
+              "name": "Профессиональные границы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ErXVn",
+                  "name": "Принципы",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Конфиденциально. Без оценок и готовых советов.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 19,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "Av8f6",
+                  "name": "Границы коучинга",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "На встрече можно сомневаться, говорить о чувствах и искать свой ответ. Коучинг не заменяет психотерапию; если запрос выходит за мои компетенции, я предложу обратиться к профильному специалисту.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "A8VzGi",
+                  "name": "Документы квалификации",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Обо мне и моём подходе ↗",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YsQlD",
+          "x": 0,
+          "y": 3336,
+          "name": "Черновик приглашения (скрыт)",
+          "enabled": false,
+          "width": 390,
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "VWsLN",
+              "name": "Текст приглашения",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bTPYg",
+                  "name": "Приглашение — заголовок",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Можно познакомиться.\nИ выбрать свой первый шаг.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 40,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "M3k2ey",
+                  "name": "Приглашение — условия",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "До 30 минут · онлайн · бесплатно. Обсудим твой запрос и подходящий формат.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "RQV7F",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Бесплатно познакомиться",
+              "x": 24,
+              "y": 298,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Бесплатно познакомиться"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PrK2H",
+          "name": "Приглашение к знакомству",
+          "width": "fill_container",
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            36,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "x3IJ6M",
+              "name": "От чтения к диалогу",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "OBNWU",
+                  "name": "Хочется обсудить\nсвою историю?",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Хочется обсудить\nсвою историю?",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 36,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "K1dwF",
+                  "name": "Приглашение",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём с бесплатного знакомства до 30 минут.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "CVkbI",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Обсудить мой запрос",
+              "descendants": {
+                "fBwYY": {
+                  "content": "Обсудить мой запрос"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KL7DC",
+          "name": "Подвал",
+          "width": "fill_container",
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            44,
+            24
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "a1hYgZ",
+              "name": "Имя и копирайт",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "PgSTM",
+                  "name": "Юля Валишина",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 30
+                },
+                {
+                  "type": "text",
+                  "id": "A8TGfW",
+                  "name": "Копирайт",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "© 2026 · Коуч по реализации и проявленности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F1aDU",
+              "name": "Документы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 9,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZyOY6",
+                  "name": "Политика",
+                  "fill": "$muted",
+                  "content": "Политика конфиденциальности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "IimeK",
+                  "name": "Условия",
+                  "fill": "$muted",
+                  "content": "Согласие на обработку данных · Условия работы",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "M4zljY",
+      "x": 4060,
+      "y": 0,
+      "name": "05 · Индивидуальный коучинг / Desktop 1440",
       "clip": true,
       "width": 1440,
       "fill": "$paper",
@@ -7415,6 +10201,17 @@
                   "name": "Журнал",
                   "fill": "$ink",
                   "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ctUnW",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-ui",
                   "fontSize": 13,
@@ -9370,9 +12167,9 @@
     {
       "type": "frame",
       "id": "f3pMlw",
-      "x": 3570,
+      "x": 5600,
       "y": 0,
-      "name": "04 · Индивидуальный коучинг / Mobile 390",
+      "name": "06 · Индивидуальный коучинг / Mobile 390",
       "clip": true,
       "width": 390,
       "fill": "$paper",
@@ -11440,9 +14237,9 @@
     {
       "type": "frame",
       "id": "YF7oS",
-      "x": 4060,
+      "x": 6090,
       "y": 0,
-      "name": "05 · Журнал / Desktop 1440",
+      "name": "07 · Журнал / Desktop 1440",
       "clip": true,
       "width": 1440,
       "fill": "$paper",
@@ -11541,6 +14338,17 @@
                   "name": "Журнал",
                   "fill": "$ink",
                   "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "zlFXy",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-ui",
                   "fontSize": 13,
@@ -12069,9 +14877,9 @@
     {
       "type": "frame",
       "id": "FUDex",
-      "x": 5600,
+      "x": 7630,
       "y": 0,
-      "name": "06 · Журнал / Mobile 390",
+      "name": "08 · Журнал / Mobile 390",
       "clip": true,
       "width": 390,
       "fill": "$paper",
@@ -12713,9 +15521,9 @@
     {
       "type": "frame",
       "id": "P234tt",
-      "x": 6090,
+      "x": 8120,
       "y": 0,
-      "name": "07 · Шаблон статьи / Desktop 1440",
+      "name": "09 · Шаблон статьи / Desktop 1440",
       "clip": true,
       "width": 1440,
       "fill": "$paper",
@@ -12814,6 +15622,17 @@
                   "name": "Журнал",
                   "fill": "$ink",
                   "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "yydG5",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-ui",
                   "fontSize": 13,
@@ -13558,9 +16377,9 @@
     {
       "type": "frame",
       "id": "a80248",
-      "x": 7630,
+      "x": 9660,
       "y": 0,
-      "name": "08 · Шаблон статьи / Mobile 390",
+      "name": "10 · Шаблон статьи / Mobile 390",
       "clip": true,
       "width": 390,
       "fill": "$paper",
@@ -14417,10 +17236,1964 @@
     },
     {
       "type": "frame",
-      "id": "s8sk7",
-      "x": 8120,
+      "id": "Natiw",
+      "x": 10150,
       "y": 0,
-      "name": "09 · Меню и состояния заявки",
+      "name": "11 · Контакты / Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "fill": "$paper",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JlVuw",
+          "name": "Навигация",
+          "width": "fill_container",
+          "stroke": "$line",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            28,
+            80
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "OM55h",
+              "name": "Логотип",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Z0wKI",
+                  "name": "Имя",
+                  "fill": "$ink",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.15,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "p2mcQ3",
+                  "name": "Профессия",
+                  "fill": "$ink",
+                  "content": "КОУЧ ПО РЕАЛИЗАЦИИ И ПРОЯВЛЕННОСТИ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 9,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "XLeYm",
+              "name": "Ссылки",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HhQhO",
+                  "name": "Обо мне",
+                  "fill": "$ink",
+                  "content": "Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "vW64P",
+                  "name": "Подход",
+                  "fill": "$ink",
+                  "content": "Подход",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "D538V",
+                  "name": "Коучинг",
+                  "fill": "$ink",
+                  "content": "Коучинг",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Y7D67H",
+                  "name": "Журнал",
+                  "fill": "$ink",
+                  "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Pu9W3",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "content": "Контакты",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "s2wyTZ",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Давай познакомимся",
+              "height": 44,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Давай познакомимся"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uIpWR",
+          "name": "Первый экран контактов",
+          "width": "fill_container",
+          "fill": "$paper",
+          "gap": 100,
+          "padding": [
+            56,
+            80,
+            64,
+            80
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ECpF1",
+              "name": "Запрос и предложение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IdHZY",
+                  "name": "Хлебные крошки",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Главная / Контакты",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "W1dZMj",
+                  "name": "ОНЛАЙН · 60 МИНУТ · ОТ 3 000 ₽",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "КОНТАКТЫ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "A1VQZH",
+                  "name": "Твоё направление.\nТвои решения.\nТвоя опора.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Будем\nна связи.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 76
+                },
+                {
+                  "type": "text",
+                  "id": "X3cEj",
+                  "name": "О коучинге",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": 730,
+                  "content": "Можно прийти с вопросом, с несколькими идеями или пока без точной формулировки. Выбери удобный способ связи — начнём с бесплатного знакомства.",
+                  "lineHeight": 1.65,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "h3O81H",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "enabled": false,
+                  "width": 229,
+                  "name": "Обсудить мой запрос",
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Обсудить мой запрос"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "Zrv48",
+                  "x": 0,
+                  "y": 515,
+                  "name": "Знакомство без оплаты",
+                  "enabled": false,
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": 730,
+                  "content": "Начнём со знакомства до 30 минут. Бесплатно.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MQLgg",
+              "x": 910,
+              "y": 60,
+              "name": "AI · портрет на странице коучинга",
+              "enabled": false,
+              "width": 450,
+              "height": 525,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "design/assets/portrait.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "layout": "vertical"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ccmIe",
+          "name": "Знакомство и контакт",
+          "width": "fill_container",
+          "fill": "$sky",
+          "gap": 96,
+          "padding": [
+            72,
+            80
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "vcKyK",
+              "name": "Приглашение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JC16B",
+                  "name": "ПЕРВЫЙ ШАГ",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ПЕРВЫЙ ШАГ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "j4U4d",
+                  "name": "Начнём\nсо знакомства?",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём\nсо знакомства?",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 72
+                },
+                {
+                  "type": "text",
+                  "id": "bqkh6",
+                  "name": "Условия первого шага",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "До 30 минут · онлайн · бесплатно\nПоговорим о твоём запросе и поймём,\nкакой формат тебе подходит.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "yTEtL",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Написать в Telegram",
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Написать в Telegram"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "ovFbS",
+                  "name": "Контакт в макете",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Telegram подключим после получения адреса.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dVSBf",
+              "name": "Форма заявки",
+              "width": 500,
+              "fill": "#FFFFFF",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "gap": 18,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "DCOJ7",
+                  "name": "Заголовок формы",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Или оставь пару слов о себе",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "t6DRC1",
+                  "name": "Как тебя зовут",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "eJ6K1",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Как тебя зовут",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gKk3z",
+                      "name": "Поле Как тебя зовут",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "qQNgd",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Имя",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e40j4A",
+                  "name": "Где удобно связаться",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EgL6q",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Где удобно связаться",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cDbXe",
+                      "name": "Поле Где удобно связаться",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vPZwB",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Телефон или @telegram",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "U9Jbz",
+                  "name": "Что хочется обсудить",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o5VJqV",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Что хочется обсудить",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ioMNg",
+                      "name": "Поле Что хочется обсудить",
+                      "width": "fill_container",
+                      "height": 76,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "zkQul",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Можно пока не знать точный запрос",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "U2mSFx",
+                  "name": "Согласие",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "D8Wbj",
+                      "name": "Чекбокс",
+                      "fill": "#FFFFFF",
+                      "width": 16,
+                      "height": 16,
+                      "stroke": "$muted",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "qkFhx",
+                      "name": "Текст согласия",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Согласна на обработку персональных данных\nи ознакомилась с политикой конфиденциальности.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "jj76A",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Отправить заявку",
+                  "width": "fill_container",
+                  "height": 50,
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Отправить заявку"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "q0bveQ",
+                  "name": "Пояснение формы",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Запись не обязывает покупать сессии или пакет.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Y9TK6v",
+          "name": "Частые вопросы",
+          "width": "fill_container",
+          "fill": "$paper",
+          "stroke": "$line",
+          "strokeWidth": {
+            "top": 1
+          },
+          "gap": 96,
+          "padding": [
+            64,
+            80,
+            80,
+            80
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "TpvgI",
+              "name": "Введение в FAQ",
+              "width": 400,
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "xxFaa",
+                  "name": "О ЧЁМ ЧАСТО СПРАШИВАЮТ",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "О ЧЁМ ЧАСТО СПРАШИВАЮТ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "t6tko",
+                  "name": "Можно прийти\nс вопросами.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Можно прийти\nс вопросами.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 50
+                },
+                {
+                  "type": "text",
+                  "id": "AHGlF",
+                  "name": "Подсказка FAQ",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Даже если пока сложно\nсформулировать свой запрос.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ci5tE",
+              "name": "Вопросы и ответы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xwlO4",
+                  "name": "А если я не знаю, чего хочу?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "f7r9U2",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "P9VTg",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "А если я не знаю, чего хочу?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "e4FFo3",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "minus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "COXTA",
+                      "name": "Ответ",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Это подходящая тема для знакомства. Можно прийти с неопределённостью — мы вместе уточним, что сейчас важно.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GoY9A",
+                  "name": "Ты скажешь, какую профессию выбрать?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "BcqRx",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sBVeq",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Ты скажешь, какую профессию выбрать?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "HUwoy",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lgvBo",
+                  "name": "Сколько встреч мне понадобится?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "z2pYYu",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xcpp3",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Сколько встреч мне понадобится?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "WALEz",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DElYI",
+                  "name": "Нужно ли уметь рисовать?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GW17r",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rXeYo",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Нужно ли уметь рисовать?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "gFYg7",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AYoQs",
+          "name": "Подвал",
+          "width": "fill_container",
+          "fill": "$paper",
+          "gap": 64,
+          "padding": [
+            40,
+            80
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "B5H0B",
+              "name": "Имя и копирайт",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LZm9l",
+                  "name": "Юля Валишина",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 30
+                },
+                {
+                  "type": "text",
+                  "id": "kI09u",
+                  "name": "Копирайт",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "© 2026 · Коуч по реализации и проявленности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z6EjUk",
+              "name": "Документы",
+              "layout": "vertical",
+              "gap": 9,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "f4nRi",
+                  "name": "Политика",
+                  "fill": "$muted",
+                  "content": "Политика конфиденциальности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "K7AjlA",
+                  "name": "Условия",
+                  "fill": "$muted",
+                  "content": "Согласие на обработку данных · Условия работы",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "d9o5M",
+      "x": 11690,
+      "y": 0,
+      "name": "12 · Контакты / Mobile 390",
+      "clip": true,
+      "width": 390,
+      "fill": "$paper",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "LLrPs",
+          "name": "Навигация",
+          "width": "fill_container",
+          "stroke": "$line",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 28,
+          "padding": [
+            22,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "pp0lg",
+              "name": "Логотип",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "h0q3G",
+                  "name": "Имя",
+                  "fill": "$ink",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.15,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "DUJe1",
+                  "name": "Профессия",
+                  "fill": "$ink",
+                  "content": "КОУЧ ПО РЕАЛИЗАЦИИ И ПРОЯВЛЕННОСТИ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 7,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DGew8",
+              "x": 46,
+              "y": 40,
+              "name": "Ссылки",
+              "enabled": false,
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rcsrD",
+                  "name": "Обо мне",
+                  "fill": "$ink",
+                  "content": "Обо мне",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "zQwUq",
+                  "name": "Подход",
+                  "fill": "$ink",
+                  "content": "Подход",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "MyQIy",
+                  "name": "Коучинг",
+                  "fill": "$ink",
+                  "content": "Коучинг",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "nffQE",
+                  "name": "Журнал",
+                  "fill": "$ink",
+                  "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "C7DqN",
+              "type": "ref",
+              "ref": "t6PHfM",
+              "name": "Давай познакомимся",
+              "height": 44,
+              "enabled": false,
+              "descendants": {
+                "fBwYY": {
+                  "content": "Давай познакомимся"
+                }
+              }
+            },
+            {
+              "type": "icon",
+              "id": "K7G7S",
+              "name": "Открыть меню",
+              "width": 24,
+              "height": 24,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$ink"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "M4LJp",
+          "name": "Первый экран контактов",
+          "width": "fill_container",
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "zLqih",
+              "name": "Запрос и предложение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g2yY8",
+                  "name": "Хлебные крошки",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Главная / Контакты",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ap08y",
+                  "name": "ОНЛАЙН · 60 МИНУТ · ОТ 3 000 ₽",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "КОНТАКТЫ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "TkXG4",
+                  "name": "Твоё направление.\nТвои решения.\nТвоя опора.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Будем\nна связи.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 52
+                },
+                {
+                  "type": "text",
+                  "id": "RJkiR",
+                  "name": "О коучинге",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Можно прийти с вопросом, с несколькими идеями или пока без точной формулировки. Выбери удобный способ связи — начнём с бесплатного знакомства.",
+                  "lineHeight": 1.65,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "rWEQJ",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "enabled": false,
+                  "width": 229,
+                  "name": "Обсудить мой запрос",
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Обсудить мой запрос"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "vI6Yl",
+                  "x": 0,
+                  "y": 467,
+                  "name": "Знакомство без оплаты",
+                  "enabled": false,
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": 342,
+                  "content": "Начнём со знакомства до 30 минут. Бесплатно.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y77jGV",
+              "x": 24,
+              "y": 557,
+              "name": "AI · портрет на странице коучинга",
+              "enabled": false,
+              "width": 342,
+              "height": 398,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "design/assets/portrait.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "layout": "vertical"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FqQ67",
+          "name": "Знакомство и контакт",
+          "width": "fill_container",
+          "fill": "$sky",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "EcE9A",
+              "name": "Приглашение",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mg58e",
+                  "name": "ПЕРВЫЙ ШАГ",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ПЕРВЫЙ ШАГ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "xyeNB",
+                  "name": "Начнём\nсо знакомства?",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Начнём\nсо знакомства?",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 42
+                },
+                {
+                  "type": "text",
+                  "id": "CNoob",
+                  "name": "Условия первого шага",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "До 30 минут · онлайн · бесплатно Поговорим о твоём запросе и поймём, какой формат тебе подходит.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "A624cM",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Написать в Telegram",
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Написать в Telegram"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "GRV2k",
+                  "name": "Контакт в макете",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Telegram подключим после получения адреса.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZoH9u",
+              "name": "Форма заявки",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "gap": 18,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lFHSn",
+                  "name": "Заголовок формы",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Или оставь пару слов о себе",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 18,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "NCqkc",
+                  "name": "Как тебя зовут",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "El7fe",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Как тебя зовут",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hQlQu",
+                      "name": "Поле Как тебя зовут",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jv6WP",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Имя",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kHfSx",
+                  "name": "Где удобно связаться",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LzkXW",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Где удобно связаться",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KiTIn",
+                      "name": "Поле Где удобно связаться",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hUKsZ",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Телефон или @telegram",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WFdqY",
+                  "name": "Что хочется обсудить",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qFtmX",
+                      "name": "Подпись поля",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Что хочется обсудить",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "t0Qyg",
+                      "name": "Поле Что хочется обсудить",
+                      "width": "fill_container",
+                      "height": 76,
+                      "fill": "$paper",
+                      "cornerRadius": 3,
+                      "stroke": "#7B909F",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "padding": [
+                        12,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "grZ5v",
+                          "name": "Пример ввода",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Можно пока не знать точный запрос",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k0px1",
+                  "name": "Согласие",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "e77ivB",
+                      "name": "Чекбокс",
+                      "fill": "#FFFFFF",
+                      "width": 16,
+                      "height": 16,
+                      "stroke": "$muted",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "U5tGz",
+                      "name": "Текст согласия",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Согласна на обработку персональных данных и ознакомилась с политикой конфиденциальности.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "yP9LZ",
+                  "type": "ref",
+                  "ref": "t6PHfM",
+                  "name": "Отправить заявку",
+                  "width": "fill_container",
+                  "height": 50,
+                  "descendants": {
+                    "fBwYY": {
+                      "content": "Отправить заявку"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "m8ZWs",
+                  "name": "Пояснение формы",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Запись не обязывает покупать сессии или пакет.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "UulnE",
+          "name": "Частые вопросы",
+          "width": "fill_container",
+          "fill": "$paper",
+          "stroke": "$line",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            44,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "xC3EC",
+              "name": "Введение в FAQ",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "e7vhD3",
+                  "name": "О ЧЁМ ЧАСТО СПРАШИВАЮТ",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "О ЧЁМ ЧАСТО СПРАШИВАЮТ",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "500",
+                  "letterSpacing": 1.8
+                },
+                {
+                  "type": "text",
+                  "id": "V5zbl",
+                  "name": "Можно прийти\nс вопросами.",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Можно прийти\nс вопросами.",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 42
+                },
+                {
+                  "type": "text",
+                  "id": "PggD1",
+                  "name": "Подсказка FAQ",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Даже если пока сложно сформулировать свой запрос.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cKh2p",
+              "name": "Вопросы и ответы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QjtBw",
+                  "name": "А если я не знаю, чего хочу?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NvYeD",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZivVC",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "А если я не знаю, чего хочу?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "zCcxb",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "minus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "MGNgR",
+                      "name": "Ответ",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Это подходящая тема для знакомства. Можно прийти с неопределённостью — мы вместе уточним, что сейчас важно.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WuJvt",
+                  "name": "Ты скажешь, какую профессию выбрать?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "r6zagD",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o7GrAH",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Ты скажешь, какую профессию выбрать?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "O2Eoo",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WGdTW",
+                  "name": "Сколько встреч мне понадобится?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Te4gm",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o0OMs",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Сколько встреч мне понадобится?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Igjm1",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QvKao",
+                  "name": "Нужно ли уметь рисовать?",
+                  "width": "fill_container",
+                  "stroke": "$line",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    20,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "z7nJVb",
+                      "name": "Вопрос",
+                      "width": "fill_container",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "euzYB",
+                          "name": "Текст вопроса",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Нужно ли уметь рисовать?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-ui",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "LZMGp",
+                          "name": "Раскрыть ответ",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$ink"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WhkPm",
+          "name": "Подвал",
+          "width": "fill_container",
+          "fill": "$paper",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            44,
+            24
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "u89ROF",
+              "name": "Имя и копирайт",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LXaFY",
+                  "name": "Юля Валишина",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Юля Валишина",
+                  "lineHeight": 1.06,
+                  "fontFamily": "$font-editorial",
+                  "fontSize": 30
+                },
+                {
+                  "type": "text",
+                  "id": "cCqhT",
+                  "name": "Копирайт",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "© 2026 · Коуч по реализации и проявленности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "y5k6q",
+              "name": "Документы",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 9,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lmFsH",
+                  "name": "Политика",
+                  "fill": "$muted",
+                  "content": "Политика конфиденциальности",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "gRRKs",
+                  "name": "Условия",
+                  "fill": "$muted",
+                  "content": "Согласие на обработку данных · Условия работы",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "s8sk7",
+      "x": 12180,
+      "y": 0,
+      "name": "13 · Меню и состояния заявки",
       "width": 1200,
       "fill": "#FFFFFF",
       "layout": "vertical",
@@ -14565,6 +19338,19 @@
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Журнал",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Mlcjs",
+                  "name": "Контакты",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Контакты",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-ui",
                   "fontSize": 17,

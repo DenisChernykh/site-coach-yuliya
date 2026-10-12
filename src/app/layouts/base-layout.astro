@@ -1,5 +1,9 @@
 ---
-import { loadContacts, type SiteSettingsDto } from '@/entities/site';
+import {
+  loadContacts,
+  type ContactDetailsDto,
+  type SiteSettingsDto,
+} from '@/entities/site';
 import { SiteHeader } from '@/widgets/site-header';
 import { SiteFooter } from '@/widgets/site-footer';
 import { SocialLinks } from '@/widgets/social-links';
@@ -9,6 +13,7 @@ import '../styles/index.css';
 interface Props {
   settings: SiteSettingsDto;
   socials?: SocialLinkDto[];
+  contacts?: ContactDetailsDto;
   title?: string;
   description?: string;
 }
@@ -17,9 +22,10 @@ const {
   title = settings.name,
   description = settings.description,
   socials: initialSocials,
+  contacts: initialContacts,
 } = Astro.props;
 const socials = initialSocials ?? (await loadSocialLinks());
-const contacts = await loadContacts();
+const contacts = initialContacts ?? (await loadContacts());
 ---
 
 <!doctype html>
