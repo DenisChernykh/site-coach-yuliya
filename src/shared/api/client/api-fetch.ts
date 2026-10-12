@@ -57,7 +57,10 @@ export async function apiFetch<T>(
     return handleMockRequest<T>(path, options);
   }
 
-  const baseUrl = import.meta.env.PUBLIC_API_BASE_URL?.replace(/\/$/, '');
+  const baseUrl = (
+    (import.meta.env.SSR && import.meta.env.API_INTERNAL_BASE_URL) ||
+    import.meta.env.PUBLIC_API_BASE_URL
+  )?.replace(/\/$/, '');
   if (!baseUrl) throw new ApiProtocolError();
   return fetchApi<T>(baseUrl + path, options);
 }

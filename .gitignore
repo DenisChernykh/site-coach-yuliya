@@ -17,3 +17,4 @@ dist/
 .admin-credentials.json
 
 .playwright-cli/
+.demo/
