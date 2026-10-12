@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
-import { Globe, MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 import type { SocialLinkDto } from '@/entities/social-link';
 import { Button } from '@/shared/ui';
 import styles from './social-links.module.css';
@@ -11,6 +11,7 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
   const id = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const openedByHover = useRef(false);
 
   useEffect(() => {
     if (!expanded) return;
@@ -19,6 +20,7 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
         event.target instanceof Node &&
         !panelRef.current?.contains(event.target)
       ) {
+        openedByHover.current = false;
         setExpanded(false);
       }
     }
@@ -30,14 +32,21 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
   return (
     <div
       ref={panelRef}
-      className={`${styles.panel} ${many ? styles.many : ''}`}
+      className={`${styles.panel} ${many ? styles.gridPanel : ''}`}
       data-expanded={expanded}
-      style={{ '--social-count': items.length } as CSSProperties}
+      style={
+        {
+          '--social-count': many ? 3 : items.length,
+          '--social-rows': Math.ceil(items.length / 3),
+        } as CSSProperties
+      }
       onPointerEnter={(event) => {
         if (
           event.pointerType === 'mouse' &&
-          window.matchMedia('(hover: hover) and (min-width: 768px)').matches
+          window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+          !expanded
         ) {
+          openedByHover.current = true;
           setExpanded(true);
         }
       }}
@@ -46,15 +55,19 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
           event.pointerType === 'mouse' &&
           !event.currentTarget.contains(document.activeElement)
         ) {
+          openedByHover.current = false;
           setExpanded(false);
         }
       }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget))
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          openedByHover.current = false;
           setExpanded(false);
+        }
       }}
       onKeyDown={(event) => {
         if (event.key === 'Escape') {
+          openedByHover.current = false;
           setExpanded(false);
           triggerRef.current?.focus();
           event.stopPropagation();
@@ -66,64 +79,28 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
         aria-hidden={!expanded}
         aria-label="Социальные сети"
         role="group"
-        className={many ? styles.list : undefined}
+        className={styles.links}
       >
-        {items.map((item, index) =>
-          many ? (
-            <a
-              key={item.id}
-              href={item.url!}
-              target="_blank"
-              rel="noopener noreferrer"
-              tabIndex={expanded ? 0 : -1}
-              className={styles.listLink}
-            >
-              <Globe size={18} aria-hidden="true" />
-              {item.label}
-            </a>
-          ) : (
-            <Button
-              key={item.id}
-              variant="outline"
-              size="icon-lg"
-              className={styles.item}
-              style={
-                {
-                  '--social-index': items.length - index,
-                  '--icon-url': `url('/icons/${item.id}.svg')`,
-                } as CSSProperties
-              }
-              nativeButton={!item.url}
-              render={
-                item.url ? (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                ) : undefined
-              }
-              disabled={!item.url}
-              tabIndex={expanded && item.url ? 0 : -1}
-              aria-label={
-                item.url
-                  ? item.label
-                  : `${item.label} — профиль пока не подключён`
-              }
-              title={
-                item.url
-                  ? item.label
-                  : `${item.label} — профиль пока не подключён`
-              }
-            >
-              {['telegram', 'vk', 'rutube', 'ok'].includes(item.id) ? (
-                <span className={styles.icon} aria-hidden="true" />
-              ) : (
-                <Globe size={26} aria-hidden="true" />
-              )}
-            </Button>
-          ),
-        )}
+        {items.map((item, index) => (
+          <a
+            key={item.id}
+            href={item.url!}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.item}
+            style={
+              {
+                '--social-index': (many ? 3 : items.length) - index,
+                '--icon-url': `url('/icons/${item.id}.svg')`,
+              } as CSSProperties
+            }
+            tabIndex={expanded ? 0 : -1}
+            aria-label={item.label}
+            title={item.label}
+          >
+            <span className={styles.icon} aria-hidden="true" />
+          </a>
+        ))}
       </div>
       <Button
         ref={triggerRef}
@@ -133,7 +110,15 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
         aria-label={expanded ? 'Закрыть соцсети' : 'Открыть соцсети'}
         aria-expanded={expanded}
         aria-controls={`${id}-links`}
-        onClick={() => setExpanded((value) => !value)}
+        onClick={() => {
+          if (openedByHover.current) {
+            openedByHover.current = false;
+            setExpanded(true);
+          } else {
+            openedByHover.current = false;
+            setExpanded((value) => !value);
+          }
+        }}
       >
         {expanded ? (
           <X className="size-7" aria-hidden="true" />
