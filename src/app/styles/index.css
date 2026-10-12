@@ -34,24 +34,25 @@
 }
 
 :root {
-  --background: #f7f9f8;
-  --foreground: #20384c;
+  /* Gold Apple-inspired palette: lime accent, black, white, neutral gray. */
+  --background: #ffffff;
+  --foreground: #151515;
   --card: #ffffff;
-  --card-foreground: #20384c;
-  --popover: #f7f9f8;
-  --popover-foreground: #20384c;
-  --primary: #20384c;
-  --primary-foreground: #f7f9f8;
-  --secondary: #c9dae8;
-  --secondary-foreground: #20384c;
-  --muted: #eef2f3;
-  --muted-foreground: #465d6f;
-  --accent: #e4c4ce;
-  --accent-foreground: #20384c;
+  --card-foreground: #151515;
+  --popover: #ffffff;
+  --popover-foreground: #151515;
+  --primary: #151515;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f2;
+  --secondary-foreground: #151515;
+  --muted: #f5f5f5;
+  --muted-foreground: #595959;
+  --accent: #dcff00;
+  --accent-foreground: #151515;
   --destructive: #a53648;
-  --border: #d7e1e6;
-  --input: #d7e1e6;
-  --ring: #465d6f;
+  --border: #d9d9d9;
+  --input: #d9d9d9;
+  --ring: #595959;
   --radius: 0.25rem;
 }
 
