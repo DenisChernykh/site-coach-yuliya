@@ -3,15 +3,31 @@ import { MessageCircle, X } from 'lucide-react';
 import type { SocialLinkDto } from '@/entities/social-link';
 import { Button } from '@/shared/ui';
 import styles from './social-links.module.css';
+import overflowStyles from './social-links-overflow.module.css';
 
 export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
   const items = supplied.filter((item) => item.url);
-  const many = items.length > 4;
+  const [overflow, setOverflow] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const id = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const openedByHover = useRef(false);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    function resize() {
+      const computed = window.getComputedStyle(panel!);
+      const size = parseFloat(computed.getPropertyValue('--social-size'));
+      const bottom = parseFloat(computed.bottom);
+      const height = (items.length + 1) * size + items.length * 10 + 12;
+      setOverflow(height > window.innerHeight - bottom - 16);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, [items.length]);
 
   useEffect(() => {
     if (!expanded) return;
@@ -32,18 +48,13 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
   return (
     <div
       ref={panelRef}
-      className={`${styles.panel} ${many ? styles.gridPanel : ''}`}
+      className={`${styles.panel} ${overflow ? overflowStyles.panel : ''}`}
       data-expanded={expanded}
-      style={
-        {
-          '--social-count': many ? 3 : items.length,
-          '--social-rows': Math.ceil(items.length / 3),
-        } as CSSProperties
-      }
+      style={{ '--social-count': items.length } as CSSProperties}
       onPointerEnter={(event) => {
         if (
           event.pointerType === 'mouse' &&
-          window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+          window.matchMedia('(hover: hover) and (min-width: 768px)').matches &&
           !expanded
         ) {
           openedByHover.current = true;
@@ -79,28 +90,30 @@ export function SocialLinks({ items: supplied }: { items: SocialLinkDto[] }) {
         aria-hidden={!expanded}
         aria-label="Социальные сети"
         role="group"
-        className={styles.links}
+        className={overflowStyles.links}
       >
-        {items.map((item, index) => (
-          <a
-            key={item.id}
-            href={item.url!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.item}
-            style={
-              {
-                '--social-index': (many ? 3 : items.length) - index,
-                '--icon-url': `url('/icons/${item.id}.svg')`,
-              } as CSSProperties
-            }
-            tabIndex={expanded ? 0 : -1}
-            aria-label={item.label}
-            title={item.label}
-          >
-            <span className={styles.icon} aria-hidden="true" />
-          </a>
-        ))}
+        <div className={overflowStyles.column}>
+          {items.map((item, index) => (
+            <a
+              key={item.id}
+              href={item.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.item}
+              style={
+                {
+                  '--social-index': items.length - index,
+                  '--icon-url': `url('/icons/${item.id}.svg')`,
+                } as CSSProperties
+              }
+              tabIndex={expanded ? 0 : -1}
+              aria-label={item.label}
+              title={item.label}
+            >
+              <span className={styles.icon} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
       </div>
       <Button
         ref={triggerRef}
