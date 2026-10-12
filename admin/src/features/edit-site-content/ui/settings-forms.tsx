@@ -1,6 +1,6 @@
 import { HomeSections } from './home-sections'
 import { ContactFields } from './contact-fields'
-import { networks } from '../model/social-networks'
+import { isSocialUrl, networks } from '../model/social-networks'
 import { useState, type ReactNode } from 'react'
 import type { z } from 'zod'
 import {
@@ -133,22 +133,32 @@ export function ContactsForm({
   socials: SocialLinkDto[]
 }) {
   const save = useSaveContacts()
+  const initialValue = {
+    ...initial,
+    links: Object.entries(networks).map(([id, label]) => ({
+      id: id as SocialLinkDto['id'],
+      label,
+      url:
+        socials.find((link) => link.id === id)?.url ??
+        (id === 'telegram' ? initial.telegramUrl : null),
+    })),
+  }
   return (
     <SettingsForm
-      initial={{
-        ...initial,
-        links: Object.entries(networks).map(([id, label]) => ({
-          id: id as SocialLinkDto['id'],
-          label,
-          url:
-            socials.find((link) => link.id === id)?.url ??
-            (id === 'telegram' ? initial.telegramUrl : null),
-        })),
-      }}
+      initial={initialValue}
       renderFields={(value, onChange) => (
-        <ContactFields value={value} onChange={onChange} />
+        <ContactFields
+          value={value}
+          onChange={onChange}
+          savedLinks={initialValue.links}
+        />
       )}
-      schema={contactsSchema}
+      schema={contactsSchema.refine(
+        ({ links, telegramUrl }) =>
+          (telegramUrl === null || isSocialUrl(telegramUrl)) &&
+          (!links ||
+            links.every((link) => link.url === null || isSocialUrl(link.url))),
+      )}
       onSave={save.mutateAsync}
       pending={save.isPending}
     />
