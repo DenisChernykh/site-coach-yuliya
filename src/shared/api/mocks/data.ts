@@ -4,8 +4,12 @@ import type {
   HomePageDto,
   ServiceDto,
   SiteSettingsDto,
+  SeoSettingsDto,
   SocialLinkDto,
 } from '../generated/model';
+import initialContent from '../../../../backend/content/initial.json';
+
+export const seoSettings = initialContent.seo satisfies SeoSettingsDto;
 
 export const siteSettings = {
   name: 'Юля Валишина',

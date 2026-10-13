@@ -335,6 +335,9 @@
             },
             "type": "array"
           },
+          "seo": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
           "slug": {
             "type": "string"
           },
@@ -1054,6 +1057,48 @@
         ],
         "type": "object"
       },
+      "PageSeoDto": {
+        "properties": {
+          "description": {
+            "maxLength": 320,
+            "type": "string"
+          },
+          "noIndex": {
+            "type": "boolean"
+          },
+          "ogDescription": {
+            "maxLength": 320,
+            "type": "string"
+          },
+          "ogImage": {
+            "maxLength": 1000,
+            "pattern": "^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$",
+            "type": "string"
+          },
+          "ogImageAlt": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "ogTitle": {
+            "maxLength": 120,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "ogTitle",
+          "ogDescription",
+          "ogImage",
+          "ogImageAlt",
+          "noIndex"
+        ],
+        "type": "object"
+      },
       "ProblemFieldErrorResponseDto": {
         "properties": {
           "code": {
@@ -1325,6 +1370,78 @@
         },
         "required": [
           "email"
+        ],
+        "type": "object"
+      },
+      "SeoPagesDto": {
+        "properties": {
+          "about": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
+          "coaching": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
+          "contacts": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
+          "home": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
+          "journal": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          },
+          "privacy": {
+            "$ref": "#/components/schemas/PageSeoDto"
+          }
+        },
+        "required": [
+          "home",
+          "about",
+          "coaching",
+          "contacts",
+          "journal",
+          "privacy"
+        ],
+        "type": "object"
+      },
+      "SeoSettingsDto": {
+        "properties": {
+          "allowIndexing": {
+            "type": "boolean"
+          },
+          "defaultImage": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$",
+            "type": "string"
+          },
+          "defaultImageAlt": {
+            "maxLength": 300,
+            "minLength": 1,
+            "type": "string"
+          },
+          "pages": {
+            "$ref": "#/components/schemas/SeoPagesDto"
+          },
+          "siteName": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "siteUrl": {
+            "maxLength": 500,
+            "nullable": true,
+            "pattern": "^https://[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?(?::[0-9]{1,5})?/?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "siteName",
+          "siteUrl",
+          "defaultImage",
+          "defaultImageAlt",
+          "allowIndexing",
+          "pages"
         ],
         "type": "object"
       },
@@ -1683,6 +1800,9 @@
               "$ref": "#/components/schemas/ArticleSectionDto"
             },
             "type": "array"
+          },
+          "seo": {
+            "$ref": "#/components/schemas/PageSeoDto"
           },
           "slug": {
             "maxLength": 100,
@@ -4856,6 +4976,74 @@
         "summary": "Обновить сайт из сохранённого контента",
         "tags": [
           "publication"
+        ]
+      }
+    },
+    "/v1/admin/seo": {
+      "get": {
+        "operationId": "adminGetSeo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSettingsDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "SEO сайта и страниц",
+        "tags": [
+          "admin content"
+        ]
+      },
+      "put": {
+        "operationId": "adminUpdateSeo",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoSettingsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSettingsDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Сохранить SEO сайта и страниц",
+        "tags": [
+          "admin content"
         ]
       }
     },
@@ -8191,6 +8379,29 @@
         ]
       }
     },
+    "/v1/seo": {
+      "get": {
+        "operationId": "getSeoSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSettingsDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "SEO сайта и страниц",
+        "tags": [
+          "seo"
+        ]
+      }
+    },
     "/v1/services": {
       "get": {
         "operationId": "getServices",
@@ -8285,6 +8496,10 @@
     {
       "description": "Настройки сайта",
       "name": "site"
+    },
+    {
+      "description": "SEO сайта и страниц",
+      "name": "seo"
     },
     {
       "description": "Контактные данные",

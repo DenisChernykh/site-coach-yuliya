@@ -18,6 +18,8 @@ import { articleMarkdown } from '../model/article-markdown'
 import { contentError } from '../model/errors'
 import { useSaveArticle } from '../model/mutations'
 import { ContentFields } from './content-fields'
+import { SeoFields } from './seo-fields'
+import { emptyPageSeo } from '../model/seo'
 import { useContentNavigationGuard } from '../model/use-content-navigation-guard'
 
 const primaryMetadataKeys = ['title', 'topic', 'description']
@@ -50,7 +52,11 @@ export function ArticleForm({
   const initial = { ...newArticle, ...article?.content }
   const form = useZodForm(writeArticleSchema, {
     defaultValues: {
-      content: { ...initial, bodyMarkdown: articleMarkdown(initial) },
+      content: {
+        ...initial,
+        seo: initial.seo ?? emptyPageSeo,
+        bodyMarkdown: articleMarkdown(initial),
+      },
       published: article?.published ?? false,
       sortOrder: article?.sortOrder ?? 0,
     },
@@ -140,6 +146,30 @@ export function ArticleForm({
                     field.onChange({ ...field.value, bodyMarkdown: value })
                   }
                 />
+                <section className="space-y-4 border-t pt-4">
+                  <h2 className="text-lg font-semibold">SEO статьи</h2>
+                  <SeoFields
+                    value={field.value.seo ?? emptyPageSeo}
+                    fallback={{
+                      title: `${field.value.title} — Юля Валишина`,
+                      description: field.value.description,
+                      ogImage: ['art', 'landscape'].includes(
+                        field.value.coverImage,
+                      )
+                        ? undefined
+                        : field.value.coverImage,
+                      ogImageAlt: field.value.coverAlt,
+                    }}
+                    url={
+                      field.value.slug
+                        ? `/journal/${field.value.slug}/`
+                        : undefined
+                    }
+                    onChange={(next) =>
+                      field.onChange({ ...field.value, seo: next })
+                    }
+                  />
+                </section>
                 <details className="space-y-4 border-t pt-4">
                   <summary className="cursor-pointer text-sm font-medium">
                     Карточки, обложка и дополнительные блоки

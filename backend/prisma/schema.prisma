@@ -178,6 +178,7 @@ enum TelegramDeliveryStatus {
 model SiteContent {
   id        String   @id
   settings  Json
+  seo       Json     @default("{}")
   contacts  Json
   home      Json
   faq       Json

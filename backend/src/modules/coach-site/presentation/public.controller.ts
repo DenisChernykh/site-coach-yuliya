@@ -22,6 +22,7 @@ import { PublicEndpoint } from '@/platform/http/policy/public-endpoint.decorator
 import { CsrfTokenExempt } from '@/platform/http/policy/csrf-token-exempt.decorator'
 import { ApiProblemResponses } from '@/platform/http/docs/api-problem-responses.decorator'
 import { SiteContentService } from '../application/content.service'
+import { SeoSettingsDto } from './seo.dto'
 import { ConsultationsService } from '../application/consultations.service'
 import {
   ArticleDto,
@@ -45,6 +46,18 @@ export class PublicSiteController {
     @Inject(ConsultationsService)
     private readonly consultations: ConsultationsService,
   ) {}
+
+  @Get('seo')
+  @ApiTags('seo')
+  @ApiOperation({
+    operationId: 'getSeoSettings',
+    summary: 'SEO сайта и страниц',
+    security: [],
+  })
+  @ApiOkResponse({ type: SeoSettingsDto })
+  public getSeo(): Promise<SeoSettingsDto> {
+    return this.site.content.getSeo()
+  }
 
   @Get('site')
   @ApiTags('site')

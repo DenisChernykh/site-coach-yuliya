@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger'
 import { RequirePermission } from '@/modules/identity-access'
 import { SiteContentService } from '../application/content.service'
+import { SeoSettingsDto } from './seo.dto'
 import { ConsultationsService } from '../application/consultations.service'
 import { SiteRecordNotFoundError } from '../application/site-errors'
 import {
@@ -62,6 +63,24 @@ export class AdminContentController {
   public constructor(
     @Inject(SiteContentService) private readonly site: SiteContentService,
   ) {}
+
+  @Get('seo')
+  @ApiOkResponse({ type: SeoSettingsDto })
+  @ApiOperation({ operationId: 'adminGetSeo', summary: 'SEO сайта и страниц' })
+  public getSeo(): Promise<SeoSettingsDto> {
+    return this.site.content.getSeo()
+  }
+
+  @Put('seo')
+  @ApiBody({ type: SeoSettingsDto })
+  @ApiOkResponse({ type: SeoSettingsDto })
+  @ApiOperation({
+    operationId: 'adminUpdateSeo',
+    summary: 'Сохранить SEO сайта и страниц',
+  })
+  public updateSeo(@Body() input: SeoSettingsDto): Promise<SeoSettingsDto> {
+    return this.site.content.updateSeo(input)
+  }
 
   @Get('site')
   @ApiOkResponse({ type: SiteSettingsDto })

@@ -9,6 +9,7 @@
 | Метод | Путь                  | Назначение                     | operationId          |
 | ----- | --------------------- | ------------------------------ | -------------------- |
 | GET   | `/v1/site`            | Настройки сайта                | `getSiteSettings`    |
+| GET   | `/v1/seo`             | SEO сайта и страниц            | `getSeoSettings`     |
 | GET   | `/v1/contacts`        | Контактные данные              | `getContacts`        |
 | GET   | `/v1/home`            | Контент главной                | `getHomePage`        |
 | GET   | `/v1/services`        | Опубликованные программы       | `getServices`        |
@@ -35,6 +36,40 @@
 | ------- | ------ | ----------- |
 | `href`  | string | да          |
 | `label` | string | да          |
+
+### SeoSettingsDto
+
+| Поле              | Тип           | Обязательно |
+| ----------------- | ------------- | ----------- |
+| `allowIndexing`   | boolean       | да          |
+| `defaultImage`    | string        | да          |
+| `defaultImageAlt` | string        | да          |
+| `pages`           | SeoPagesDto   | да          |
+| `siteName`        | string        | да          |
+| `siteUrl`         | string / null | да          |
+
+### SeoPagesDto
+
+| Поле       | Тип        | Обязательно |
+| ---------- | ---------- | ----------- |
+| `about`    | PageSeoDto | да          |
+| `coaching` | PageSeoDto | да          |
+| `contacts` | PageSeoDto | да          |
+| `home`     | PageSeoDto | да          |
+| `journal`  | PageSeoDto | да          |
+| `privacy`  | PageSeoDto | да          |
+
+### PageSeoDto
+
+| Поле            | Тип     | Обязательно |
+| --------------- | ------- | ----------- |
+| `description`   | string  | да          |
+| `noIndex`       | boolean | да          |
+| `ogDescription` | string  | да          |
+| `ogImage`       | string  | да          |
+| `ogImageAlt`    | string  | да          |
+| `ogTitle`       | string  | да          |
+| `title`         | string  | да          |
 
 ### ContactDetailsDto
 
@@ -161,6 +196,7 @@
 | `quote`              | string              | да          |
 | `quoteNote`          | string              | да          |
 | `sections`           | ArticleSectionDto[] | да          |
+| `seo`                | PageSeoDto          | нет         |
 | `slug`               | string              | да          |
 | `story`              | string[]            | да          |
 | `storyTitle`         | string              | да          |

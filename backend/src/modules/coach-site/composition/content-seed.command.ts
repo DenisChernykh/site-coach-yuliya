@@ -9,6 +9,7 @@ import {
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
 import type { TransactionPort } from '@/shared/application/transaction.port'
 import { PrismaContentSeed } from '../infrastructure/prisma-content-seed'
+import { SeoSettingsDto } from '../presentation/seo.dto'
 import {
   ArticleDto,
   ContactDetailsDto,
@@ -20,6 +21,10 @@ import {
 } from '../presentation/content.dto'
 
 export class InitialContentDto {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => SeoSettingsDto)
+  public seo!: SeoSettingsDto
   @IsDefined()
   @ValidateNested()
   @Type(() => SiteSettingsDto)

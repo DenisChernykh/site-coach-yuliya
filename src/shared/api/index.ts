@@ -11,6 +11,7 @@ export type {
   ProblemDocumentLike,
 } from './client/api-errors';
 export { getSiteSettings } from './generated/site/site';
+export { getSeoSettings } from './generated/seo/seo';
 export { getHomePage } from './generated/home/home';
 export { getServices } from './generated/services/services';
 export {
@@ -37,6 +38,9 @@ export type {
   NavigationItemDto,
   ServiceDto,
   SiteSettingsDto,
+  SeoSettingsDto,
+  SeoPagesDto,
+  PageSeoDto,
   SocialLinkDto,
   StepDto,
 } from './generated/model';

@@ -5,6 +5,7 @@ import type {
   HomePageDto,
   ServiceDto,
   SiteSettingsDto,
+  SeoSettingsDto,
   SocialLinkDto,
 } from '../domain/content'
 
@@ -36,6 +37,8 @@ export interface WriteProgram {
 }
 
 export interface SiteContentPort {
+  getSeo(): Promise<SeoSettingsDto>
+  updateSeo(seo: SeoSettingsDto): Promise<SeoSettingsDto>
   getSettings(): Promise<SiteSettingsDto>
   updateSettings(settings: SiteSettingsDto): Promise<SiteSettingsDto>
   getContacts(): Promise<ContactDetailsDto>

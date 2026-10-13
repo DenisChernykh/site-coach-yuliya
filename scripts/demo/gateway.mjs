@@ -55,7 +55,7 @@ export function createDemoGateway({ siteTarget, apiTarget, state }) {
         if (
           (response.statusCode ?? 500) < 400 &&
           ['POST', 'PUT', 'DELETE'].includes(incoming.method) &&
-          /^\/v1\/admin\/(?:site|contacts|home|faq|social-links|articles|programs)(?:\/|$)/u.test(
+          /^\/v1\/admin\/(?:site|seo|contacts|home|faq|social-links|articles|programs)(?:\/|$)/u.test(
             incoming.url?.split('?', 1)[0] ?? '',
           )
         ) {

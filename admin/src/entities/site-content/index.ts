@@ -4,6 +4,7 @@ export {
   usePrograms,
   useContacts,
   useSite,
+  useSeo,
   useHome,
   useFaq,
   useSocials,

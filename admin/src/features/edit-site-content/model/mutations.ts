@@ -10,6 +10,7 @@ import {
   adminDeleteProgram,
   adminUpdateContacts,
   adminUpdateSite,
+  adminUpdateSeo,
   adminUpdateHome,
   adminUpdateFaq,
   adminUpdateSocialLinks,
@@ -18,6 +19,7 @@ import {
   type WriteProgramDto,
   type WriteContactsDto,
   type SiteSettingsDto,
+  type SeoSettingsDto,
   type HomePageDto,
   type FaqItemDto,
   type SocialLinkDto,
@@ -82,6 +84,12 @@ export function useSaveSite() {
   return useContentMutation(
     (input: SiteSettingsDto) => adminUpdateSite(input),
     'site',
+  )
+}
+export function useSaveSeo() {
+  return useContentMutation(
+    (input: SeoSettingsDto) => adminUpdateSeo(input),
+    'seo',
   )
 }
 export function useSaveHome() {

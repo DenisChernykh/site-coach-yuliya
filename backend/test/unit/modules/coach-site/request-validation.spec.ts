@@ -1,6 +1,8 @@
 import 'reflect-metadata'
 import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
+import { readFileSync } from 'node:fs'
+import { SeoSettingsDto } from '@/modules/coach-site/presentation/seo.dto'
 import {
   ConsultationRequestDto,
   ServiceDto,
@@ -23,6 +25,42 @@ const valid = {
 }
 
 describe('site HTTP input validation', () => {
+  const initial = JSON.parse(readFileSync('content/initial.json', 'utf8')) as {
+    seo: object
+  }
+  it.each([null, 'https://coach.example.com', 'https://coach.example.com/'])(
+    'accepts SEO with an optional HTTPS site origin: %s',
+    async (siteUrl) => {
+      expect(
+        await validate(
+          plainToInstance(SeoSettingsDto, { ...initial.seo, siteUrl }),
+          options,
+        ),
+      ).toHaveLength(0)
+    },
+  )
+  it.each([
+    { siteUrl: 'http://coach.example.com' },
+    { siteUrl: 'https://coach.example.com/path' },
+    { siteUrl: 'https://user:password@coach.example.com' },
+    { siteUrl: 'https://coach.example.com?track=1' },
+    { siteUrl: '' },
+    { allowIndexing: 'true' },
+    { pages: {} },
+    { defaultImage: '//untrusted.example.com/image.png' },
+    { defaultImage: 'javascript:alert(1)' },
+    { defaultImageAlt: 'x'.repeat(301) },
+  ])(
+    'rejects invalid SEO origins, images, and incomplete nested pages',
+    async (fields) => {
+      expect(
+        await validate(
+          plainToInstance(SeoSettingsDto, { ...initial.seo, ...fields }),
+          options,
+        ),
+      ).not.toHaveLength(0)
+    },
+  )
   it.each(['', 'has spaces', '../outside', 'two/slashes', 'UPPERCASE'])(
     'rejects a program ID that cannot be addressed by admin routes: %s',
     async (id) => {

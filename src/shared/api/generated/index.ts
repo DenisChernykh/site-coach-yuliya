@@ -3,6 +3,7 @@ export * from './consultations/consultations.ts';
 export * from './contacts/contacts.ts';
 export * from './faq/faq.ts';
 export * from './home/home.ts';
+export * from './seo/seo.ts';
 export * from './services/services.ts';
 export * from './site/site.ts';
 export * from './social-links/social-links.ts';

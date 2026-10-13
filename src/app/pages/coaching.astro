@@ -15,11 +15,7 @@ const [settings, home, services, faq, socials] = await Promise.all([
 ]);
 ---
 
-<BaseLayout
-  settings={settings}
-  socials={socials}
-  title="Индивидуальный коучинг — Юля Валишина"
->
+<BaseLayout settings={settings} socials={socials} seoPage="coaching">
   <CoachingPage data={home} services={services} faq={faq} socials={socials}>
     <ConsultationIsland slot="contact-form" client:load services={services} />
   </CoachingPage>

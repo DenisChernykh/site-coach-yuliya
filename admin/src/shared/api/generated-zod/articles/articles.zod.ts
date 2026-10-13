@@ -22,6 +22,21 @@ export const getArticles200ResponsePreviewDescriptionMax = 2000
 
 export const getArticles200ResponsePreviewTitleMax = 300
 
+export const getArticles200ResponseSeoDescriptionMax = 320
+
+export const getArticles200ResponseSeoOgDescriptionMax = 320
+
+export const getArticles200ResponseSeoOgImageMax = 1000
+
+export const getArticles200ResponseSeoOgImageRegExp = new RegExp(
+  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+)
+export const getArticles200ResponseSeoOgImageAltMax = 300
+
+export const getArticles200ResponseSeoOgTitleMax = 120
+
+export const getArticles200ResponseSeoTitleMax = 120
+
 export const GetArticles200ResponseItem = zod.strictObject({
   bodyMarkdown: zod
     .string()
@@ -57,6 +72,22 @@ export const GetArticles200ResponseItem = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  seo: zod
+    .strictObject({
+      description: zod.string().max(getArticles200ResponseSeoDescriptionMax),
+      noIndex: zod.boolean(),
+      ogDescription: zod
+        .string()
+        .max(getArticles200ResponseSeoOgDescriptionMax),
+      ogImage: zod
+        .string()
+        .max(getArticles200ResponseSeoOgImageMax)
+        .regex(getArticles200ResponseSeoOgImageRegExp),
+      ogImageAlt: zod.string().max(getArticles200ResponseSeoOgImageAltMax),
+      ogTitle: zod.string().max(getArticles200ResponseSeoOgTitleMax),
+      title: zod.string().max(getArticles200ResponseSeoTitleMax),
+    })
+    .optional(),
   slug: zod.string(),
   story: zod.array(zod.string()),
   storyTitle: zod.string(),
@@ -80,6 +111,21 @@ export const getArticle200ResponseListingDescriptionMax = 2000
 export const getArticle200ResponsePreviewDescriptionMax = 2000
 
 export const getArticle200ResponsePreviewTitleMax = 300
+
+export const getArticle200ResponseSeoDescriptionMax = 320
+
+export const getArticle200ResponseSeoOgDescriptionMax = 320
+
+export const getArticle200ResponseSeoOgImageMax = 1000
+
+export const getArticle200ResponseSeoOgImageRegExp = new RegExp(
+  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+)
+export const getArticle200ResponseSeoOgImageAltMax = 300
+
+export const getArticle200ResponseSeoOgTitleMax = 120
+
+export const getArticle200ResponseSeoTitleMax = 120
 
 export const GetArticle200Response = zod.strictObject({
   bodyMarkdown: zod
@@ -116,6 +162,20 @@ export const GetArticle200Response = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  seo: zod
+    .strictObject({
+      description: zod.string().max(getArticle200ResponseSeoDescriptionMax),
+      noIndex: zod.boolean(),
+      ogDescription: zod.string().max(getArticle200ResponseSeoOgDescriptionMax),
+      ogImage: zod
+        .string()
+        .max(getArticle200ResponseSeoOgImageMax)
+        .regex(getArticle200ResponseSeoOgImageRegExp),
+      ogImageAlt: zod.string().max(getArticle200ResponseSeoOgImageAltMax),
+      ogTitle: zod.string().max(getArticle200ResponseSeoOgTitleMax),
+      title: zod.string().max(getArticle200ResponseSeoTitleMax),
+    })
+    .optional(),
   slug: zod.string(),
   story: zod.array(zod.string()),
   storyTitle: zod.string(),

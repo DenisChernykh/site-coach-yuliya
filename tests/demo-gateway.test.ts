@@ -103,10 +103,17 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     });
     assert.match(result.cookie, /Secure; HttpOnly/u);
     assert.equal(contentRefreshes, 1);
+    const seoSave = await fetch(`${origin}/v1/admin/seo`, {
+      method: 'PUT',
+      body: '{}',
+    });
+    await seoSave.arrayBuffer();
+    assert.equal(contentRefreshes, 2, 'saving SEO must rebuild the demo');
     for (const path of [
       '/v1/consultations',
       '/v1/admin/consultations/demo',
       '/v1/admin/articles/rejected',
+      '/v1/admin/seo/rejected',
     ]) {
       const response = await fetch(origin + path, {
         method: 'POST',
@@ -116,7 +123,7 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     }
     assert.equal(
       contentRefreshes,
-      1,
+      2,
       'public submissions, notes and rejected saves must not rebuild the site',
     );
     const local = await fetch(`${origin}/v1/site`, {

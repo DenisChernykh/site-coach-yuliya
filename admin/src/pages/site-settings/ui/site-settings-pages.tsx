@@ -1,6 +1,7 @@
 import {
   useContacts,
   useSite,
+  useSeo,
   useHome,
   useFaq,
   useSocials,
@@ -8,6 +9,7 @@ import {
 import {
   ContactsForm,
   SiteForm,
+  SeoForm,
   HomeForm,
   FaqForm,
   SocialsForm,
@@ -47,6 +49,25 @@ export function SitePage() {
         failure
       ) : (
         <SiteForm initial={query.data} />
+      )}
+    </section>
+  )
+}
+export function SeoPage() {
+  const query = useSeo()
+  return (
+    <section className="space-y-6">
+      <h1 className="text-2xl font-semibold">SEO</h1>
+      <p className="max-w-3xl text-sm text-muted-foreground">
+        Заголовки и описания для поиска, превью ссылок и индексация. После
+        сохранения сайт обновляется через очередь публикации.
+      </p>
+      {query.isPending ? (
+        <p>Загружаем…</p>
+      ) : query.isError ? (
+        failure
+      ) : (
+        <SeoForm initial={query.data} />
       )}
     </section>
   )

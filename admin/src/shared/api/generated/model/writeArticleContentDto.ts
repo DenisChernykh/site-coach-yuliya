@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ArticleSectionDto } from './articleSectionDto'
+import type { PageSeoDto } from './pageSeoDto'
 import type { WriteArticleContentDtoTopic } from './writeArticleContentDtoTopic'
 
 export type WriteArticleContentDto = {
@@ -28,6 +29,7 @@ export type WriteArticleContentDto = {
   quote: string
   quoteNote: string
   sections: ArticleSectionDto[]
+  seo?: PageSeoDto
   /** @maxLength 100 */
   slug?: string
   story: string[]

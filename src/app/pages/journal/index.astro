@@ -12,6 +12,6 @@ const [settings, rawArticles] = await Promise.all([
 const articles = await resolveArticleImages(rawArticles, 960);
 ---
 
-<BaseLayout settings={settings} title="Журнал о своём пути — Юля Валишина">
+<BaseLayout settings={settings} seoPage="journal">
   <JournalPage><JournalIsland client:load articles={articles} /></JournalPage>
 </BaseLayout>

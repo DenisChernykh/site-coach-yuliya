@@ -5,6 +5,4 @@ import { loadSiteSettings } from '@/entities/site';
 const settings = await loadSiteSettings();
 ---
 
-<BaseLayout settings={settings} title="Конфиденциальность — Юля Валишина"
-  ><PrivacyPage /></BaseLayout
->
+<BaseLayout settings={settings} seoPage="privacy"><PrivacyPage /></BaseLayout>

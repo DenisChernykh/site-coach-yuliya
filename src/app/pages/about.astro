@@ -8,10 +8,6 @@ const [settings, data] = await Promise.all([
 ]);
 ---
 
-<BaseLayout
-  settings={settings}
-  title="Обо мне — Юля Валишина"
-  description="История Юли Валишиной, её путь к коучингу и подход к работе: исследовать себя, выбирать свои решения и двигаться в своём темпе."
->
+<BaseLayout settings={settings} seoPage="about">
   <AboutPage data={data} />
 </BaseLayout>

@@ -7,6 +7,7 @@
  */
 import type { ArticleDtoTopic } from './articleDtoTopic.ts';
 import type { ArticleSectionDto } from './articleSectionDto.ts';
+import type { PageSeoDto } from './pageSeoDto.ts';
 
 export type ArticleDto = {
   /** @maxLength 50000 */
@@ -28,6 +29,7 @@ export type ArticleDto = {
   quote: string;
   quoteNote: string;
   sections: ArticleSectionDto[];
+  seo?: PageSeoDto;
   slug: string;
   story: string[];
   storyTitle: string;

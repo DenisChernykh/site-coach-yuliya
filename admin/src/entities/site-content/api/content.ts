@@ -4,6 +4,8 @@ import {
   adminGetFaq,
   adminGetHome,
   adminGetSite,
+  adminGetSeo,
+  getAdminGetSeoQueryKey,
   adminGetSocialLinks,
   adminGetPublication,
   adminListArticles,
@@ -26,6 +28,7 @@ export const contentKeys = {
   programs: getAdminListProgramsQueryKey,
   contacts: getAdminGetContactsQueryKey,
   site: getAdminGetSiteQueryKey,
+  seo: getAdminGetSeoQueryKey,
   home: getAdminGetHomeQueryKey,
   faq: getAdminGetFaqQueryKey,
   socials: getAdminGetSocialLinksQueryKey,
@@ -56,6 +59,13 @@ export function useSite() {
   return useQuery({
     queryKey: contentKeys.site(),
     queryFn: ({ signal }) => adminGetSite(undefined, signal),
+    throwOnError: authError,
+  })
+}
+export function useSeo() {
+  return useQuery({
+    queryKey: contentKeys.seo(),
+    queryFn: ({ signal }) => adminGetSeo(undefined, signal),
     throwOnError: authError,
   })
 }
