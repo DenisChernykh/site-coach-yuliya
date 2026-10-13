@@ -226,6 +226,50 @@ async function checkNavigationMigration() {
   }
 }
 
+async function checkConsultationSourceMigration() {
+  const connection = await pool.connect()
+  try {
+    await connection.query('BEGIN')
+    await connection.query('CREATE SCHEMA source_migration_fixture')
+    await connection.query('SET LOCAL search_path = source_migration_fixture')
+    await connection.query(
+      'CREATE TABLE consultations (id text PRIMARY KEY, name text NOT NULL)',
+    )
+    await connection.query(
+      "INSERT INTO consultations VALUES ('legacy', 'Старая заявка')",
+    )
+    const legacy = (await connection.query('SELECT * FROM consultations'))
+      .rows[0]
+    await connection.query(
+      await readFile(
+        'prisma/migrations/20261013140000_consultation_source/migration.sql',
+        'utf8',
+      ),
+    )
+    assert.deepEqual(
+      (await connection.query('SELECT * FROM consultations')).rows[0],
+      { ...legacy, source: null },
+    )
+    for (const source of [
+      'HOME_CONTACT',
+      'COACHING_CONTACT',
+      'CONTACTS_CONTACT',
+    ]) {
+      await connection.query('INSERT INTO consultations VALUES ($1, $2, $3)', [
+        source,
+        'Новая заявка',
+        source,
+      ])
+    }
+    process.stdout.write(
+      'PASS consultation source migration preserves historical rows and accepts every form\n',
+    )
+  } finally {
+    await connection.query('ROLLBACK')
+    connection.release()
+  }
+}
+
 try {
   await owner.query(`CREATE DATABASE ${databaseName}`)
   pool = new Pool({ connectionString: databaseUrl })
@@ -240,6 +284,7 @@ try {
     env,
   )
   command(['dist/bootstrap/content/main.js'], env)
+  await checkConsultationSourceMigration()
   command(
     ['dist/bootstrap/admin/main.js', '--email', credentials.email],
     env,
@@ -469,6 +514,17 @@ try {
       name: 'Анна',
       contact: '@anna_example',
       consent: true,
+      source: 'UNKNOWN',
+    },
+    422,
+  )
+  await http(
+    '/v1/consultations',
+    'POST',
+    {
+      name: 'Анна',
+      contact: '@anna_example',
+      consent: true,
       serviceId: 'unknown-program',
     },
     400,
@@ -500,6 +556,7 @@ try {
       consent: true,
       serviceId: initial.programs[0].id,
       message: 'Заявка для проверки',
+      source: 'COACHING_CONTACT',
     },
     201,
   )
@@ -514,16 +571,31 @@ try {
   const consultation = list.body.items[0]
   assert.equal(consultation.name, 'Анна')
   assert.equal(consultation.serviceTitle, initial.programs[0].title)
+  assert.equal(consultation.source, 'COACHING_CONTACT')
+  assert.equal(consultation.sourceLabel, 'Коучинг → форма заявки')
   assert.equal(consultation.delivery.status, 'PENDING')
   assert.equal(consultation.consentVersion, '2026-10-11')
   assert.equal(consultation.delivery.claimToken, undefined)
-  await http(
+  const updatedConsultation = await http(
     `/v1/admin/consultations/${consultation.id}`,
     'PATCH',
     { status: 'IN_PROGRESS', adminNote: 'Связаться завтра' },
     200,
     true,
   )
+  assert.equal(updatedConsultation.body.source, consultation.source)
+  assert.equal(updatedConsultation.body.sourceLabel, consultation.sourceLabel)
+  const details = (
+    await http(
+      `/v1/admin/consultations/${consultation.id}`,
+      'GET',
+      undefined,
+      200,
+      true,
+    )
+  ).body
+  assert.equal(details.source, consultation.source)
+  assert.equal(details.sourceLabel, consultation.sourceLabel)
   assert.equal(
     (
       await http(
@@ -556,6 +628,17 @@ try {
   process.stdout.write(
     'PASS durable consultations, program snapshots, validation, filters, status and rate limit\n',
   )
+  const legacyRequest = (
+    await http(
+      '/v1/admin/consultations?search=test_example',
+      'GET',
+      undefined,
+      200,
+      true,
+    )
+  ).body.items[0]
+  assert.equal(legacyRequest.source, null)
+  assert.equal(legacyRequest.sourceLabel, 'Неизвестен')
 
   const config = buildPostgresCommandConfig({
     NODE_ENV: 'test',
@@ -884,6 +967,7 @@ try {
     contact: '@repeat_check',
     consent: true,
     message: 'Текст',
+    source: 'HOME_CONTACT',
   }
   const otherRequests = new PrismaConsultationsAdapter(provider, transaction)
   const repeatedRows = await Promise.all(
@@ -892,6 +976,13 @@ try {
     ),
   )
   assert.equal(new Set(repeatedRows.map((row) => row.id)).size, 1)
+  assert.equal(repeatedRows[0].source, 'HOME_CONTACT')
+  const otherFormDuplicate = await requests.create(
+    { ...repeated, source: 'CONTACTS_CONTACT' },
+    null,
+  )
+  assert.equal(otherFormDuplicate.id, repeatedRows[0].id)
+  assert.equal(otherFormDuplicate.source, 'HOME_CONTACT')
   assert.equal(
     (
       await pool.query(
@@ -974,6 +1065,30 @@ try {
   )
   process.stdout.write(
     'PASS honeypot, concurrent durable deduplication, expiry, distinct requests and rollback recovery\n',
+  )
+  for (const [source, sourceLabel] of [
+    ['HOME_CONTACT', 'Главная → форма знакомства'],
+    ['CONTACTS_CONTACT', 'Контакты → форма связи'],
+  ]) {
+    const savedSource = await requests.create(
+      { ...repeated, contact: `@source_${source}`, source },
+      initial.programs[0].title,
+    )
+    const sourceDetails = (
+      await http(
+        `/v1/admin/consultations/${savedSource.id}`,
+        'GET',
+        undefined,
+        200,
+        true,
+      )
+    ).body
+    assert.equal(sourceDetails.source, source)
+    assert.equal(sourceDetails.sourceLabel, sourceLabel)
+    assert.equal(sourceDetails.serviceTitle, initial.programs[0].title)
+  }
+  process.stdout.write(
+    'PASS persisted form sources, admin list/detail/update, historical fallback and first-source deduplication\n',
   )
   await http('/v1/auth/logout', 'POST', {}, 204, true)
   await http('/v1/admin/consultations', 'GET', undefined, 401, true)

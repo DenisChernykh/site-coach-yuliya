@@ -18,6 +18,7 @@ export * from './cmsPageDto.ts';
 export * from './cmsPageDtoKey.ts';
 export * from './concernDto.ts';
 export * from './consultationRequestDto.ts';
+export * from './consultationRequestDtoSource.ts';
 export * from './consultationResultDto.ts';
 export * from './consultationResultDtoStatus.ts';
 export * from './contactDetailsDto.ts';

@@ -45,6 +45,10 @@ export const AdminListConsultations200Response = zod.strictObject({
       name: zod.string(),
       serviceId: zod.string().nullable(),
       serviceTitle: zod.string().nullable(),
+      source: zod
+        .enum(['HOME_CONTACT', 'COACHING_CONTACT', 'CONTACTS_CONTACT'])
+        .nullable(),
+      sourceLabel: zod.string(),
       status: zod.enum(['NEW', 'IN_PROGRESS', 'COMPLETED', 'ARCHIVED']),
       updatedAt: zod.iso.datetime({ offset: true }),
     }),
@@ -81,6 +85,10 @@ export const AdminGetConsultation200Response = zod.strictObject({
   name: zod.string(),
   serviceId: zod.string().nullable(),
   serviceTitle: zod.string().nullable(),
+  source: zod
+    .enum(['HOME_CONTACT', 'COACHING_CONTACT', 'CONTACTS_CONTACT'])
+    .nullable(),
+  sourceLabel: zod.string(),
   status: zod.enum(['NEW', 'IN_PROGRESS', 'COMPLETED', 'ARCHIVED']),
   updatedAt: zod.iso.datetime({ offset: true }),
 })
@@ -122,6 +130,10 @@ export const AdminUpdateConsultation200Response = zod.strictObject({
   name: zod.string(),
   serviceId: zod.string().nullable(),
   serviceTitle: zod.string().nullable(),
+  source: zod
+    .enum(['HOME_CONTACT', 'COACHING_CONTACT', 'CONTACTS_CONTACT'])
+    .nullable(),
+  sourceLabel: zod.string(),
   status: zod.enum(['NEW', 'IN_PROGRESS', 'COMPLETED', 'ARCHIVED']),
   updatedAt: zod.iso.datetime({ offset: true }),
 })

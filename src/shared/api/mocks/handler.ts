@@ -9,7 +9,10 @@ import {
   seoSettings,
   socialLinks,
 } from './data';
-import type { ConsultationRequestDto } from '../generated/model';
+import {
+  ConsultationRequestDtoSource,
+  type ConsultationRequestDto,
+} from '../generated/model';
 
 export async function handleMockRequest<T>(
   path: string,
@@ -80,6 +83,8 @@ export async function handleMockRequest<T>(
       input.contact.trim().length < 5 ||
       input.contact.length > 120 ||
       input.consent !== true ||
+      (input.source !== undefined &&
+        !Object.values(ConsultationRequestDtoSource).includes(input.source)) ||
       (input.website !== undefined &&
         (typeof input.website !== 'string' || input.website.length > 2000)) ||
       (input.message !== undefined &&

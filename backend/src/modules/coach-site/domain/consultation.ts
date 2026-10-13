@@ -7,6 +7,25 @@ export const consultationStatuses = [
 export type ConsultationStatus = (typeof consultationStatuses)[number]
 export type DeliveryStatus = 'PENDING' | 'PROCESSING' | 'SENT' | 'FAILED'
 
+export const consultationSources = [
+  'HOME_CONTACT',
+  'COACHING_CONTACT',
+  'CONTACTS_CONTACT',
+] as const
+export type ConsultationSource = (typeof consultationSources)[number]
+
+const sourceLabels: Record<ConsultationSource, string> = {
+  HOME_CONTACT: 'Главная → форма знакомства',
+  COACHING_CONTACT: 'Коучинг → форма заявки',
+  CONTACTS_CONTACT: 'Контакты → форма связи',
+}
+
+export function consultationSourceLabel(
+  source: ConsultationSource | null,
+): string {
+  return source === null ? 'Неизвестен' : sourceLabels[source]
+}
+
 export interface Consultation {
   readonly id: string
   readonly name: string
@@ -14,6 +33,7 @@ export interface Consultation {
   readonly message: string
   readonly serviceId: string | null
   readonly serviceTitle: string | null
+  readonly source: ConsultationSource | null
   readonly consentAt: Date
   readonly consentVersion: string
   readonly status: ConsultationStatus

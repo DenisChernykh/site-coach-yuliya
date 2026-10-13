@@ -5,6 +5,7 @@
  * Заявки, уведомления Telegram, статьи, программы и контактные данные.
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminConsultationDtoSource } from './adminConsultationDtoSource'
 import type { AdminConsultationDtoStatus } from './adminConsultationDtoStatus'
 import type { TelegramDeliveryDto } from './telegramDeliveryDto'
 
@@ -23,6 +24,9 @@ export type AdminConsultationDto = {
   serviceId: string | null
   /** @nullable */
   serviceTitle: string | null
+  /** @nullable */
+  source: AdminConsultationDtoSource
+  sourceLabel: string
   status: AdminConsultationDtoStatus
   updatedAt: string
 }

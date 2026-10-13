@@ -76,6 +76,16 @@ test('consultation validates input and never claims delivery in mock mode', asyn
   const result = await createConsultation(valid);
   assert.equal(result.status, 'preview');
   assert.match(result.message, /Заявка не отправлена, данные не сохранены/);
+  for (const source of [
+    'HOME_CONTACT',
+    'COACHING_CONTACT',
+    'CONTACTS_CONTACT',
+  ] as const) {
+    assert.equal(
+      (await createConsultation({ ...valid, source })).status,
+      'preview',
+    );
+  }
   for (const data of [
     null,
     [],
@@ -88,6 +98,9 @@ test('consultation validates input and never claims delivery in mock mode', asyn
     { ...valid, website: null },
     { ...valid, website: 42 },
     { ...valid, website: 'x'.repeat(2001) },
+    { ...valid, source: null },
+    { ...valid, source: 'UNKNOWN' },
+    { ...valid, source: 42 },
   ]) {
     await assert.rejects(
       handleMockRequest('/v1/consultations', {

@@ -32,6 +32,11 @@ const articles = await resolveArticleImages(rawArticles, 960);
     socials={socials}
     articles={articles}
   >
-    <ConsultationIsland slot="contact-form" client:load services={services} />
+    <ConsultationIsland
+      slot="contact-form"
+      client:load
+      services={services}
+      source="HOME_CONTACT"
+    />
   </HomePage>
 </BaseLayout>

@@ -185,6 +185,18 @@
             "nullable": true,
             "type": "string"
           },
+          "source": {
+            "enum": [
+              "HOME_CONTACT",
+              "COACHING_CONTACT",
+              "CONTACTS_CONTACT"
+            ],
+            "nullable": true,
+            "type": "string"
+          },
+          "sourceLabel": {
+            "type": "string"
+          },
           "status": {
             "enum": [
               "NEW",
@@ -206,6 +218,8 @@
           "message",
           "serviceId",
           "serviceTitle",
+          "source",
+          "sourceLabel",
           "consentAt",
           "consentVersion",
           "status",
@@ -850,6 +864,15 @@
           },
           "serviceId": {
             "maxLength": 100,
+            "type": "string"
+          },
+          "source": {
+            "description": "Форма сайта, из которой отправлена заявка.",
+            "enum": [
+              "HOME_CONTACT",
+              "COACHING_CONTACT",
+              "CONTACTS_CONTACT"
+            ],
             "type": "string"
           },
           "website": {

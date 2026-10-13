@@ -225,6 +225,12 @@ model Program {
   @@map("programs")
 }
 
+enum ConsultationSource {
+  HOME_CONTACT
+  COACHING_CONTACT
+  CONTACTS_CONTACT
+}
+
 model Consultation {
   id            String             @id @default(uuid()) @db.Uuid
   name          String             @db.VarChar(80)
@@ -232,6 +238,7 @@ model Consultation {
   message       String             @db.VarChar(2000)
   serviceId     String?            @map("service_id") @db.VarChar(100)
   serviceTitle  String?            @map("service_title") @db.VarChar(300)
+  source        ConsultationSource?
   consentAt     DateTime           @default(now()) @map("consent_at")
   consentVersion String            @map("consent_version") @db.VarChar(100)
   status        ConsultationStatus @default(NEW)

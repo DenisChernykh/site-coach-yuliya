@@ -101,6 +101,9 @@ export function ConsultationsPage() {
                       <p className="mt-1 text-sm break-words text-muted-foreground">
                         {item.contact}
                       </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Источник: {item.sourceLabel}
+                      </p>
                       <p className="mt-2 text-xs text-muted-foreground">
                         {new Date(item.createdAt).toLocaleString('ru-RU')}
                       </p>

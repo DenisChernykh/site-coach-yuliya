@@ -269,6 +269,7 @@
 | `message`   | string  | нет         |
 | `name`      | string  | да          |
 | `serviceId` | string  | нет         |
+| `source`    | string  | нет         |
 | `website`   | string  | нет         |
 
 ### ConsultationResultDto

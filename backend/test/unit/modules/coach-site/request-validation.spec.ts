@@ -88,6 +88,10 @@ describe('site HTTP input validation', () => {
     { ...valid, website: null },
     { ...valid, website: 42 },
     { ...valid, website: 'x'.repeat(2001) },
+    { ...valid, source: null },
+    { ...valid, source: 'UNKNOWN' },
+    { ...valid, source: 'https://example.com/contacts/' },
+    { ...valid, source: 42 },
   ])(
     'rejects invalid consultation fields without persisting them',
     async (input) => {
@@ -118,6 +122,18 @@ describe('site HTTP input validation', () => {
     expect(await validate(input, options)).toHaveLength(0)
     expect(input).toMatchObject({ name: 'Анна', contact: '@anna_example' })
   })
+
+  it.each(['HOME_CONTACT', 'COACHING_CONTACT', 'CONTACTS_CONTACT'])(
+    'accepts a known consultation form: %s',
+    async (source) => {
+      expect(
+        await validate(
+          plainToInstance(ConsultationRequestDto, { ...valid, source }),
+          options,
+        ),
+      ).toHaveLength(0)
+    },
+  )
 
   it('requires nested article content even when other fields are valid', async () => {
     expect(

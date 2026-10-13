@@ -17,7 +17,9 @@ import {
   ValidateNested,
 } from 'class-validator'
 import {
+  consultationSources,
   consultationStatuses,
+  type ConsultationSource,
   type ConsultationStatus,
 } from '../domain/consultation'
 import {
@@ -208,6 +210,9 @@ export class AdminConsultationDto {
     string | null
   @ApiProperty({ type: String, nullable: true }) public readonly serviceTitle!:
     string | null
+  @ApiProperty({ type: String, enum: consultationSources, nullable: true })
+  public readonly source!: ConsultationSource | null
+  @ApiProperty({ type: String }) public readonly sourceLabel!: string
   @ApiProperty({ type: String, format: 'date-time' })
   public readonly consentAt!: Date
   @ApiProperty({ type: String }) public readonly consentVersion!: string

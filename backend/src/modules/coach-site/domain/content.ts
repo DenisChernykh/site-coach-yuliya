@@ -1,3 +1,5 @@
+import type { ConsultationSource } from './consultation'
+
 export interface NavigationItemDto {
   readonly label: string
   readonly href: string
@@ -166,6 +168,7 @@ export interface ConsultationRequestDto {
   readonly message?: string
   readonly consent: true
   readonly serviceId?: string
+  readonly source?: ConsultationSource
 }
 
 export interface ConsultationResultDto {

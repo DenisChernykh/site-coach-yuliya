@@ -25,6 +25,11 @@ const [settings, home, services, faq, socials] = await Promise.all([
     faq={faq}
     socials={socials}
   >
-    <ConsultationIsland slot="contact-form" client:load services={services} />
+    <ConsultationIsland
+      slot="contact-form"
+      client:load
+      services={services}
+      source="COACHING_CONTACT"
+    />
   </CoachingPage>
 </BaseLayout>

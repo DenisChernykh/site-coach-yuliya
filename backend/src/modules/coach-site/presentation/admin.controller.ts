@@ -28,6 +28,10 @@ import { RequirePermission } from '@/modules/identity-access'
 import { SiteCmsService } from '../application/cms.service'
 import { SeoSettingsDto } from './seo.dto'
 import { ConsultationsService } from '../application/consultations.service'
+import {
+  consultationSourceLabel,
+  type Consultation,
+} from '../domain/consultation'
 import { SiteRecordNotFoundError } from '../application/site-errors'
 import {
   MANAGE_CONSULTATIONS,
@@ -328,10 +332,11 @@ export class AdminConsultationsController {
     required: false,
   })
   @ApiQuery({ name: 'search', type: String, required: false })
-  public list(
+  public async list(
     @Query() filters: ConsultationQueryDto,
   ): Promise<ConsultationPageDto> {
-    return this.consultations.requests.list(filters)
+    const page = await this.consultations.requests.list(filters)
+    return { ...page, items: page.items.map(toAdminConsultation) }
   }
 
   @Get(':id')
@@ -346,7 +351,7 @@ export class AdminConsultationsController {
   ): Promise<AdminConsultationDto> {
     const request = await this.consultations.requests.find(id)
     if (request === undefined) throw new SiteRecordNotFoundError()
-    return request
+    return toAdminConsultation(request)
   }
 
   @Patch(':id')
@@ -357,11 +362,13 @@ export class AdminConsultationsController {
   })
   @ApiParam({ name: 'id', type: String, format: 'uuid' })
   @ApiBody({ type: UpdateConsultationDto })
-  public update(
+  public async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() input: UpdateConsultationDto,
   ): Promise<AdminConsultationDto> {
-    return this.consultations.requests.update(id, input)
+    return toAdminConsultation(
+      await this.consultations.requests.update(id, input),
+    )
   }
 
   @Post(':id/telegram/retry')
@@ -374,5 +381,12 @@ export class AdminConsultationsController {
   @ApiParam({ name: 'id', type: String, format: 'uuid' })
   public retry(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.consultations.requests.retryDelivery(id)
+  }
+}
+
+function toAdminConsultation(consultation: Consultation): AdminConsultationDto {
+  return {
+    ...consultation,
+    sourceLabel: consultationSourceLabel(consultation.source),
   }
 }

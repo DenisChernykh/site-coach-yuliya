@@ -34,6 +34,10 @@ export const CreateConsultationBody = zod.strictObject({
     .min(createConsultationBodyNameMin)
     .max(createConsultationBodyNameMax),
   serviceId: zod.string().max(createConsultationBodyServiceIdMax).optional(),
+  source: zod
+    .enum(['HOME_CONTACT', 'COACHING_CONTACT', 'CONTACTS_CONTACT'])
+    .optional()
+    .describe('Форма сайта, из которой отправлена заявка.'),
   website: zod.string().max(createConsultationBodyWebsiteMax).optional(),
 })
 

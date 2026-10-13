@@ -5,6 +5,7 @@
  * Заявки, уведомления Telegram, статьи, программы и контактные данные.
  * OpenAPI spec version: 0.1.0
  */
+import type { ConsultationRequestDtoSource } from './consultationRequestDtoSource.ts';
 
 export type ConsultationRequestDto = {
   consent: true;
@@ -22,6 +23,8 @@ export type ConsultationRequestDto = {
   name: string;
   /** @maxLength 100 */
   serviceId?: string;
+  /** Форма сайта, из которой отправлена заявка. */
+  source?: ConsultationRequestDtoSource;
   /** @maxLength 2000 */
   website?: string;
 };

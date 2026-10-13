@@ -1,5 +1,8 @@
 import type { CoachSiteRuntimeConfig } from '@/platform/config/coach-site.config'
-import type { Consultation } from '../domain/consultation'
+import {
+  consultationSourceLabel,
+  type Consultation,
+} from '../domain/consultation'
 import type {
   TelegramSenderPort,
   TelegramSendResult,
@@ -11,6 +14,7 @@ export function formatTelegramNotification(consultation: Consultation): string {
     `Номер: ${consultation.id}`,
     `Имя: ${consultation.name}`,
     `Контакт: ${consultation.contact}`,
+    `Источник: ${consultationSourceLabel(consultation.source)}`,
     `Программа: ${consultation.serviceTitle ?? 'Знакомство'}`,
     `Сообщение: ${consultation.message || 'Не указано'}`,
     `Дата: ${consultation.createdAt.toISOString()}`,

@@ -67,6 +67,7 @@ export function ConsultationForm({
           {date.format(new Date(consultation.createdAt))}
         </p>
       </div>
+      <p className="text-sm">Источник: {consultation.sourceLabel}</p>
       {consultation.serviceTitle && (
         <p className="text-sm">Программа: {consultation.serviceTitle}</p>
       )}

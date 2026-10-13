@@ -1,4 +1,7 @@
-import { TelegramAdapter } from '@/modules/coach-site/infrastructure/telegram.adapter'
+import {
+  TelegramAdapter,
+  formatTelegramNotification,
+} from '@/modules/coach-site/infrastructure/telegram.adapter'
 import type { Consultation } from '@/modules/coach-site/domain/consultation'
 
 const consultation: Consultation = {
@@ -8,6 +11,7 @@ const consultation: Consultation = {
   message: 'Текст & вопросы',
   serviceId: 'coaching',
   serviceTitle: 'Коучинг',
+  source: 'COACHING_CONTACT',
   consentAt: new Date('2026-10-11T00:00:00Z'),
   consentVersion: '2026-10-11',
   status: 'NEW',
@@ -45,7 +49,22 @@ describe('Telegram delivery boundary', () => {
     expect(request['text']).toContain('Анна <b>')
     expect(request['text']).toContain('Коучинг')
     expect(request['text']).toContain('@anna_example')
+    expect(request['text']).toContain('Источник: Коучинг → форма заявки')
   })
+
+  it.each([
+    ['HOME_CONTACT', 'Главная → форма знакомства'],
+    ['COACHING_CONTACT', 'Коучинг → форма заявки'],
+    ['CONTACTS_CONTACT', 'Контакты → форма связи'],
+    [null, 'Неизвестен'],
+  ] as const)(
+    'identifies the form separately from the program: %s',
+    (source, label) => {
+      const text = formatTelegramNotification({ ...consultation, source })
+      expect(text).toContain(`Источник: ${label}`)
+      expect(text).toContain('Программа: Коучинг')
+    },
+  )
 
   it('honors Telegram retry_after and never returns provider details or secrets', async () => {
     const fetcher = (): Promise<Response> =>

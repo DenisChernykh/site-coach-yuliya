@@ -1,4 +1,8 @@
 import { socialNetworks, type SocialNetwork } from '../domain/content'
+import {
+  consultationSources,
+  type ConsultationSource,
+} from '../domain/consultation'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type, Transform } from 'class-transformer'
 import { PageSeoDto } from './seo.dto'
@@ -531,6 +535,14 @@ export class SocialLinkDto {
 }
 
 export class ConsultationRequestDto {
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsIn(consultationSources)
+  @ApiPropertyOptional({
+    enum: consultationSources,
+    description: 'Форма сайта, из которой отправлена заявка.',
+  })
+  public readonly source?: ConsultationSource
+
   @ValidateIf((_object, value: unknown) => value !== undefined)
   @IsString()
   @Length(0, 2000)

@@ -1,7 +1,10 @@
 import { useEffect, useId, useRef, useState, type SubmitEvent } from 'react';
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react';
 import type { ServiceDto } from '@/entities/service';
-import { useCreateConsultation } from '@/shared/api';
+import {
+  useCreateConsultation,
+  type ConsultationRequestDto,
+} from '@/shared/api';
 import { getConsultationErrorMessage } from '../model/errors';
 import { routes } from '@/shared/routes';
 import {
@@ -22,7 +25,13 @@ import {
 type FieldName = 'name' | 'contact' | 'consent';
 type Errors = Partial<Record<FieldName, string>>;
 
-export function ConsultationForm({ services }: { services: ServiceDto[] }) {
+export function ConsultationForm({
+  services,
+  source,
+}: {
+  services: ServiceDto[];
+  source: NonNullable<ConsultationRequestDto['source']>;
+}) {
   const id = useId();
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -65,7 +74,15 @@ export function ConsultationForm({ services }: { services: ServiceDto[] }) {
       return;
     }
     mutation.mutate({
-      data: { name, contact, message, website, consent: true, serviceId },
+      data: {
+        name,
+        contact,
+        message,
+        website,
+        consent: true,
+        serviceId,
+        source,
+      },
     });
   }
 

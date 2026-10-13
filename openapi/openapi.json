@@ -1269,6 +1269,15 @@
             "maxLength": 100,
             "type": "string"
           },
+          "source": {
+            "description": "Форма сайта, из которой отправлена заявка.",
+            "enum": [
+              "HOME_CONTACT",
+              "COACHING_CONTACT",
+              "CONTACTS_CONTACT"
+            ],
+            "type": "string"
+          },
           "website": {
             "maxLength": 2000,
             "type": "string"
