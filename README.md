@@ -78,6 +78,10 @@ pnpm demo:tunnel
 `pnpm demo:tunnel --local` и адрес `http://127.0.0.1:8787/`.
 
 Сайт использует настоящий API и отдаёт собранную версию без сервера разработки.
+[Microsoft Dev Tunnels](https://github.com/microsoft/dev-tunnels/blob/main/ts/src/contracts/tunnelOptions.ts) подменяет Origin на localhost. Gateway восстанавливает
+его только для same-origin браузерных запросов с Referer текущего демо и
+соединением через loopback. В демо используется Referrer-Policy: same-origin;
+проверки origin, cookie и CSRF на backend продолжают применяться.
 После сохранения контента в админке демо автоматически пересобирается;
 через несколько секунд обновите страницу сайта. При ошибке остаётся предыдущая сборка.
 Заявки сохраняются в существующей локальной базе и видны в админке.

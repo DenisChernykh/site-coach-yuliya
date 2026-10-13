@@ -59,6 +59,7 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     const page = await fetch(`${origin}/contacts/`);
     assert.equal(await page.text(), 'site:/contacts/');
     assert.equal(page.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.equal(page.headers.get('referrer-policy'), 'same-origin');
     const admin = await fetch(`${origin}/admin/consultations`);
     assert.equal((await admin.json()).path, '/admin/consultations');
     const options = {
@@ -130,6 +131,20 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
       headers: { 'CF-Connecting-IP': '203.0.113.20' },
     });
     assert.equal((await local.json()).ip, '127.0.0.1');
+    state.origin = new URL('https://approved-8787.use.devtunnels.ms');
+    const restored = await fetch(`${origin}/v1/site`, {
+      headers: {
+        Host: `localhost:${new URL(origin).port}`,
+        Origin: `http://localhost:${new URL(origin).port}`,
+        Referer: `${state.origin.origin}/admin/seo`,
+        'Sec-Fetch-Site': 'same-origin',
+        'X-Forwarded-For': '198.51.100.99',
+      },
+    });
+    const restoredBody = await restored.json();
+    assert.equal(restoredBody.origin, state.origin.origin);
+    assert.equal(restoredBody.proto, 'https');
+    assert.equal(restoredBody.ip, '127.0.0.1');
     state.ready = false;
     const starting = await fetch(origin);
     assert.equal(starting.status, 503);
