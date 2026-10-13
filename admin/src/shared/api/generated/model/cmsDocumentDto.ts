@@ -11,6 +11,7 @@ import type { FaqItemDto } from './faqItemDto'
 import type { HomePageDto } from './homePageDto'
 import type { ManagedArticleDto } from './managedArticleDto'
 import type { ManagedProgramDto } from './managedProgramDto'
+import type { SeoSettingsDto } from './seoSettingsDto'
 import type { SiteSettingsDto } from './siteSettingsDto'
 import type { SocialLinkDto } from './socialLinkDto'
 
@@ -26,6 +27,7 @@ export type CmsDocumentDto = {
    */
   pages: CmsPageDto[]
   programs: ManagedProgramDto[]
+  seo: SeoSettingsDto
   site: SiteSettingsDto
   /** @maxItems 18 */
   socials: SocialLinkDto[]

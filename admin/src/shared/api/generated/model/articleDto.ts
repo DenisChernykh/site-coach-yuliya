@@ -7,6 +7,7 @@
  */
 import type { ArticleDtoTopic } from './articleDtoTopic'
 import type { ArticleSectionDto } from './articleSectionDto'
+import type { PageSeoDto } from './pageSeoDto'
 
 export type ArticleDto = {
   /** @maxLength 50000 */
@@ -28,6 +29,7 @@ export type ArticleDto = {
   quote: string
   quoteNote: string
   sections: ArticleSectionDto[]
+  seo?: PageSeoDto
   slug: string
   story: string[]
   storyTitle: string

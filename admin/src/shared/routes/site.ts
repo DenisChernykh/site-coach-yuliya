@@ -7,4 +7,5 @@ export const siteNavigation = [
   { path: '/home', label: 'Главная страница' },
   { path: '/faq', label: 'Частые вопросы' },
   { path: '/site', label: 'Настройки сайта' },
+  { path: '/seo', label: 'SEO' },
 ] as const

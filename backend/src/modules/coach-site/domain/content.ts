@@ -10,6 +10,34 @@ export interface SiteSettingsDto {
   readonly navigation: NavigationItemDto[]
 }
 
+export interface PageSeoDto {
+  readonly title: string
+  readonly description: string
+  readonly ogTitle: string
+  readonly ogDescription: string
+  readonly ogImage: string
+  readonly ogImageAlt: string
+  readonly noIndex: boolean
+}
+
+export interface SeoPagesDto {
+  readonly home: PageSeoDto
+  readonly about: PageSeoDto
+  readonly coaching: PageSeoDto
+  readonly contacts: PageSeoDto
+  readonly journal: PageSeoDto
+  readonly privacy: PageSeoDto
+}
+
+export interface SeoSettingsDto {
+  readonly siteName: string
+  readonly siteUrl: string | null
+  readonly defaultImage: string
+  readonly defaultImageAlt: string
+  readonly allowIndexing: boolean
+  readonly pages: SeoPagesDto
+}
+
 export interface HeroDto {
   readonly eyebrow: string
   readonly headingLines: string[]
@@ -95,6 +123,7 @@ export interface ArticleSectionDto {
 }
 
 export interface ArticleDto {
+  readonly seo?: PageSeoDto
   readonly bodyMarkdown?: string
   readonly previewTitle?: string
   readonly previewDescription?: string

@@ -51,6 +51,7 @@ export function createOpenApiDocument(
     .addTag('health', 'Process lifecycle and dependency health probes.')
     .addTag('auth', 'Hardened browser-session authentication endpoints.')
     .addTag('site', 'Настройки сайта')
+    .addTag('seo', 'SEO сайта и страниц')
     .addTag('contacts', 'Контактные данные')
     .addTag('home', 'Главная страница')
     .addTag('services', 'Программы коучинга')

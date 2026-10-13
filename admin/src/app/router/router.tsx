@@ -7,6 +7,7 @@ import { SiteEditorPage } from '@/pages/site-editor'
 import {
   ContactsPage,
   SitePage,
+  SeoPage,
   HomePage,
   FaqPage,
 } from '@/pages/site-settings'
@@ -60,6 +61,7 @@ export const router = createBrowserRouter(
         { path: 'faq', element: <FaqPage /> },
         { path: 'socials', element: <Navigate to="/contacts" replace /> },
         { path: 'site', element: <SitePage /> },
+        { path: 'seo', element: <SeoPage /> },
       ],
     },
     {

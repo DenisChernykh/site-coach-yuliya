@@ -226,6 +226,52 @@ try {
   )
 
   const initial = JSON.parse(await readFile('content/initial.json', 'utf8'))
+  await pool.query("UPDATE site_content SET seo = '{}'::jsonb")
+  await pool.query("UPDATE articles SET content = content - 'seo'")
+  command(['dist/bootstrap/content/main.js'], env)
+  assert.deepEqual(
+    (await http('/v1/articles')).body.map((article) => article.seo),
+    initial.articles.map((article) => article.seo),
+  )
+  await http('/v1/admin/seo', 'GET', undefined, 401)
+  assert.deepEqual((await http('/v1/seo')).body, initial.seo)
+  const editedSeo = {
+    ...initial.seo,
+    siteUrl: 'https://coach.example.com',
+    pages: {
+      ...initial.seo.pages,
+      home: { ...initial.seo.pages.home, title: 'SEO из редактора' },
+    },
+  }
+  const seoRevision = (
+    await http('/v1/admin/publication', 'GET', undefined, 200, true)
+  ).body.requestedRevision
+  await http(
+    '/v1/admin/seo',
+    'PUT',
+    { ...editedSeo, siteUrl: 'https://coach.example.com/path' },
+    422,
+    true,
+  )
+  await http('/v1/admin/seo', 'PUT', editedSeo, 200, true)
+  assert.deepEqual((await http('/v1/seo')).body, initial.seo)
+  assert.deepEqual(
+    (await http('/v1/admin/seo', 'GET', undefined, 200, true)).body,
+    editedSeo,
+  )
+  await publishDraft()
+  assert.deepEqual((await http('/v1/seo')).body, editedSeo)
+  assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    seoRevision + 1,
+  )
+  command(['dist/bootstrap/content/main.js'], env)
+  assert.deepEqual((await http('/v1/seo')).body, editedSeo)
+  process.stdout.write(
+    'PASS SEO validation, protected editing, publication scheduling and seed preservation\n',
+  )
+
   await http('/v1/admin/cms', 'GET', undefined, 401)
   const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
     .body
@@ -234,6 +280,7 @@ try {
   const pageContent = structuredClone(workspace.content)
   delete pageContent.articles
   delete pageContent.programs
+  delete pageContent.seo
   const changed = structuredClone(pageContent)
   changed.home.hero.description = 'Только в черновике'
   const section = changed.pages[0].blocks.splice(2, 1)[0]
@@ -541,6 +588,20 @@ try {
     (await http('/v1/articles/acceptance-draft')).body.bodyMarkdown,
     draft.content.bodyMarkdown,
   )
+  const legacyContent = { ...draft.content }
+  delete legacyContent.seo
+  await http(
+    `/v1/admin/articles/${saved.id}`,
+    'PUT',
+    { ...draft, content: legacyContent, published: true },
+    200,
+    true,
+  )
+  await publishDraft()
+  assert.deepEqual(
+    (await http('/v1/articles/acceptance-draft')).body.seo,
+    draft.content.seo,
+  )
   const originalArticle = (
     await http('/v1/admin/articles', 'GET', undefined, 200, true)
   ).body.find((article) => article.content.slug === initial.articles[0].slug)
@@ -558,6 +619,7 @@ try {
     (await http('/v1/site')).body.profession,
     'Изменено через админку',
   )
+  assert.deepEqual((await http('/v1/seo')).body, editedSeo)
   process.stdout.write(
     'PASS CSRF, content editing, drafts, atomic publication scheduling and repeatable seed\n',
   )

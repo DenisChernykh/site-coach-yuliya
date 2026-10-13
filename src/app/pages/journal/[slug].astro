@@ -25,10 +25,6 @@ const [settings, articles] = await Promise.all([
 const article = articles[0]!;
 ---
 
-<BaseLayout
-  settings={settings}
-  title={`${article.title} — Юля Валишина`}
-  description={article.description}
->
+<BaseLayout settings={settings} article={article}>
   <ArticlePage article={article} />
 </BaseLayout>

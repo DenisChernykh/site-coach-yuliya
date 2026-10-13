@@ -23,11 +23,7 @@ const [settings, home, services, faq, socials, rawArticles] = await Promise.all(
 const articles = await resolveArticleImages(rawArticles, 960);
 ---
 
-<BaseLayout
-  settings={settings}
-  socials={socials}
-  title="Юля Валишина — от поиска себя к проявленности"
->
+<BaseLayout settings={settings} socials={socials} seoPage="home">
   <HomePage
     layouts={layouts}
     data={home}

@@ -349,7 +349,7 @@ try {
           throw error;
         }
         currentDirectory = nextDirectory;
-        console.log('Демо-сайт обновлён после сохранения контента.');
+        console.log('Демо-сайт обновлён после публикации контента.');
       }
     } catch {
       console.error(
@@ -359,7 +359,7 @@ try {
       refreshing = false;
     }
   }
-  state.onContentSaved = () => {
+  state.onContentPublished = () => {
     refreshRequested = true;
     clearTimeout(refreshTimer);
     refreshTimer = setTimeout(() => void refresh(), 250);

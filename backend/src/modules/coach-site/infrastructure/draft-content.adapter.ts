@@ -9,6 +9,7 @@ import type {
 import type { SiteCmsPort } from '../application/cms.port'
 import type {
   ArticleDto,
+  SeoSettingsDto,
   ContactDetailsDto,
   HomePageDto,
   SiteSettingsDto,
@@ -39,6 +40,12 @@ export class DraftContentAdapter implements SiteContentPort {
   }
   public async getSettings(): Promise<SiteSettingsDto> {
     return (await this.document()).site
+  }
+  public async getSeo(): Promise<SeoSettingsDto> {
+    return (await this.document()).seo
+  }
+  public updateSeo(value: SeoSettingsDto): Promise<SeoSettingsDto> {
+    return this.replace('seo', value)
   }
   public async getContacts(): Promise<ContactDetailsDto> {
     return (await this.document()).contacts
@@ -141,9 +148,15 @@ export class DraftContentAdapter implements SiteContentPort {
       }
       if (document.articles.some((a) => a.id !== id && a.content.slug === slug))
         throw new SiteContentConflictError()
+      const seo = input.content.seo ?? previous?.content.seo
+      const content: ArticleDto = {
+        ...input.content,
+        slug,
+        ...(seo === undefined ? {} : { seo }),
+      }
       const article = {
         id: id ?? randomUUID(),
-        content: { ...input.content, slug },
+        content,
         published: input.published,
         sortOrder: input.sortOrder,
         updatedAt: new Date().toISOString(),

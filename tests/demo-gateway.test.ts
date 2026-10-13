@@ -23,7 +23,11 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     const chunks = [];
     for await (const chunk of incoming) chunks.push(chunk);
     response.setHeader('Content-Type', 'application/json');
-    if (incoming.url?.endsWith('/rejected')) response.statusCode = 403;
+    if (
+      incoming.url?.endsWith('/rejected') ||
+      incoming.headers['x-test-reject']
+    )
+      response.statusCode = 403;
     response.setHeader(
       'Set-Cookie',
       '__Host-session=test; Secure; HttpOnly; Path=/',
@@ -44,7 +48,7 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
   const state = {
     ready: true,
     origin: new URL('https://demo.trycloudflare.com'),
-    onContentSaved: () => {
+    onContentPublished: () => {
       contentRefreshes += 1;
     },
   };
@@ -59,6 +63,7 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     const page = await fetch(`${origin}/contacts/`);
     assert.equal(await page.text(), 'site:/contacts/');
     assert.equal(page.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.equal(page.headers.get('referrer-policy'), 'same-origin');
     const admin = await fetch(`${origin}/admin/consultations`);
     assert.equal((await admin.json()).path, '/admin/consultations');
     const options = {
@@ -102,11 +107,41 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
       proto: 'https',
     });
     assert.match(result.cookie, /Secure; HttpOnly/u);
-    assert.equal(contentRefreshes, 1);
+    assert.equal(contentRefreshes, 0);
+    const seoSave = await fetch(`${origin}/v1/admin/seo`, {
+      method: 'PUT',
+      body: '{}',
+    });
+    await seoSave.arrayBuffer();
+    assert.equal(
+      contentRefreshes,
+      0,
+      'saving a draft must not rebuild the demo',
+    );
+    const draftSave = await fetch(`${origin}/v1/admin/cms/draft`, {
+      method: 'PUT',
+      body: '{}',
+    });
+    await draftSave.arrayBuffer();
+    assert.equal(contentRefreshes, 0);
+    const publication = await fetch(`${origin}/v1/admin/cms/publish`, {
+      method: 'POST',
+      body: '{}',
+    });
+    await publication.arrayBuffer();
+    assert.equal(contentRefreshes, 1, 'publishing must rebuild the demo');
+    const rejectedPublication = await fetch(`${origin}/v1/admin/cms/publish`, {
+      method: 'POST',
+      body: '{}',
+      headers: { 'X-Test-Reject': 'true' },
+    });
+    await rejectedPublication.arrayBuffer();
+    assert.equal(rejectedPublication.status, 403);
     for (const path of [
       '/v1/consultations',
       '/v1/admin/consultations/demo',
       '/v1/admin/articles/rejected',
+      '/v1/admin/seo/rejected',
     ]) {
       const response = await fetch(origin + path, {
         method: 'POST',
@@ -117,12 +152,26 @@ test('demo forwards the site, admin and real API body/cookie/CSRF on one origin'
     assert.equal(
       contentRefreshes,
       1,
-      'public submissions, notes and rejected saves must not rebuild the site',
+      'public submissions, notes and rejected publication must not rebuild the site',
     );
     const local = await fetch(`${origin}/v1/site`, {
       headers: { 'CF-Connecting-IP': '203.0.113.20' },
     });
     assert.equal((await local.json()).ip, '127.0.0.1');
+    state.origin = new URL('https://approved-8787.use.devtunnels.ms');
+    const restored = await fetch(`${origin}/v1/site`, {
+      headers: {
+        Host: `localhost:${new URL(origin).port}`,
+        Origin: `http://localhost:${new URL(origin).port}`,
+        Referer: `${state.origin.origin}/admin/seo`,
+        'Sec-Fetch-Site': 'same-origin',
+        'X-Forwarded-For': '198.51.100.99',
+      },
+    });
+    const restoredBody = await restored.json();
+    assert.equal(restoredBody.origin, state.origin.origin);
+    assert.equal(restoredBody.proto, 'https');
+    assert.equal(restoredBody.ip, '127.0.0.1');
     state.ready = false;
     const starting = await fetch(origin);
     assert.equal(starting.status, 503);

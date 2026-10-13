@@ -17,6 +17,7 @@ import type {
   HomePageDto,
   ServiceDto,
   SiteSettingsDto,
+  SeoSettingsDto,
   SocialLinkDto,
 } from '../domain/content'
 import {
@@ -76,6 +77,7 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
 
   private async site(): Promise<{
     settings: Prisma.JsonValue
+    seo: Prisma.JsonValue
     contacts: Prisma.JsonValue
     home: Prisma.JsonValue
     faq: Prisma.JsonValue
@@ -90,6 +92,19 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
 
   public async getSettings(): Promise<SiteSettingsDto> {
     return json<SiteSettingsDto>((await this.site()).settings)
+  }
+  public async getSeo(): Promise<SeoSettingsDto> {
+    return json<SeoSettingsDto>((await this.site()).seo)
+  }
+
+  public async updateSeo(seo: SeoSettingsDto): Promise<SeoSettingsDto> {
+    await this.edit((client) =>
+      client.siteContent.update({
+        where: { id: 'site' },
+        data: { seo: inputJson(seo) },
+      }),
+    )
+    return seo
   }
   public async getContacts(): Promise<ContactDetailsDto> {
     return json<ContactDetailsDto>((await this.site()).contacts)
@@ -225,10 +240,12 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     try {
       const row = await this.edit(async (client) => {
         let slug: string
+        let previousSeo: ArticleDto['seo']
         if (id !== undefined) {
           const existing = await client.article.findUnique({ where: { id } })
           if (existing === null) throw new SiteRecordNotFoundError()
           slug = existing.slug
+          previousSeo = json<ArticleDto>(existing.content).seo
         } else {
           slug = input.content.slug ?? articleSlug(input.content.title)
           if (input.content.slug === undefined) {
@@ -239,7 +256,12 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
             }
           }
         }
-        const content: ArticleDto = { ...input.content, slug }
+        const seo = input.content.seo ?? previousSeo
+        const content: ArticleDto = {
+          ...input.content,
+          slug,
+          ...(seo === undefined ? {} : { seo }),
+        }
         const data = {
           content: inputJson(content),
           slug,

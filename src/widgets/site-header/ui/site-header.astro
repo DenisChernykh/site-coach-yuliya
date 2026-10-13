@@ -6,9 +6,10 @@ import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 
 interface Props {
+  preview?: boolean;
   settings: SiteSettingsDto;
 }
-const { settings } = Astro.props;
+const { settings, preview = false } = Astro.props;
 const pathname = Astro.url.pathname;
 ---
 
@@ -22,14 +23,20 @@ const pathname = Astro.url.pathname;
       <span data-cms-field="site.name">{settings.name}</span>
       <small data-cms-field="site.profession">{settings.profession}</small>
     </a>
-    <nav class="desktop-navigation" aria-label="Основная навигация">
+    <nav
+      class="desktop-navigation"
+      data-cms-list="site.navigation"
+      aria-label="Основная навигация"
+    >
       {
         settings.navigation.map((item) => (
           <a
+            data-cms-item
+            data-cms-href=".href"
             href={item.href}
             aria-current={item.href === pathname ? 'page' : undefined}
           >
-            {item.label}
+            <span data-cms-field=".label">{item.label}</span>
           </a>
         ))
       }
@@ -38,11 +45,23 @@ const pathname = Astro.url.pathname;
       >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
     >
     <div class="mobile-navigation">
-      <MobileNavigation
-        client:load
-        navigation={settings.navigation}
-        name={settings.name}
-      />
+      {
+        preview ? (
+          <div data-cms-react="navigation">
+            {' '}
+            <MobileNavigation
+              navigation={settings.navigation}
+              name={settings.name}
+            />
+          </div>
+        ) : (
+          <MobileNavigation
+            client:load
+            navigation={settings.navigation}
+            name={settings.name}
+          />
+        )
+      }
     </div>
   </div>
   <noscript

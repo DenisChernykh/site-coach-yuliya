@@ -8,6 +8,7 @@ import { JournalPage } from '@/pages/journal';
 import { ArticlePage } from '@/pages/article';
 import { ConsultationIsland } from '../islands/consultation-island';
 import {
+  seoSettings,
   siteSettings,
   homePage,
   faq,
@@ -27,6 +28,8 @@ const contacts = {
 
 <BaseLayout
   preview
+  seo={seoSettings}
+  noIndex
   settings={siteSettings}
   contacts={contacts}
   socials={socialLinks}

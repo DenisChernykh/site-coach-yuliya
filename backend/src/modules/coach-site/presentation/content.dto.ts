@@ -1,6 +1,7 @@
 import { socialNetworks, type SocialNetwork } from '../domain/content'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type, Transform } from 'class-transformer'
+import { PageSeoDto } from './seo.dto'
 import {
   IsDefined,
   IsArray,
@@ -366,6 +367,13 @@ export class ArticleSectionDto {
 }
 
 export class ArticleDto {
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => PageSeoDto)
+  @ApiPropertyOptional({ type: () => PageSeoDto })
+  public readonly seo?: PageSeoDto
+
   @ApiPropertyOptional({ type: String, maxLength: 50000 })
   @ValidateIf((_object, value: unknown) => value !== undefined)
   @IsString()

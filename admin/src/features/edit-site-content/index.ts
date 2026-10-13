@@ -14,6 +14,7 @@ export {
 export {
   ContactsForm,
   SiteForm,
+  SeoForm,
   HomeForm,
   FaqForm,
   SocialsForm,

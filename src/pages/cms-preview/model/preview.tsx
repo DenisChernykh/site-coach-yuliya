@@ -1,3 +1,4 @@
+import { MobileNavigation } from '@/features/mobile-navigation';
 import { TelegramLink } from '@/widgets/contact';
 import { SocialLinks } from '@/widgets/social-links';
 import { createRoot, type Root } from 'react-dom/client';
@@ -93,6 +94,11 @@ function lists(scope: Element, document: unknown) {
         node.textContent =
           (node.dataset.cmsValuePrefix ?? '') + String(item ?? '');
       fields(node, item, true);
+      const href = node.dataset.cmsHref
+        ? read(item, node.dataset.cmsHref)
+        : undefined;
+      if (typeof href === 'string' && /^(?:https:\/\/|\/(?!\/)|#)/.test(href))
+        node.setAttribute('href', href);
       node.querySelectorAll<HTMLElement>('[data-cms-index]').forEach((n) => {
         n.textContent = String(index + 1).padStart(2, '0');
       });
@@ -280,7 +286,13 @@ export function startPreview() {
                 />,
               );
             if (type === 'socials')
-              render(node, <SocialLinks items={content.socials} />);
+              render(
+                node,
+                <SocialLinks
+                  items={content.socials}
+                  phone={content.contacts.phone}
+                />,
+              );
             if (type === 'faq') render(node, <FaqList items={content.faq} />);
             if (type === 'articles' || type === 'journal') {
               const all = content.articles
@@ -344,7 +356,26 @@ export function startPreview() {
       });
     window.document
       .querySelectorAll<HTMLElement>('[data-cms-react="socials"]')
-      .forEach((node) => render(node, <SocialLinks items={content.socials} />));
+      .forEach((node) =>
+        render(
+          node,
+          <SocialLinks
+            items={content.socials}
+            phone={content.contacts.phone}
+          />,
+        ),
+      );
+    window.document
+      .querySelectorAll<HTMLElement>('[data-cms-react="navigation"]')
+      .forEach((node) =>
+        render(
+          node,
+          <MobileNavigation
+            navigation={content.site.navigation}
+            name={content.site.name}
+          />,
+        ),
+      );
     window.parent.postMessage(
       { type: 'cms:rendered', sequence: event.data.sequence },
       parentOrigin,

@@ -5,7 +5,11 @@ import { buttonVariants } from '@/shared/ui';
 const settings = await loadSiteSettings();
 ---
 
-<BaseLayout settings={settings} title="Страница не найдена — Юля Валишина">
+<BaseLayout
+  settings={settings}
+  title="Страница не найдена — Юля Валишина"
+  noIndex
+>
   <section class="page-container py-24">
     <p class="eyebrow">404</p><h1 class="mt-5 text-5xl">
       Здесь пока нет страницы.

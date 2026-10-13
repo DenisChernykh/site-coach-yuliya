@@ -31,6 +31,7 @@ import type {
   HomePageDto,
   ManagedArticleDto,
   ManagedProgramDto,
+  SeoSettingsDto,
   SiteSettingsDto,
   SocialLinkDto,
   WriteArticleDto,
@@ -1610,6 +1611,227 @@ export const useAdminUpdateProgram = <
   TContext
 > => {
   return useMutation(getAdminUpdateProgramMutationOptions(options), queryClient)
+}
+/**
+ * @summary SEO сайта и страниц
+ */
+export const adminGetSeo = (
+  options?: SecondParameter<typeof apiMutator>,
+  signal?: AbortSignal,
+) => {
+  return apiMutator<SeoSettingsDto>(
+    { url: `/v1/admin/seo`, method: 'GET', signal },
+    options,
+  )
+}
+
+export const getAdminGetSeoQueryKey = () => {
+  return [`/v1/admin/seo`] as const
+}
+
+export const getAdminGetSeoQueryOptions = <
+  TData = Awaited<ReturnType<typeof adminGetSeo>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof adminGetSeo>>, TError, TData>
+  >
+  request?: SecondParameter<typeof apiMutator>
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey = queryOptions?.queryKey ?? getAdminGetSeoQueryKey()
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof adminGetSeo>>> = ({
+    signal,
+  }) => adminGetSeo(requestOptions, signal)
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof adminGetSeo>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type AdminGetSeoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof adminGetSeo>>
+>
+export type AdminGetSeoQueryError = ErrorType<unknown>
+
+export function useAdminGetSeo<
+  TData = Awaited<ReturnType<typeof adminGetSeo>>,
+  TError = ErrorType<unknown>,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof adminGetSeo>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof adminGetSeo>>,
+          TError,
+          Awaited<ReturnType<typeof adminGetSeo>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof apiMutator>
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useAdminGetSeo<
+  TData = Awaited<ReturnType<typeof adminGetSeo>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof adminGetSeo>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof adminGetSeo>>,
+          TError,
+          Awaited<ReturnType<typeof adminGetSeo>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof apiMutator>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useAdminGetSeo<
+  TData = Awaited<ReturnType<typeof adminGetSeo>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof adminGetSeo>>, TError, TData>
+    >
+    request?: SecondParameter<typeof apiMutator>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary SEO сайта и страниц
+ */
+
+export function useAdminGetSeo<
+  TData = Awaited<ReturnType<typeof adminGetSeo>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof adminGetSeo>>, TError, TData>
+    >
+    request?: SecondParameter<typeof apiMutator>
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getAdminGetSeoQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  return withQueryKey(query, queryOptions.queryKey)
+}
+
+/**
+ * @summary Сохранить SEO сайта и страниц
+ */
+export const adminUpdateSeo = (
+  seoSettingsDto: BodyType<SeoSettingsDto>,
+  options?: SecondParameter<typeof apiMutator>,
+  signal?: AbortSignal,
+) => {
+  return apiMutator<SeoSettingsDto>(
+    {
+      url: `/v1/admin/seo`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: seoSettingsDto,
+      signal,
+    },
+    options,
+  )
+}
+
+export const getAdminUpdateSeoMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminUpdateSeo>>,
+    TError,
+    { data: BodyType<SeoSettingsDto> },
+    TContext
+  >
+  request?: SecondParameter<typeof apiMutator>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof adminUpdateSeo>>,
+  TError,
+  { data: BodyType<SeoSettingsDto> },
+  TContext
+> => {
+  const mutationKey = ['adminUpdateSeo']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof adminUpdateSeo>>,
+    { data: BodyType<SeoSettingsDto> }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return adminUpdateSeo(data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type AdminUpdateSeoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof adminUpdateSeo>>
+>
+export type AdminUpdateSeoMutationBody = BodyType<SeoSettingsDto>
+export type AdminUpdateSeoMutationError = ErrorType<unknown>
+
+/**
+ * @summary Сохранить SEO сайта и страниц
+ */
+export const useAdminUpdateSeo = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof adminUpdateSeo>>,
+      TError,
+      { data: BodyType<SeoSettingsDto> },
+      TContext
+    >
+    request?: SecondParameter<typeof apiMutator>
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof adminUpdateSeo>>,
+  TError,
+  { data: BodyType<SeoSettingsDto> },
+  TContext
+> => {
+  return useMutation(getAdminUpdateSeoMutationOptions(options), queryClient)
 }
 /**
  * @summary Настройки сайта для редактирования

@@ -2,6 +2,7 @@ import type { Prisma, SiteCmsDraft } from '@/generated/prisma/client'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
 import type { TransactionPort } from '@/shared/application/transaction.port'
 import type { SiteCmsPort } from '../application/cms.port'
+import type { SiteContentPort } from '../application/content.port'
 import {
   SiteContentConflictError,
   SiteRecordNotFoundError,
@@ -24,6 +25,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
   public constructor(
     private readonly database: PrismaClientProvider,
     private readonly transaction: TransactionPort,
+    private readonly legacy: SiteContentPort,
   ) {}
 
   private async lock(client: Client): Promise<SiteCmsDraft> {
@@ -35,7 +37,16 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     const existing = await client.siteCmsDraft.findUnique({
       where: { id: 'site' },
     })
-    if (existing) return existing
+    if (existing) {
+      const document = json<CmsDocument>(existing.content)
+      if (document.seo) return existing
+      return client.siteCmsDraft.update({
+        where: { id: 'site' },
+        data: {
+          content: input({ ...document, seo: await this.legacy.getSeo() }),
+        },
+      })
+    }
     const site = await client.siteContent.findUnique({ where: { id: 'site' } })
     if (!site) throw new SiteRecordNotFoundError()
     const [articles, programs] = await Promise.all([
@@ -47,6 +58,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
       }),
     ])
     const document: CmsDocument = {
+      seo: await this.legacy.getSeo(),
       site: json(site.settings),
       home: json(site.home),
       contacts: json(site.contacts),
@@ -153,6 +165,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
           where: { id: 'site' },
           data: {
             settings: input(document.site),
+            seo: input(document.seo),
             contacts: input(document.contacts),
             home: input(document.home),
             faq: input(document.faq),

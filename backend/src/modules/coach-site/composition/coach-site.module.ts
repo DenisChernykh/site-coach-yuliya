@@ -64,11 +64,16 @@ export class CoachSiteModule {
       providers: [
         {
           provide: PrismaCmsAdapter,
-          inject: [PrismaClientProvider, TRANSACTION_PORT],
+          inject: [
+            PrismaClientProvider,
+            TRANSACTION_PORT,
+            PrismaSiteContentAdapter,
+          ],
           useFactory: (
             database: PrismaClientProvider,
             transaction: TransactionPort,
-          ) => new PrismaCmsAdapter(database, transaction),
+            legacy: PrismaSiteContentAdapter,
+          ) => new PrismaCmsAdapter(database, transaction, legacy),
         },
         {
           provide: SiteCmsService,

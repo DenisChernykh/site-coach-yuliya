@@ -47,7 +47,7 @@ export function ContactFields({
         <p className="text-sm text-muted-foreground">
           Вставьте полную ссылку с https://, а не только имя пользователя или
           номер телефона. Пустые ссылки на сайте не выводятся. Изменения
-          появятся после сохранения и обновления сайта.
+          появятся после публикации черновика и обновления сайта.
         </p>
         <div className="space-y-2 border-l-2 border-primary bg-muted/40 p-3">
           <p role="status" className="text-sm font-medium">

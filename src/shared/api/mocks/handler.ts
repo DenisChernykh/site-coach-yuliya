@@ -6,6 +6,7 @@ import {
   homePage,
   services,
   siteSettings,
+  seoSettings,
   socialLinks,
 } from './data';
 import type { ConsultationRequestDto } from '../generated/model';
@@ -26,6 +27,9 @@ export async function handleMockRequest<T>(
         break;
       case '/v1/site':
         result = siteSettings;
+        break;
+      case '/v1/seo':
+        result = seoSettings;
         break;
       case '/v1/contacts':
         result = { email: null, phone: null, telegramUrl: null, address: null };

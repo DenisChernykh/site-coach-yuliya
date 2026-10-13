@@ -1,16 +1,19 @@
 import { HomeSections } from './home-sections'
 import { ContactFields } from './contact-fields'
+import { SeoSettingsFields } from './seo-fields'
 import { isSocialUrl, networks } from '../model/social-networks'
 import { useState, type ReactNode } from 'react'
 import type { z } from 'zod'
 import {
   contactsSchema,
   siteSchema,
+  seoSchema,
   homeSchema,
   faqSchema,
   socialsSchema,
   type ContactDetailsDto,
   type SiteSettingsDto,
+  type SeoSettingsDto,
   type HomePageDto,
   type FaqItemDto,
   type SocialLinkDto,
@@ -23,6 +26,7 @@ import { contentError } from '../model/errors'
 import {
   useSaveContacts,
   useSaveSite,
+  useSaveSeo,
   useSaveHome,
   useSaveFaq,
   useSaveSocials,
@@ -171,6 +175,23 @@ export function SiteForm({ initial }: { initial: SiteSettingsDto }) {
     <SettingsForm
       initial={initial}
       schema={siteSchema}
+      onSave={save.mutateAsync}
+      pending={save.isPending}
+    />
+  )
+}
+export function SeoForm({ initial }: { initial: SeoSettingsDto }) {
+  const save = useSaveSeo()
+  return (
+    <SettingsForm
+      initial={initial}
+      schema={seoSchema}
+      renderFields={(value, onChange) => (
+        <SeoSettingsFields
+          value={value as unknown as SeoSettingsDto}
+          onChange={(next) => onChange(next as unknown as ContentValue)}
+        />
+      )}
       onSave={save.mutateAsync}
       pending={save.isPending}
     />

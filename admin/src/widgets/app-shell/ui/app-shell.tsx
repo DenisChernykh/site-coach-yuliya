@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Settings,
   Inbox,
+  Search,
 } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router'
 import { useCurrentSession } from '@/entities/session'
@@ -39,6 +40,7 @@ const icons = {
   '/home': Home,
   '/faq': MessageSquare,
   '/site': Settings,
+  '/seo': Search,
 }
 
 function Navigation({ canManage }: { canManage: boolean }) {

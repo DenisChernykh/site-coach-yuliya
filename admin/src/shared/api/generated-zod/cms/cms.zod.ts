@@ -18,6 +18,20 @@ export const adminGetCms200ResponseContentArticlesItemContentPreviewDescriptionM
 
 export const adminGetCms200ResponseContentArticlesItemContentPreviewTitleMax = 300
 
+export const adminGetCms200ResponseContentArticlesItemContentSeoDescriptionMax = 320
+
+export const adminGetCms200ResponseContentArticlesItemContentSeoOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageMax = 1000
+
+export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentArticlesItemContentSeoOgTitleMax = 120
+
+export const adminGetCms200ResponseContentArticlesItemContentSeoTitleMax = 120
+
 export const adminGetCms200ResponseContentArticlesItemSortOrderMin = 0
 export const adminGetCms200ResponseContentArticlesItemSortOrderMax = 10000
 
@@ -57,6 +71,104 @@ export const adminGetCms200ResponseContentProgramsItemContentTitleMax = 300
 export const adminGetCms200ResponseContentProgramsItemSortOrderMin = 0
 export const adminGetCms200ResponseContentProgramsItemSortOrderMax = 10000
 
+export const adminGetCms200ResponseContentSeoDefaultImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoDefaultImageRegExp = new RegExp(
+  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+)
+export const adminGetCms200ResponseContentSeoDefaultImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesAboutDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesAboutOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesAboutOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesAboutOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesAboutOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesAboutOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesAboutTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesCoachingDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesCoachingOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesCoachingOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesCoachingOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesCoachingOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesCoachingOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesCoachingTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesContactsDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesContactsOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesContactsOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesContactsOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesContactsOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesContactsOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesContactsTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesHomeDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesHomeOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesHomeOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesHomeOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesHomeOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesHomeOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesHomeTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesJournalDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesJournalOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesJournalOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesJournalOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesJournalOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesJournalOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesJournalTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyOgDescriptionMax = 320
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageMax = 1000
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyOgTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoPagesPrivacyTitleMax = 120
+
+export const adminGetCms200ResponseContentSeoSiteNameMax = 120
+
+export const adminGetCms200ResponseContentSeoSiteUrlMax = 500
+
+export const adminGetCms200ResponseContentSeoSiteUrlRegExp = new RegExp(
+  '^https://[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?(?::[0-9]{1,5})?/?$',
+)
 export const adminGetCms200ResponseContentSocialsMax = 18
 
 export const AdminGetCms200Response = zod.strictObject({
@@ -106,6 +218,44 @@ export const AdminGetCms200Response = zod.strictObject({
               title: zod.string(),
             }),
           ),
+          seo: zod
+            .strictObject({
+              description: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoDescriptionMax,
+                ),
+              noIndex: zod.boolean(),
+              ogDescription: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoOgDescriptionMax,
+                ),
+              ogImage: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoOgImageMax,
+                )
+                .regex(
+                  adminGetCms200ResponseContentArticlesItemContentSeoOgImageRegExp,
+                ),
+              ogImageAlt: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoOgImageAltMax,
+                ),
+              ogTitle: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoOgTitleMax,
+                ),
+              title: zod
+                .string()
+                .max(
+                  adminGetCms200ResponseContentArticlesItemContentSeoTitleMax,
+                ),
+            })
+            .optional(),
           slug: zod.string(),
           story: zod.array(zod.string()),
           storyTitle: zod.string(),
@@ -279,6 +429,161 @@ export const AdminGetCms200Response = zod.strictObject({
         updatedAt: zod.iso.datetime({ offset: true }),
       }),
     ),
+    seo: zod.strictObject({
+      allowIndexing: zod.boolean(),
+      defaultImage: zod
+        .string()
+        .min(1)
+        .max(adminGetCms200ResponseContentSeoDefaultImageMax)
+        .regex(adminGetCms200ResponseContentSeoDefaultImageRegExp),
+      defaultImageAlt: zod
+        .string()
+        .min(1)
+        .max(adminGetCms200ResponseContentSeoDefaultImageAltMax),
+      pages: zod.strictObject({
+        about: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesAboutOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesAboutTitleMax),
+        }),
+        coaching: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesCoachingOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesCoachingTitleMax),
+        }),
+        contacts: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesContactsOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesContactsTitleMax),
+        }),
+        home: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesHomeOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesHomeTitleMax),
+        }),
+        journal: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesJournalOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesJournalTitleMax),
+        }),
+        privacy: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyOgImageMax)
+            .regex(adminGetCms200ResponseContentSeoPagesPrivacyOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyOgTitleMax),
+          title: zod
+            .string()
+            .max(adminGetCms200ResponseContentSeoPagesPrivacyTitleMax),
+        }),
+      }),
+      siteName: zod
+        .string()
+        .min(1)
+        .max(adminGetCms200ResponseContentSeoSiteNameMax),
+      siteUrl: zod
+        .string()
+        .max(adminGetCms200ResponseContentSeoSiteUrlMax)
+        .regex(adminGetCms200ResponseContentSeoSiteUrlRegExp)
+        .nullable(),
+    }),
     site: zod.strictObject({
       description: zod.string(),
       name: zod.string(),
@@ -535,6 +840,20 @@ export const adminSaveCmsDraft200ResponseContentArticlesItemContentPreviewDescri
 
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentPreviewTitleMax = 300
 
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoTitleMax = 120
+
 export const adminSaveCmsDraft200ResponseContentArticlesItemSortOrderMin = 0
 export const adminSaveCmsDraft200ResponseContentArticlesItemSortOrderMax = 10000
 
@@ -574,6 +893,103 @@ export const adminSaveCmsDraft200ResponseContentProgramsItemContentTitleMax = 30
 export const adminSaveCmsDraft200ResponseContentProgramsItemSortOrderMin = 0
 export const adminSaveCmsDraft200ResponseContentProgramsItemSortOrderMax = 10000
 
+export const adminSaveCmsDraft200ResponseContentSeoDefaultImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoDefaultImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoDefaultImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesAboutTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesContactsTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesHomeTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesJournalTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgDescriptionMax = 320
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyTitleMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoSiteNameMax = 120
+
+export const adminSaveCmsDraft200ResponseContentSeoSiteUrlMax = 500
+
+export const adminSaveCmsDraft200ResponseContentSeoSiteUrlRegExp = new RegExp(
+  '^https://[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?(?::[0-9]{1,5})?/?$',
+)
 export const adminSaveCmsDraft200ResponseContentSocialsMax = 18
 
 export const AdminSaveCmsDraft200Response = zod.strictObject({
@@ -623,6 +1039,44 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
               title: zod.string(),
             }),
           ),
+          seo: zod
+            .strictObject({
+              description: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoDescriptionMax,
+                ),
+              noIndex: zod.boolean(),
+              ogDescription: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgDescriptionMax,
+                ),
+              ogImage: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageMax,
+                )
+                .regex(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageRegExp,
+                ),
+              ogImageAlt: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageAltMax,
+                ),
+              ogTitle: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgTitleMax,
+                ),
+              title: zod
+                .string()
+                .max(
+                  adminSaveCmsDraft200ResponseContentArticlesItemContentSeoTitleMax,
+                ),
+            })
+            .optional(),
           slug: zod.string(),
           story: zod.array(zod.string()),
           storyTitle: zod.string(),
@@ -808,6 +1262,203 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
         updatedAt: zod.iso.datetime({ offset: true }),
       }),
     ),
+    seo: zod.strictObject({
+      allowIndexing: zod.boolean(),
+      defaultImage: zod
+        .string()
+        .min(1)
+        .max(adminSaveCmsDraft200ResponseContentSeoDefaultImageMax)
+        .regex(adminSaveCmsDraft200ResponseContentSeoDefaultImageRegExp),
+      defaultImageAlt: zod
+        .string()
+        .min(1)
+        .max(adminSaveCmsDraft200ResponseContentSeoDefaultImageAltMax),
+      pages: zod.strictObject({
+        about: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesAboutDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesAboutOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesAboutOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesAboutTitleMax),
+        }),
+        coaching: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesCoachingDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesCoachingTitleMax),
+        }),
+        contacts: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesContactsDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesContactsOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesContactsOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesContactsTitleMax),
+        }),
+        home: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesHomeDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesHomeOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesHomeOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesHomeTitleMax),
+        }),
+        journal: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesJournalDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesJournalOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesJournalOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesJournalTitleMax),
+        }),
+        privacy: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesPrivacyDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageMax)
+            .regex(
+              adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgTitleMax),
+          title: zod
+            .string()
+            .max(adminSaveCmsDraft200ResponseContentSeoPagesPrivacyTitleMax),
+        }),
+      }),
+      siteName: zod
+        .string()
+        .min(1)
+        .max(adminSaveCmsDraft200ResponseContentSeoSiteNameMax),
+      siteUrl: zod
+        .string()
+        .max(adminSaveCmsDraft200ResponseContentSeoSiteUrlMax)
+        .regex(adminSaveCmsDraft200ResponseContentSeoSiteUrlRegExp)
+        .nullable(),
+    }),
     site: zod.strictObject({
       description: zod.string(),
       name: zod.string(),
@@ -868,6 +1519,20 @@ export const adminPublishCms200ResponseContentArticlesItemContentPreviewDescript
 
 export const adminPublishCms200ResponseContentArticlesItemContentPreviewTitleMax = 300
 
+export const adminPublishCms200ResponseContentArticlesItemContentSeoDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentArticlesItemContentSeoOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentArticlesItemContentSeoOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentArticlesItemContentSeoTitleMax = 120
+
 export const adminPublishCms200ResponseContentArticlesItemSortOrderMin = 0
 export const adminPublishCms200ResponseContentArticlesItemSortOrderMax = 10000
 
@@ -907,6 +1572,103 @@ export const adminPublishCms200ResponseContentProgramsItemContentTitleMax = 300
 export const adminPublishCms200ResponseContentProgramsItemSortOrderMin = 0
 export const adminPublishCms200ResponseContentProgramsItemSortOrderMax = 10000
 
+export const adminPublishCms200ResponseContentSeoDefaultImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoDefaultImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoDefaultImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesAboutDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesAboutOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesAboutOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesAboutOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesAboutOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesAboutOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesAboutTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesCoachingTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesContactsDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesContactsOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesContactsOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesContactsOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesContactsOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesContactsOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesContactsTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesHomeDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesHomeOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesHomeOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesHomeOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesHomeOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesHomeOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesHomeTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesJournalDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesJournalOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesJournalOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesJournalOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesJournalOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesJournalOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesJournalTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyOgDescriptionMax = 320
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageMax = 1000
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageRegExp =
+  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyOgTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoPagesPrivacyTitleMax = 120
+
+export const adminPublishCms200ResponseContentSeoSiteNameMax = 120
+
+export const adminPublishCms200ResponseContentSeoSiteUrlMax = 500
+
+export const adminPublishCms200ResponseContentSeoSiteUrlRegExp = new RegExp(
+  '^https://[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?(?::[0-9]{1,5})?/?$',
+)
 export const adminPublishCms200ResponseContentSocialsMax = 18
 
 export const AdminPublishCms200Response = zod.strictObject({
@@ -956,6 +1718,44 @@ export const AdminPublishCms200Response = zod.strictObject({
               title: zod.string(),
             }),
           ),
+          seo: zod
+            .strictObject({
+              description: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoDescriptionMax,
+                ),
+              noIndex: zod.boolean(),
+              ogDescription: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoOgDescriptionMax,
+                ),
+              ogImage: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoOgImageMax,
+                )
+                .regex(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoOgImageRegExp,
+                ),
+              ogImageAlt: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoOgImageAltMax,
+                ),
+              ogTitle: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoOgTitleMax,
+                ),
+              title: zod
+                .string()
+                .max(
+                  adminPublishCms200ResponseContentArticlesItemContentSeoTitleMax,
+                ),
+            })
+            .optional(),
           slug: zod.string(),
           story: zod.array(zod.string()),
           storyTitle: zod.string(),
@@ -1137,6 +1937,191 @@ export const AdminPublishCms200Response = zod.strictObject({
         updatedAt: zod.iso.datetime({ offset: true }),
       }),
     ),
+    seo: zod.strictObject({
+      allowIndexing: zod.boolean(),
+      defaultImage: zod
+        .string()
+        .min(1)
+        .max(adminPublishCms200ResponseContentSeoDefaultImageMax)
+        .regex(adminPublishCms200ResponseContentSeoDefaultImageRegExp),
+      defaultImageAlt: zod
+        .string()
+        .min(1)
+        .max(adminPublishCms200ResponseContentSeoDefaultImageAltMax),
+      pages: zod.strictObject({
+        about: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesAboutDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesAboutOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesAboutOgImageMax)
+            .regex(adminPublishCms200ResponseContentSeoPagesAboutOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesAboutOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesAboutOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesAboutTitleMax),
+        }),
+        coaching: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesCoachingDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesCoachingOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesCoachingOgImageMax)
+            .regex(
+              adminPublishCms200ResponseContentSeoPagesCoachingOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesCoachingOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesCoachingOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesCoachingTitleMax),
+        }),
+        contacts: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesContactsDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesContactsOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesContactsOgImageMax)
+            .regex(
+              adminPublishCms200ResponseContentSeoPagesContactsOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesContactsOgImageAltMax,
+            ),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesContactsOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesContactsTitleMax),
+        }),
+        home: zod.strictObject({
+          description: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeDescriptionMax),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeOgDescriptionMax),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeOgImageMax)
+            .regex(adminPublishCms200ResponseContentSeoPagesHomeOgImageRegExp),
+          ogImageAlt: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesHomeTitleMax),
+        }),
+        journal: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesJournalDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesJournalOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesJournalOgImageMax)
+            .regex(
+              adminPublishCms200ResponseContentSeoPagesJournalOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesJournalOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesJournalOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesJournalTitleMax),
+        }),
+        privacy: zod.strictObject({
+          description: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesPrivacyDescriptionMax,
+            ),
+          noIndex: zod.boolean(),
+          ogDescription: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentSeoPagesPrivacyOgDescriptionMax,
+            ),
+          ogImage: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesPrivacyOgImageMax)
+            .regex(
+              adminPublishCms200ResponseContentSeoPagesPrivacyOgImageRegExp,
+            ),
+          ogImageAlt: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesPrivacyOgImageAltMax),
+          ogTitle: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesPrivacyOgTitleMax),
+          title: zod
+            .string()
+            .max(adminPublishCms200ResponseContentSeoPagesPrivacyTitleMax),
+        }),
+      }),
+      siteName: zod
+        .string()
+        .min(1)
+        .max(adminPublishCms200ResponseContentSeoSiteNameMax),
+      siteUrl: zod
+        .string()
+        .max(adminPublishCms200ResponseContentSeoSiteUrlMax)
+        .regex(adminPublishCms200ResponseContentSeoSiteUrlRegExp)
+        .nullable(),
+    }),
     site: zod.strictObject({
       description: zod.string(),
       name: zod.string(),

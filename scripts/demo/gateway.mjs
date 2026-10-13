@@ -1,5 +1,6 @@
 import { createServer, request } from 'node:http';
 import { isIP } from 'node:net';
+import { restoreDevTunnelOrigin } from './request-origin.mjs';
 
 // All three applications share one browser origin; backend guards still own auth.
 export function createDemoGateway({ siteTarget, apiTarget, state }) {
@@ -13,7 +14,10 @@ export function createDemoGateway({ siteTarget, apiTarget, state }) {
 
   function headers(incoming, target) {
     const values = { ...incoming.headers, host: target.host };
-    const publicRequest = incoming.headers.host === state.origin?.host;
+    const restoredOrigin = restoreDevTunnelOrigin(incoming, state.origin);
+    if (restoredOrigin) values.origin = restoredOrigin;
+    const publicRequest =
+      incoming.headers.host === state.origin?.host || Boolean(restoredOrigin);
     // Cloudflare overwrites CF-Connecting-IP. Never trust a visitor's XFF chain.
     const cloudflareIp = state.origin?.hostname.endsWith('.trycloudflare.com')
       ? incoming.headers['cf-connecting-ip']
@@ -30,7 +34,9 @@ export function createDemoGateway({ siteTarget, apiTarget, state }) {
     values['x-forwarded-proto'] = publicRequest
       ? state.origin.protocol.slice(0, -1)
       : 'http';
-    values['x-forwarded-host'] = incoming.headers.host;
+    values['x-forwarded-host'] = restoredOrigin
+      ? state.origin.host
+      : incoming.headers.host;
     return values;
   }
 
@@ -54,15 +60,14 @@ export function createDemoGateway({ siteTarget, apiTarget, state }) {
       (response) => {
         if (
           (response.statusCode ?? 500) < 400 &&
-          ['POST', 'PUT', 'DELETE'].includes(incoming.method) &&
-          /^\/v1\/admin\/(?:site|contacts|home|faq|social-links|articles|programs)(?:\/|$)/u.test(
-            incoming.url?.split('?', 1)[0] ?? '',
-          )
+          incoming.method === 'POST' &&
+          incoming.url?.split('?', 1)[0] === '/v1/admin/cms/publish'
         ) {
-          state.onContentSaved?.();
+          state.onContentPublished?.();
         }
         outgoing.writeHead(response.statusCode ?? 502, {
           ...response.headers,
+          'referrer-policy': 'same-origin',
           'x-robots-tag': 'noindex, nofollow',
         });
         response.on('error', () => outgoing.destroy());

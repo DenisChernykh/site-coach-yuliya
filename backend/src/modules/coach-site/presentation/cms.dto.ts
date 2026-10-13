@@ -25,6 +25,7 @@ import {
   SocialLinkDto,
 } from './content.dto'
 import { ManagedArticleDto, ManagedProgramDto } from './admin.dto'
+import { SeoSettingsDto } from './seo.dto'
 
 export class CmsBlockDto {
   @ApiProperty({ type: String, maxLength: 40 })
@@ -121,6 +122,8 @@ export class CmsPageContentDto {
   public readonly pages!: CmsPageDto[]
 }
 export class CmsDocumentDto extends CmsPageContentDto {
+  @ApiProperty({ type: () => SeoSettingsDto })
+  public readonly seo!: SeoSettingsDto
   @ApiProperty({ type: () => [ManagedArticleDto] })
   public readonly articles!: ManagedArticleDto[]
   @ApiProperty({ type: () => [ManagedProgramDto] })

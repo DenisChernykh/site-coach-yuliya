@@ -5,6 +5,7 @@ import type {
   HomePageDto,
   ServiceDto,
   SiteSettingsDto,
+  SeoSettingsDto,
   SocialLinkDto,
 } from './content'
 
@@ -95,6 +96,7 @@ export interface CmsProgram {
   updatedAt: string
 }
 export interface CmsDocument extends CmsPageContent {
+  seo: SeoSettingsDto
   articles: CmsArticle[]
   programs: CmsProgram[]
 }

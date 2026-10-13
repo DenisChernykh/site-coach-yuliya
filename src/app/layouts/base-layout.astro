@@ -1,9 +1,14 @@
 ---
 import {
   loadContacts,
+  loadSeoSettings,
+  resolvePageSeo,
+  serializeJsonLd,
   type ContactDetailsDto,
   type SiteSettingsDto,
+  type SeoPagesDto,
 } from '@/entities/site';
+import type { ArticleDto } from '@/entities/article';
 import { SiteHeader } from '@/widgets/site-header';
 import { SiteFooter } from '@/widgets/site-footer';
 import { SocialLinks } from '@/widgets/social-links';
@@ -12,22 +17,43 @@ import '../styles/index.css';
 
 interface Props {
   preview?: boolean;
+  seo?: import('@/shared/api').SeoSettingsDto;
   settings: SiteSettingsDto;
   socials?: SocialLinkDto[];
   contacts?: ContactDetailsDto;
   title?: string;
   description?: string;
+  seoPage?: keyof SeoPagesDto;
+  article?: ArticleDto;
+  noIndex?: boolean;
 }
 const {
   settings,
   preview = false,
-  title = settings.name,
-  description = settings.description,
+  seo: initialSeo,
+  title,
+  description,
+  seoPage,
+  article,
+  noIndex,
   socials: initialSocials,
   contacts: initialContacts,
 } = Astro.props;
-const socials = initialSocials ?? (await loadSocialLinks());
-const contacts = initialContacts ?? (await loadContacts());
+const [socials, contacts, seo] = await Promise.all([
+  initialSocials ?? loadSocialLinks(),
+  initialContacts ?? loadContacts(),
+  initialSeo ?? loadSeoSettings(),
+]);
+const metadata = resolvePageSeo({
+  settings,
+  seo,
+  pathname: Astro.url.pathname,
+  page: seoPage,
+  article,
+  title,
+  description,
+  noIndex: preview ? true : noIndex,
+});
 ---
 
 <!doctype html>
@@ -35,26 +61,54 @@ const contacts = initialContacts ?? (await loadContacts());
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={metadata.description} />
+    <meta name="robots" content={metadata.robots} />
     <meta name="theme-color" content="#F7F9F8" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <title>{title}</title>
+    {metadata.canonical && <link rel="canonical" href={metadata.canonical} />}
+    <meta property="og:title" content={metadata.ogTitle} />
+    <meta property="og:description" content={metadata.ogDescription} />
+    <meta property="og:type" content={metadata.type} />
+    <meta property="og:site_name" content={metadata.siteName} />
+    <meta property="og:locale" content="ru_RU" />
+    {
+      metadata.canonical && (
+        <meta property="og:url" content={metadata.canonical} />
+      )
+    }
+    {metadata.image && <meta property="og:image" content={metadata.image} />}
+    {
+      metadata.image && (
+        <meta property="og:image:alt" content={metadata.imageAlt} />
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={metadata.ogTitle} />
+    <meta name="twitter:description" content={metadata.ogDescription} />
+    {metadata.image && <meta name="twitter:image" content={metadata.image} />}
+    {
+      metadata.image && (
+        <meta name="twitter:image:alt" content={metadata.imageAlt} />
+      )
+    }
+    <script
+      type="application/ld+json"
+      set:html={serializeJsonLd(metadata.jsonLd)}
+    />
+    <title>{metadata.title}</title>
     <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Перейти к содержимому</a>
-    <SiteHeader settings={settings} />
+    <SiteHeader settings={settings} preview={preview} />
     <main id="main-content"><slot /></main>
     <SiteFooter settings={settings} contacts={contacts} />
     {
       preview ? (
         <div data-cms-react="socials" style="display:contents">
-          <SocialLinks items={socials} />
+          <SocialLinks items={socials} phone={contacts.phone} />
         </div>
       ) : (
-        <SocialLinks client:load items={socials} />
+        <SocialLinks client:load items={socials} phone={contacts.phone} />
       )
     }
   </body>
