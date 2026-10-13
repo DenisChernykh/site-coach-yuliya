@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCms } from '@/entities/site-content'
-import type {
-  ArticleDto,
-  CmsDocumentDto,
-  CmsPageContentDto,
-} from '@/shared/api'
+import type { ArticleDto, CmsDocumentDto } from '@/shared/api'
 import { Button } from '@/shared/ui'
 
 export function CmsPreview({
@@ -129,16 +125,4 @@ export function ArticlePreview({ article }: { article: ArticleDto }) {
   ) : (
     <p className="text-sm text-muted-foreground">Загружаем превью…</p>
   )
-}
-export function PagePreview({
-  content,
-  page,
-}: {
-  content: CmsPageContentDto
-  page: string
-}) {
-  const query = useCms()
-  return query.data ? (
-    <CmsPreview content={{ ...query.data.content, ...content }} page={page} />
-  ) : null
 }

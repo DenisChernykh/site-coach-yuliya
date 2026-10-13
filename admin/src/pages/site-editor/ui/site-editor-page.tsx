@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { useBlocker } from 'react-router'
+import { useBlocker, useSearchParams } from 'react-router'
 import { useCms } from '@/entities/site-content'
 import {
   ContentFields,
+  ContactFields,
+  contactLinks,
+  isSocialUrl,
   CmsPreview,
   useCmsActions,
   contentError,
@@ -62,16 +65,28 @@ const homeFields: Record<string, keyof CmsPageContentDto['home']> = {
 }
 function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const source = useCms()
+  const [params] = useSearchParams()
+  const initialPage =
+    initial.content.pages.find((p) => p.key === params.get('page')) ??
+    initial.content.pages.find((p) => p.key === 'home')!
+  const initialSection =
+    initialPage.blocks.find((b) => b.id === params.get('section'))?.id ?? 'hero'
+  const initialSettings =
+    params.get('settings') === 'site'
+      ? 'site'
+      : params.get('settings') === 'contacts'
+        ? 'contacts'
+        : null
   const [snapshot, setSnapshot] = useState(initial)
   const [content, setContent] = useState<CmsDocumentDto>(initial.content)
-  const [page, setPage] = useState<keyof typeof pageLabels>('home')
-  const [selected, setSelected] = useState('hero')
-  const [global, setGlobal] = useState<'site' | 'contacts' | 'socials' | null>(
-    null,
+  const [page, setPage] = useState<keyof typeof pageLabels>(initialPage.key)
+  const [selected, setSelected] = useState(initialSection)
+  const [global, setGlobal] = useState<'site' | 'contacts' | null>(
+    initialSettings,
   )
   const [expanded, setExpanded] = useState(false)
   const [panel, setPanel] = useState<'pages' | 'blocks' | 'fields' | 'preview'>(
-    'pages',
+    initialSettings || params.has('section') ? 'fields' : 'pages',
   )
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
@@ -80,6 +95,29 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const { save, publish, pending } = useCmsActions()
   const blocker = useBlocker(dirty)
   const drag = useRef<string | null>(null)
+  const links = contactLinks(content.contacts, content.socials)
+  const savedLinks = contactLinks(
+    snapshot.content.contacts,
+    snapshot.content.socials,
+  )
+  const contactFields = (
+    <ContactFields
+      value={{ ...content.contacts, links }}
+      savedLinks={savedLinks}
+      onChange={(next) => {
+        const { links: socials, ...contacts } = next
+        change({
+          ...content,
+          contacts: {
+            ...contacts,
+            telegramUrl:
+              socials.find((link) => link.id === 'telegram')?.url ?? null,
+          },
+          socials,
+        })
+      }}
+    />
+  )
   useEffect(() => {
     if (!dirty) return
     const prevent = (event: BeforeUnloadEvent) => event.preventDefault()
@@ -129,7 +167,14 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         pages: content.pages,
       },
     })
-    if (!parsed.success) {
+    if (
+      !parsed.success ||
+      (content.contacts.telegramUrl !== null &&
+        !isSocialUrl(content.contacts.telegramUrl)) ||
+      content.socials.some(
+        (link) => link.url !== null && !isSocialUrl(link.url),
+      )
+    ) {
       setError('Проверьте заполненные поля и ссылки.')
       return
     }
@@ -162,8 +207,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const heading = global
     ? {
         site: 'Настройки сайта',
-        contacts: 'Контакты',
-        socials: 'Социальные сети',
+        contacts: 'Контакты и социальные сети',
       }[global]
     : blockLabels[block.id]
   return (
@@ -418,7 +462,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                 panel === 'pages' ? 'grid gap-1' : 'hidden gap-1 xl:grid'
               }
             >
-              {(['site', 'contacts', 'socials'] as const).map((key) => (
+              {(['site', 'contacts'] as const).map((key) => (
                 <Button
                   key={key}
                   variant={global === key ? 'secondary' : 'ghost'}
@@ -431,8 +475,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                   {
                     {
                       site: 'Настройки сайта',
-                      contacts: 'Контакты',
-                      socials: 'Социальные сети',
+                      contacts: 'Контакты и социальные сети',
                     }[key]
                   }
                 </Button>
@@ -463,26 +506,17 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
               </p>
             )}
             <fieldset disabled={pending} className="min-w-0 space-y-5">
-              {global ? (
+              {global === 'contacts' ? (
+                contactFields
+              ) : global === 'site' ? (
                 <ContentFields
-                  value={content[global] as unknown as ContentValue}
-                  onChange={(next) => {
-                    const updated = { ...content, [global]: next }
-                    if (global === 'contacts')
-                      updated.socials = content.socials.map((link) =>
-                        link.id === 'telegram'
-                          ? { ...link, url: updated.contacts.telegramUrl }
-                          : link,
-                      )
-                    if (global === 'socials')
-                      updated.contacts = {
-                        ...content.contacts,
-                        telegramUrl:
-                          updated.socials.find((link) => link.id === 'telegram')
-                            ?.url ?? null,
-                      }
-                    change(updated)
-                  }}
+                  value={content.site as unknown as ContentValue}
+                  onChange={(next) =>
+                    change({
+                      ...content,
+                      site: next as unknown as CmsDocumentDto['site'],
+                    })
+                  }
                 />
               ) : field ? (
                 <>
@@ -504,7 +538,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
               ) : block.id === 'faq' ? (
                 <ContentFields
                   value={content.faq as unknown as ContentValue}
-                  field="faq"
+                  field="items"
                   onChange={(next) =>
                     change({
                       ...content,
@@ -513,15 +547,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                   }
                 />
               ) : block.id === 'details' ? (
-                <ContentFields
-                  value={content.contacts as unknown as ContentValue}
-                  onChange={(next) =>
-                    change({
-                      ...content,
-                      contacts: next as unknown as CmsDocumentDto['contacts'],
-                    })
-                  }
-                />
+                contactFields
               ) : (
                 <>
                   <TextField

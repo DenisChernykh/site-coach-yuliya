@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw'
 import { createElement } from 'react'
 import { RouterProvider } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { server } from '@/shared/lib/testing'
+import { createCmsFixture, server } from '@/shared/lib/testing'
 
 const apiOrigin = 'http://localhost:3000'
 const currentUser = {
@@ -95,7 +95,7 @@ describe('site admin session guard', () => {
     let privateRequests = 0
     server.use(
       http.get(`${apiOrigin}/v1/auth/me`, authenticationRequired),
-      http.get(`${apiOrigin}/v1/admin/contacts`, () => {
+      http.get(`${apiOrigin}/v1/admin/cms`, () => {
         privateRequests += 1
         return HttpResponse.json({})
       }),
@@ -142,14 +142,11 @@ describe('site admin session guard', () => {
         events.push('session')
         return HttpResponse.json(currentUser)
       }),
-      http.get(`${apiOrigin}/v1/admin/contacts`, () => {
-        events.push('contacts')
-        return HttpResponse.json({
-          email: 'coach@example.com',
-          phone: null,
-          telegramUrl: null,
-          address: null,
-        })
+      http.get(`${apiOrigin}/v1/admin/cms`, () => {
+        events.push('cms')
+        const workspace = createCmsFixture()
+        workspace.content.contacts.email = 'coach@example.com'
+        return HttpResponse.json(workspace)
       }),
     )
     const application = await start('/admin/contacts')
@@ -157,9 +154,35 @@ describe('site admin session guard', () => {
     expect(await screen.findByRole('textbox', { name: 'Email' })).toHaveValue(
       'coach@example.com',
     )
-    expect(application.router.state.location.pathname).toBe('/admin/contacts')
-    expect(events.indexOf('session')).toBeLessThan(events.indexOf('contacts'))
+    expect(application.router.state.location.pathname).toBe('/admin/editor')
+    expect(application.router.state.location.search).toBe('?settings=contacts')
+    expect(events.indexOf('session')).toBeLessThan(events.indexOf('cms'))
   })
+  it.each([
+    ['/admin/home', '?page=home', 'Первый экран'],
+    ['/admin/faq', '?page=home&section=faq', 'Частые вопросы'],
+    ['/admin/site', '?settings=site', 'Настройки сайта'],
+    ['/admin/socials', '?settings=contacts', 'Контакты и социальные сети'],
+  ])(
+    'opens the corresponding CMS panel for %s',
+    async (path, search, heading) => {
+      server.use(
+        http.get(`${apiOrigin}/v1/auth/me`, () =>
+          HttpResponse.json(currentUser),
+        ),
+        http.get(`${apiOrigin}/v1/admin/cms`, () =>
+          HttpResponse.json(createCmsFixture()),
+        ),
+      )
+      const application = await start(path)
+      display(application)
+      expect(
+        await screen.findByRole('heading', { name: heading, level: 2 }),
+      ).toBeVisible()
+      expect(application.router.state.location.pathname).toBe('/admin/editor')
+      expect(application.router.state.location.search).toBe(search)
+    },
+  )
   it('returns to login when a protected request discovers an expired session', async () => {
     let expired = false
     server.use(

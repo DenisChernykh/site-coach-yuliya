@@ -4,13 +4,7 @@ import { clearCurrentSession, currentSessionQueryKey } from '@/entities/session'
 import { ConsultationsPage } from '@/pages/consultations'
 import { ArticlesPage, ProgramsPage } from '@/pages/content-library'
 import { SiteEditorPage } from '@/pages/site-editor'
-import {
-  ContactsPage,
-  SitePage,
-  SeoPage,
-  HomePage,
-  FaqPage,
-} from '@/pages/site-settings'
+import { SeoPage } from '@/pages/seo'
 import { LoginPage } from '@/pages/login'
 import { authGetMe } from '@/shared/api'
 import { loginPath } from '@/shared/routes'
@@ -56,11 +50,23 @@ export const router = createBrowserRouter(
         { path: 'editor', element: <SiteEditorPage /> },
         { path: 'articles', element: <ArticlesPage /> },
         { path: 'programs', element: <ProgramsPage /> },
-        { path: 'contacts', element: <ContactsPage /> },
-        { path: 'home', element: <HomePage /> },
-        { path: 'faq', element: <FaqPage /> },
-        { path: 'socials', element: <Navigate to="/contacts" replace /> },
-        { path: 'site', element: <SitePage /> },
+        {
+          path: 'contacts',
+          element: <Navigate to="/editor?settings=contacts" replace />,
+        },
+        { path: 'home', element: <Navigate to="/editor?page=home" replace /> },
+        {
+          path: 'faq',
+          element: <Navigate to="/editor?page=home&section=faq" replace />,
+        },
+        {
+          path: 'socials',
+          element: <Navigate to="/editor?settings=contacts" replace />,
+        },
+        {
+          path: 'site',
+          element: <Navigate to="/editor?settings=site" replace />,
+        },
         { path: 'seo', element: <SeoPage /> },
       ],
     },

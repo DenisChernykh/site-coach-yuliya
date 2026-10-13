@@ -1,7 +1,6 @@
-import type { SocialLinkDto } from '@/shared/api'
+import type { ContactDetailsDto, SocialLinkDto } from '@/shared/api'
 import { Check, ExternalLink } from 'lucide-react'
 import { Badge } from '@/shared/ui'
-import type { ContentValue } from '../model/content-fields'
 import { ContactInput } from './contact-input'
 
 import {
@@ -10,17 +9,18 @@ import {
   networks,
 } from '../model/social-networks'
 
+type ContactContent = ContactDetailsDto & { links: SocialLinkDto[] }
+
 export function ContactFields({
   value,
   onChange,
   savedLinks,
 }: {
-  value: ContentValue
-  onChange: (value: ContentValue) => void
+  value: ContactContent
+  onChange: (value: ContactContent) => void
   savedLinks: SocialLinkDto[]
 }) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
-  const links = value.links as unknown as SocialLinkDto[]
+  const links = value.links
   const filledLinks = links.filter((link) => isSocialUrl(link.url))
   return (
     <div className="space-y-8">
@@ -35,7 +35,7 @@ export function ContactFields({
               field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'
             }
             maxLength={{ email: 254, phone: 80, address: 500 }[field]}
-            value={value[field] as string | null}
+            value={value[field]}
             onChange={(next) => onChange({ ...value, [field]: next })}
           />
         ))}
@@ -80,7 +80,7 @@ export function ContactFields({
             </p>
           )}
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4">
           {links.map((link) => {
             const valid = isSocialUrl(link.url)
             const changed =

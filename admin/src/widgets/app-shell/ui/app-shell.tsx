@@ -1,16 +1,7 @@
 import { CmsPublicationBar } from '@/features/edit-site-content'
 import { useState, type CSSProperties, type PropsWithChildren } from 'react'
 import { SidebarResize } from './sidebar-resize'
-import {
-  Home,
-  FileText,
-  Layers,
-  Mail,
-  MessageSquare,
-  Settings,
-  Inbox,
-  Search,
-} from 'lucide-react'
+import { FileText, Layers, Inbox, Search } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router'
 import { useCurrentSession } from '@/entities/session'
 import { LogoutButton } from '@/features/auth-logout'
@@ -36,10 +27,6 @@ const icons = {
   '/editor': Layers,
   '/articles': FileText,
   '/programs': Layers,
-  '/contacts': Mail,
-  '/home': Home,
-  '/faq': MessageSquare,
-  '/site': Settings,
   '/seo': Search,
 }
 

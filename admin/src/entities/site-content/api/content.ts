@@ -1,21 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import {
-  adminGetContacts,
-  adminGetFaq,
-  adminGetHome,
-  adminGetSite,
   adminGetSeo,
   getAdminGetSeoQueryKey,
-  adminGetSocialLinks,
   adminGetPublication,
   adminListArticles,
   adminListPrograms,
   isProblemCode,
-  getAdminGetContactsQueryKey,
-  getAdminGetFaqQueryKey,
-  getAdminGetHomeQueryKey,
-  getAdminGetSiteQueryKey,
-  getAdminGetSocialLinksQueryKey,
   getAdminGetPublicationQueryKey,
   getAdminListArticlesQueryKey,
   getAdminListProgramsQueryKey,
@@ -26,12 +16,7 @@ const authError = (error: unknown) =>
 export const contentKeys = {
   articles: getAdminListArticlesQueryKey,
   programs: getAdminListProgramsQueryKey,
-  contacts: getAdminGetContactsQueryKey,
-  site: getAdminGetSiteQueryKey,
   seo: getAdminGetSeoQueryKey,
-  home: getAdminGetHomeQueryKey,
-  faq: getAdminGetFaqQueryKey,
-  socials: getAdminGetSocialLinksQueryKey,
   publication: getAdminGetPublicationQueryKey,
 }
 export function useArticles() {
@@ -48,45 +33,10 @@ export function usePrograms() {
     throwOnError: authError,
   })
 }
-export function useContacts() {
-  return useQuery({
-    queryKey: contentKeys.contacts(),
-    queryFn: ({ signal }) => adminGetContacts(undefined, signal),
-    throwOnError: authError,
-  })
-}
-export function useSite() {
-  return useQuery({
-    queryKey: contentKeys.site(),
-    queryFn: ({ signal }) => adminGetSite(undefined, signal),
-    throwOnError: authError,
-  })
-}
 export function useSeo() {
   return useQuery({
     queryKey: contentKeys.seo(),
     queryFn: ({ signal }) => adminGetSeo(undefined, signal),
-    throwOnError: authError,
-  })
-}
-export function useHome() {
-  return useQuery({
-    queryKey: contentKeys.home(),
-    queryFn: ({ signal }) => adminGetHome(undefined, signal),
-    throwOnError: authError,
-  })
-}
-export function useFaq() {
-  return useQuery({
-    queryKey: contentKeys.faq(),
-    queryFn: ({ signal }) => adminGetFaq(undefined, signal),
-    throwOnError: authError,
-  })
-}
-export function useSocials() {
-  return useQuery({
-    queryKey: contentKeys.socials(),
-    queryFn: ({ signal }) => adminGetSocialLinks(undefined, signal),
     throwOnError: authError,
   })
 }

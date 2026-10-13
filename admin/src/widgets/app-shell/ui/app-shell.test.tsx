@@ -11,6 +11,10 @@ vi.mock('@/features/publish-site', () => ({
   PublicationStatus: () => <p>Статус публикации</p>,
 }))
 
+vi.mock('@/features/edit-site-content', () => ({
+  CmsPublicationBar: () => <p>Публикация черновика</p>,
+}))
+
 import { AppShell } from './app-shell'
 
 const currentUser: CurrentUserResponseDto = {
@@ -131,23 +135,26 @@ describe('AppShell', () => {
 
     expect(screen.getByRole('link', { name: 'Заявки' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Статьи' })).toBeVisible()
+    expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual(
+      ['Заявки', 'Редактор сайта', 'Статьи', 'Программы', 'SEO'],
+    )
   })
 
   it('shows content navigation with the content permission', () => {
-    renderAppShell('/contacts', {
+    renderAppShell('/editor', {
       ...currentUser,
       permissions: ['site.content.manage'],
     })
 
-    expect(screen.getByRole('link', { name: 'Контакты' })).toBeVisible()
-    expect(getMenuButton('Контакты')).toHaveAttribute('data-active')
+    expect(screen.getByRole('link', { name: 'Редактор сайта' })).toBeVisible()
+    expect(getMenuButton('Редактор сайта')).toHaveAttribute('data-active')
   })
 
   it('hides content navigation without the content permission', () => {
-    renderAppShell('/contacts', { ...currentUser, permissions: [] })
+    renderAppShell('/editor', { ...currentUser, permissions: [] })
 
     expect(
-      screen.queryByRole('link', { name: 'Контакты' }),
+      screen.queryByRole('link', { name: 'Редактор сайта' }),
     ).not.toBeInTheDocument()
   })
 
@@ -246,7 +253,7 @@ describe('AppShell', () => {
     })
   })
 
-  it('closes mobile navigation after navigating to contacts', async () => {
+  it('closes mobile navigation after navigating to the CMS', async () => {
     setViewport(390)
     const user = userEvent.setup()
     renderAppShell('/', {
@@ -259,7 +266,7 @@ describe('AppShell', () => {
       name: 'Навигация',
     })
     await user.click(
-      within(navigationSheet).getByRole('link', { name: 'Контакты' }),
+      within(navigationSheet).getByRole('link', { name: 'Редактор сайта' }),
     )
 
     await waitFor(() => {

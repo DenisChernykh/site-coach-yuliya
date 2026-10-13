@@ -8,7 +8,7 @@ import { useSeo } from '@/entities/site-content'
 import { setCsrfToken, type SeoSettingsDto } from '@/shared/api'
 import { server } from '@/shared/lib/testing'
 import initialContent from '../../../../../backend/content/initial.json'
-import { SeoForm } from './settings-forms'
+import { SeoForm } from './seo-form'
 
 function Editor() {
   const query = useSeo()

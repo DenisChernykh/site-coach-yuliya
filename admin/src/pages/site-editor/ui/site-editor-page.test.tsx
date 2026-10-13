@@ -4,54 +4,57 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import { useContacts, useSocials } from '@/entities/site-content'
-import { setCsrfToken, type WriteContactsDto } from '@/shared/api'
-import { server } from '@/shared/lib/testing'
-import { ContactsForm } from './settings-forms'
+import {
+  setCsrfToken,
+  type adminSaveCmsDraft,
+  type CmsDocumentDto,
+} from '@/shared/api'
+import { createCmsFixture, server } from '@/shared/lib/testing'
+import { SiteEditorPage } from './site-editor-page'
 
-function Editor() {
-  const contacts = useContacts()
-  const socials = useSocials()
-  if (!contacts.data || !socials.data) return null
-  return <ContactsForm initial={contacts.data} socials={socials.data} />
-}
+type DraftWrite = Parameters<typeof adminSaveCmsDraft>[0]
 
-function show() {
-  let stored: WriteContactsDto = {
+function show(
+  search = '?settings=contacts',
+  overrides: Partial<CmsDocumentDto> = {},
+) {
+  let stored = createCmsFixture()
+  stored.content.contacts = {
     email: 'coach@example.com',
     phone: '+7 999 123-45-67',
     address: 'Екатеринбург',
     telegramUrl: 'https://t.me/coach',
-    links: [
-      { id: 'telegram', label: 'Telegram', url: 'https://t.me/coach' },
-      { id: 'vk', label: 'ВКонтакте', url: 'https://vk.com/coach' },
-    ],
   }
-  const writes: WriteContactsDto[] = []
+  stored.content.socials = [
+    { id: 'telegram', label: 'Telegram', url: 'https://t.me/coach' },
+    { id: 'vk', label: 'ВКонтакте', url: 'https://vk.com/coach' },
+  ]
+  stored.content = { ...stored.content, ...overrides }
+  const writes: DraftWrite[] = []
   const origin = window.location.origin
   setCsrfToken('test-csrf')
   server.use(
-    http.get(`${origin}/v1/admin/contacts`, () => {
-      return HttpResponse.json({
-        email: stored.email,
-        phone: stored.phone,
-        address: stored.address,
-        telegramUrl: stored.telegramUrl,
-      })
-    }),
-    http.get(`${origin}/v1/admin/social-links`, () =>
-      HttpResponse.json(stored.links),
-    ),
-    http.put(`${origin}/v1/admin/contacts`, async ({ request }) => {
-      stored = (await request.json()) as WriteContactsDto
-      writes.push(stored)
-      return new HttpResponse(null, { status: 204 })
+    http.get(`${origin}/v1/admin/cms`, () => HttpResponse.json(stored)),
+    http.put(`${origin}/v1/admin/cms/draft`, async ({ request }) => {
+      expect(request.headers.get('x-csrf-token')).toBe('test-csrf')
+      const input = (await request.json()) as DraftWrite
+      expect(input.revision).toBe(stored.revision)
+      writes.push(input)
+      stored = {
+        ...stored,
+        revision: stored.revision + 1,
+        content: { ...stored.content, ...input.content },
+      }
+      return HttpResponse.json(stored)
     }),
   )
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   })
-  const router = createMemoryRouter([{ path: '/', element: <Editor /> }])
+  const router = createMemoryRouter(
+    [{ path: '/', element: <SiteEditorPage /> }],
+    { initialEntries: ['/' + search] },
+  )
   render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
@@ -66,7 +69,7 @@ function show() {
   }
 }
 
-describe('contact editing', () => {
+describe('unified CMS editing', () => {
   it('clears a contact and Telegram with one click, preserves other fields, and saves nulls', async () => {
     const editor = show()
     try {
@@ -91,19 +94,19 @@ describe('contact editing', () => {
         'https://vk.com/coach',
       )
       await user.click(
-        screen.getByRole('button', { name: 'Сохранить изменения' }),
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
       )
       await screen.findByText(
-        'Изменения сохранены в черновике. Нажмите «Опубликовать сохранённое», чтобы обновить сайт.',
+        'Черновик сохранён. На сайте пока прежняя версия.',
       )
       expect(editor.writes).toHaveLength(1)
-      expect(editor.writes[0]).toMatchObject({
+      expect(editor.writes[0].content.contacts).toMatchObject({
         email: null,
         telegramUrl: null,
         phone: '+7 999 123-45-67',
         address: 'Екатеринбург',
       })
-      expect(editor.writes[0].links).toContainEqual({
+      expect(editor.writes[0].content.socials).toContainEqual({
         id: 'telegram',
         label: 'Telegram',
         url: null,
@@ -129,13 +132,13 @@ describe('contact editing', () => {
         screen.getByRole('link', { name: 'Открыть ссылку WhatsApp' }),
       ).toHaveAttribute('href', 'https://wa.me/79991234567')
       await user.click(
-        screen.getByRole('button', { name: 'Сохранить изменения' }),
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
       )
       await waitFor(() =>
         expect(screen.queryByText('Не сохранено')).not.toBeInTheDocument(),
       )
       expect(screen.getAllByText('Вывод включён')).toHaveLength(3)
-      expect(editor.writes[0].links).toContainEqual({
+      expect(editor.writes[0].content.socials).toContainEqual({
         id: 'whatsapp',
         label: 'WhatsApp',
         url: 'https://wa.me/79991234567',
@@ -157,12 +160,41 @@ describe('contact editing', () => {
         screen.queryByRole('link', { name: 'Открыть ссылку WhatsApp' }),
       ).not.toBeInTheDocument()
       await user.click(
-        screen.getByRole('button', { name: 'Сохранить изменения' }),
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
       )
       expect(
         await screen.findByText('Проверьте заполненные поля и ссылки.'),
       ).toBeVisible()
       expect(editor.writes).toHaveLength(0)
+    } finally {
+      editor.dispose()
+    }
+  })
+  it('adds a structured question when FAQ is empty and saves it in the same draft', async () => {
+    const editor = show('?page=home&section=faq', { faq: [] })
+    try {
+      const user = userEvent.setup()
+      await user.click(
+        await screen.findByRole('button', { name: 'Добавить пункт' }),
+      )
+      await user.type(
+        screen.getByLabelText('Вопрос'),
+        'Как проходит знакомство?',
+      )
+      await user.type(screen.getByLabelText('Ответ'), 'Онлайн, до 30 минут.')
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      expect(editor.writes[0].content.faq).toEqual([
+        {
+          id: expect.any(String),
+          question: 'Как проходит знакомство?',
+          answer: 'Онлайн, до 30 минут.',
+        },
+      ])
     } finally {
       editor.dispose()
     }

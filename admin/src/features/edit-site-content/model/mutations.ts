@@ -8,21 +8,11 @@ import {
   adminCreateProgram,
   adminUpdateProgram,
   adminDeleteProgram,
-  adminUpdateContacts,
-  adminUpdateSite,
   adminUpdateSeo,
-  adminUpdateHome,
-  adminUpdateFaq,
-  adminUpdateSocialLinks,
   isProblemCode,
   type WriteArticleDto,
   type WriteProgramDto,
-  type WriteContactsDto,
-  type SiteSettingsDto,
   type SeoSettingsDto,
-  type HomePageDto,
-  type FaqItemDto,
-  type SocialLinkDto,
 } from '@/shared/api'
 
 export function useContentMutation<T, R>(
@@ -38,9 +28,6 @@ export function useContentMutation<T, R>(
         client.invalidateQueries({ queryKey: cmsKey() }),
         client.invalidateQueries({ queryKey: contentKeys[kind]() }),
         client.invalidateQueries({ queryKey: contentKeys.publication() }),
-        ...(kind === 'contacts'
-          ? [client.invalidateQueries({ queryKey: contentKeys.socials() })]
-          : []),
       ])
     },
     onError: (error) => {
@@ -75,39 +62,9 @@ export function useDeleteProgram() {
     'programs',
   )
 }
-export function useSaveContacts() {
-  return useContentMutation(
-    (input: WriteContactsDto) => adminUpdateContacts(input),
-    'contacts',
-  )
-}
-export function useSaveSite() {
-  return useContentMutation(
-    (input: SiteSettingsDto) => adminUpdateSite(input),
-    'site',
-  )
-}
 export function useSaveSeo() {
   return useContentMutation(
     (input: SeoSettingsDto) => adminUpdateSeo(input),
     'seo',
-  )
-}
-export function useSaveHome() {
-  return useContentMutation(
-    (input: HomePageDto) => adminUpdateHome(input),
-    'home',
-  )
-}
-export function useSaveFaq() {
-  return useContentMutation(
-    (items: FaqItemDto[]) => adminUpdateFaq({ items }),
-    'faq',
-  )
-}
-export function useSaveSocials() {
-  return useContentMutation(
-    (links: SocialLinkDto[]) => adminUpdateSocialLinks({ links }),
-    'socials',
   )
 }
