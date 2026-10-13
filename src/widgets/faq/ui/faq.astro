@@ -2,21 +2,33 @@
 import type { FaqItemDto } from '@/entities/faq';
 import { FaqList } from '@/features/faq';
 interface Props {
+  preview?: boolean;
   items: FaqItemDto[];
 }
-const { items } = Astro.props;
+const { items, preview = false } = Astro.props;
 ---
 
 <section class="faq" aria-labelledby="faq-title">
   <div class="page-container faq-grid">
     <div>
-      <p class="eyebrow">О чём часто спрашивают</p><h2 id="faq-title">
+      <p class="eyebrow" data-cms-copy="eyebrow">О чём часто спрашивают</p><h2
+        id="faq-title"
+        data-cms-copy="title"
+      >
         Можно прийти<br />с вопросами.
       </h2><p class="faq-note">
         Даже если пока сложно<br />{' '}сформулировать свой запрос.
       </p>
     </div>
-    <FaqList client:visible items={items} />
+    {
+      preview ? (
+        <div data-cms-react="faq">
+          <FaqList items={items} />
+        </div>
+      ) : (
+        <FaqList client:visible items={items} />
+      )
+    }
   </div>
 </section>
 <style>

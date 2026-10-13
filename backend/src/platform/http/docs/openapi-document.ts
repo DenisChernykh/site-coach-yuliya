@@ -61,6 +61,8 @@ export function createOpenApiDocument(
     .addTag('admin content', 'Редактирование контента')
     .addTag('admin consultations', 'Обработка заявок')
     .addTag('publication', 'Пересборка и публикация сайта')
+    .addTag('cms', 'Черновики и явная публикация контента')
+    .addTag('page-layouts', 'Опубликованный порядок секций страниц')
     .addTag('admin auth', 'Protected account administration endpoints.')
     .addCookieAuth(
       config.auth.sessionCookieName,

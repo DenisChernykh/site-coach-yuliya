@@ -9,3 +9,4 @@ export {
   useSocials,
   usePublication,
 } from './api/content'
+export { useCms, cmsKey } from './api/cms'

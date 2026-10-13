@@ -1,4 +1,6 @@
 ---
+import { PageSections } from '@/entities/cms';
+import type { CmsPageDto } from '@/shared/api';
 import { Image } from 'astro:assets';
 import type { HomePageDto } from '@/entities/site';
 import type { ServiceDto } from '@/entities/service';
@@ -14,85 +16,113 @@ import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
+  layouts?: CmsPageDto[];
+  preview?: boolean;
   data: HomePageDto;
   services: ServiceDto[];
   faq: FaqItemDto[];
   socials: SocialLinkDto[];
 }
-const { data, services, faq, socials } = Astro.props;
+const { layouts, preview = false, data, services, faq, socials } = Astro.props;
 ---
 
-<section class="coaching-hero" aria-labelledby="coaching-title">
-  <div class="page-container coaching-grid">
-    <div class="coaching-copy">
-      <nav class="breadcrumb" aria-label="Хлебные крошки">
-        <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
-          aria-current="page">Индивидуальный коучинг</span
-        >
-      </nav>
-      <p class="eyebrow">Онлайн · 60 минут · от 3 000 ₽</p>
-      <h1 id="coaching-title">
-        Твоё направление.<br />Твои решения.<br />Твоя опора.
-      </h1>
-      <p class="description">
-        Пространство, где можно исследовать свои вопросы, увидеть новые варианты
-        и выбрать действия, которые подходят тебе.
-      </p>
-      <a
-        href="#contact"
-        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
-        >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
-      >
-      <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
-    </div>
-    <Image
-      src={portrait}
-      alt="Демонстрационный портрет для макета коучинга"
-      width={840}
-      height={1060}
-      format="webp"
-      quality={85}
-      loading="eager"
-      class="coaching-portrait"
-    />
-  </div>
-</section>
-<section class="requests" aria-labelledby="requests-title">
-  <div class="page-container requests-grid">
-    <div>
-      <h2 id="requests-title">
-        От «не знаю»<br />к своему<br />следующему шагу.
-      </h2><p class="requests-intro">
-        Не обязательно сразу ставить большую цель. Можно начать с того, что
-        сейчас вызывает вопросы.
-      </p>
-    </div>
-    <div class="request-list">
-      <article>
-        <h3>Найти подходящее направление</h3><p>
-          Понять свои интересы и ценности, собрать несколько гипотез и выбрать,
-          как их проверить.
-        </p>
-      </article>
-      <article>
-        <h3>Поддержать себя в переменах</h3><p>
-          Исследовать сомнения и реакции на трудности, найти собственные опоры.
-        </p>
-      </article>
-      <article>
-        <h3>Начать проявляться</h3><p>
-          Разобраться со страхом видимости, увидеть свою экспертность и выбрать
-          комфортный формат действий.
-        </p>
-      </article>
-    </div>
-  </div>
-</section>
-<Pricing services={services} />
-<WorkProcess steps={data.process} />
-<WorkBoundaries />
-<Faq items={faq} />
-<Contact socials={socials}><slot name="contact-form" /></Contact>
+<PageSections pageKey="coaching" layouts={layouts} preview={preview}>
+  <Fragment slot="hero">
+    <section class="coaching-hero" aria-labelledby="coaching-title">
+      <div class="page-container coaching-grid">
+        <div class="coaching-copy">
+          <nav class="breadcrumb" aria-label="Хлебные крошки">
+            <a href={routes.home}>Главная</a><span aria-hidden="true">/</span
+            ><span aria-current="page">Индивидуальный коучинг</span>
+          </nav>
+          <p class="eyebrow" data-cms-copy="eyebrow">
+            Онлайн · 60 минут · от 3 000 ₽
+          </p>
+          <h1 id="coaching-title" data-cms-copy="title">
+            Твоё направление.<br />Твои решения.<br />Твоя опора.
+          </h1>
+          <p class="description" data-cms-copy="description">
+            Пространство, где можно исследовать свои вопросы, увидеть новые
+            варианты и выбрать действия, которые подходят тебе.
+          </p>
+          <a
+            href="#contact"
+            class:list={[
+              buttonVariants(),
+              'h-14 px-6 gap-[18px] text-sm w-fit',
+            ]}
+            >Обсудить мой запрос <ArrowUpRight
+              size={18}
+              aria-hidden="true"
+            /></a
+          >
+          <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
+        </div>
+        <Image
+          src={portrait}
+          alt="Демонстрационный портрет для макета коучинга"
+          width={840}
+          height={1060}
+          format="webp"
+          quality={85}
+          loading="eager"
+          class="coaching-portrait"
+        />
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="requests">
+    <section class="requests" aria-labelledby="requests-title">
+      <div class="page-container requests-grid">
+        <div>
+          <h2 id="requests-title" data-cms-copy="title">
+            От «не знаю»<br />к своему<br />следующему шагу.
+          </h2><p class="requests-intro">
+            Не обязательно сразу ставить большую цель. Можно начать с того, что
+            сейчас вызывает вопросы.
+          </p>
+        </div>
+        <div class="request-list">
+          <article>
+            <h3>Найти подходящее направление</h3><p>
+              Понять свои интересы и ценности, собрать несколько гипотез и
+              выбрать, как их проверить.
+            </p>
+          </article>
+          <article>
+            <h3>Поддержать себя в переменах</h3><p>
+              Исследовать сомнения и реакции на трудности, найти собственные
+              опоры.
+            </p>
+          </article>
+          <article>
+            <h3>Начать проявляться</h3><p>
+              Разобраться со страхом видимости, увидеть свою экспертность и
+              выбрать комфортный формат действий.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="pricing">
+    <Pricing services={services} />
+  </Fragment>
+  <Fragment slot="process">
+    <WorkProcess steps={data.process} />
+  </Fragment>
+  <Fragment slot="boundaries">
+    <WorkBoundaries />
+  </Fragment>
+  <Fragment slot="faq">
+    <Faq preview={preview} items={faq} />
+  </Fragment>
+  <Fragment slot="contact">
+    <Contact preview={preview} socials={socials}
+      ><slot name="contact-form" /></Contact
+    >
+  </Fragment>
+</PageSections>
 <style>
   .coaching-hero {
     padding-block: 56px 64px;

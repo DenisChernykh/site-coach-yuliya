@@ -1,0 +1,39 @@
+---
+import type { CmsPageDto } from '@/shared/api';
+import {
+  applyBlockCopy,
+  defaultPageLayouts,
+  type CmsPageKey,
+} from '../model/layout';
+interface Props {
+  pageKey: CmsPageKey;
+  layouts?: CmsPageDto[];
+  preview?: boolean;
+}
+const {
+  pageKey,
+  layouts = defaultPageLayouts(),
+  preview = false,
+} = Astro.props;
+const page =
+  layouts.find((p) => p.key === pageKey) ??
+  defaultPageLayouts().find((p) => p.key === pageKey)!;
+const sections = await Promise.all(
+  page.blocks
+    .filter((block) => preview || block.enabled)
+    .map(async (block) => ({
+      block,
+      html: applyBlockCopy(await Astro.slots.render(block.id), block),
+    })),
+);
+---
+
+<div data-cms-page={pageKey} style="display:contents">
+  {
+    sections.map(({ block, html }) => (
+      <div data-cms-block={block.id} style="display:contents">
+        <Fragment set:html={html} />
+      </div>
+    ))
+  }
+</div>

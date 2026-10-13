@@ -5,9 +5,10 @@ import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
+  preview?: boolean;
   article: ArticleDto;
 }
-const { article } = Astro.props;
+const { article, preview = false } = Astro.props;
 const toc =
   article.bodyMarkdown !== undefined
     ? markdownHeadings(article.bodyMarkdown).map(({ id, title }) => ({
@@ -22,13 +23,18 @@ const toc =
     <nav class="breadcrumb" aria-label="Хлебные крошки">
       <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><a
         href={routes.journal}>Журнал</a
-      ><span aria-hidden="true">/</span><span aria-current="page"
-        >{article.topicLabel}</span
+      ><span aria-hidden="true">/</span><span
+        aria-current="page"
+        data-cms-field="article.topicLabel">{article.topicLabel}</span
       >
     </nav>
-    <p class="eyebrow">{article.topicLabel}</p>
-    <h1>{article.title}</h1>
-    <p class="article-description">{article.description}</p>
+    <p class="eyebrow" data-cms-field="article.topicLabel">
+      {article.topicLabel}
+    </p>
+    <h1 data-cms-field="article.title">{article.title}</h1>
+    <p class="article-description" data-cms-field="article.description">
+      {article.description}
+    </p>
     <p class="article-author">
       Юля Валишина · коуч по реализации и проявленности
     </p>
@@ -46,7 +52,7 @@ const toc =
     <aside class="article-aside">
       <nav aria-label="Оглавление статьи">
         <p class="eyebrow">В этой статье</p>
-        <ol>
+        <ol data-cms-toc>
           {
             toc.map((section, index) => (
               <li>
@@ -68,21 +74,29 @@ const toc =
     </aside>
     <div class="article-body">
       {
-        article.bodyMarkdown !== undefined ? (
+        preview ? (
+          <div data-cms-react="article-body">
+            <MarkdownArticleBody
+              markdown={article.bodyMarkdown ?? article.intro}
+            />
+          </div>
+        ) : article.bodyMarkdown !== undefined ? (
           <MarkdownArticleBody markdown={article.bodyMarkdown} />
         ) : (
           <>
-            <p>{article.intro}</p>
+            <p data-cms-field="article.intro">{article.intro}</p>
             <section class="article-story">
-              <h2>{article.storyTitle}</h2>
+              <h2 data-cms-field="article.storyTitle">{article.storyTitle}</h2>
               {article.story.map((paragraph) => (
                 <p>{paragraph}</p>
               ))}
             </section>
             <blockquote>
               <>
-                <p>{article.quote}</p>
-                <footer>{article.quoteNote}</footer>
+                <p data-cms-field="article.quote">{article.quote}</p>
+                <footer data-cms-field="article.quoteNote">
+                  {article.quoteNote}
+                </footer>
               </>
             </blockquote>
             {article.sections.map((section, index) => (
@@ -103,10 +117,14 @@ const toc =
           <section class="article-practice">
             <>
               <p class="eyebrow">Попробуй сегодня</p>
-              <h2>{article.practiceTitle}</h2>
-              <ul>
+              <h2 data-cms-field="article.practiceTitle">
+                {article.practiceTitle}
+              </h2>
+              <ul data-cms-list="article.practiceQuestions">
                 {article.practiceQuestions.map((question) => (
-                  <li>— {question}</li>
+                  <li data-cms-item data-cms-value data-cms-value-prefix="— ">
+                    — {question}
+                  </li>
                 ))}
               </ul>
             </>
@@ -114,7 +132,11 @@ const toc =
         )
       }
       <section class="article-cta">
-        <h2>{article.ctaTitle}</h2><p>{article.ctaDescription}</p><a
+        <h2 data-cms-field="article.ctaTitle">{article.ctaTitle}</h2><p
+          data-cms-field="article.ctaDescription"
+        >
+          {article.ctaDescription}
+        </p><a
           href={routes.contact}
           class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
           >Бесплатно познакомиться <ArrowUpRight

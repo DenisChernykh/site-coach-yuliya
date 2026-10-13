@@ -6,19 +6,38 @@
 
 ## Методы
 
-| Метод | Путь                  | Назначение                     | operationId          |
-| ----- | --------------------- | ------------------------------ | -------------------- |
-| GET   | `/v1/site`            | Настройки сайта                | `getSiteSettings`    |
-| GET   | `/v1/contacts`        | Контактные данные              | `getContacts`        |
-| GET   | `/v1/home`            | Контент главной                | `getHomePage`        |
-| GET   | `/v1/services`        | Опубликованные программы       | `getServices`        |
-| GET   | `/v1/articles`        | Опубликованные статьи          | `getArticles`        |
-| GET   | `/v1/articles/{slug}` | Опубликованная статья          | `getArticle`         |
-| GET   | `/v1/faq`             | Частые вопросы                 | `getFaq`             |
-| GET   | `/v1/social-links`    | Социальные сети                | `getSocialLinks`     |
-| POST  | `/v1/consultations`   | Сохранить заявку на знакомство | `createConsultation` |
+| Метод | Путь                  | Назначение                                | operationId          |
+| ----- | --------------------- | ----------------------------------------- | -------------------- |
+| GET   | `/v1/page-layouts`    | Опубликованный порядок и видимость секций | `getPageLayouts`     |
+| GET   | `/v1/site`            | Настройки сайта                           | `getSiteSettings`    |
+| GET   | `/v1/contacts`        | Контактные данные                         | `getContacts`        |
+| GET   | `/v1/home`            | Контент главной                           | `getHomePage`        |
+| GET   | `/v1/services`        | Опубликованные программы                  | `getServices`        |
+| GET   | `/v1/articles`        | Опубликованные статьи                     | `getArticles`        |
+| GET   | `/v1/articles/{slug}` | Опубликованная статья                     | `getArticle`         |
+| GET   | `/v1/faq`             | Частые вопросы                            | `getFaq`             |
+| GET   | `/v1/social-links`    | Социальные сети                           | `getSocialLinks`     |
+| POST  | `/v1/consultations`   | Сохранить заявку на знакомство            | `createConsultation` |
 
 ## Модели
+
+### CmsPageDto
+
+| Поле     | Тип           | Обязательно |
+| -------- | ------------- | ----------- |
+| `blocks` | CmsBlockDto[] | да          |
+| `key`    | string        | да          |
+
+### CmsBlockDto
+
+| Поле          | Тип     | Обязательно |
+| ------------- | ------- | ----------- |
+| `description` | string  | нет         |
+| `enabled`     | boolean | да          |
+| `eyebrow`     | string  | нет         |
+| `id`          | string  | да          |
+| `note`        | string  | нет         |
+| `title`       | string  | нет         |
 
 ### SiteSettingsDto
 

@@ -1,4 +1,6 @@
 ---
+import { loadPageLayouts } from '@/entities/cms';
+const layouts = await loadPageLayouts();
 import BaseLayout from '../layouts/base-layout.astro';
 import { ConsultationIsland } from '../islands/consultation-island';
 import { ContactsPage } from '@/pages/contacts';
@@ -22,7 +24,12 @@ const [settings, contacts, socials, services, faq] = await Promise.all([
   title="Контакты — Юля Валишина"
   description="Связаться с Юлей Валишиной и записаться на бесплатное знакомство: обсудить запрос, индивидуальный коучинг или арт-практики."
 >
-  <ContactsPage contacts={contacts} socials={socials} faq={faq}>
+  <ContactsPage
+    layouts={layouts}
+    contacts={contacts}
+    socials={socials}
+    faq={faq}
+  >
     <ConsultationIsland slot="contact-form" client:load services={services} />
   </ContactsPage>
 </BaseLayout>

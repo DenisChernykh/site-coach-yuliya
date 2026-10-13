@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { HomePage } from '@/pages/home';
+import { AboutPage } from '@/pages/about';
+import { CoachingPage } from '@/pages/coaching';
+import { ContactsPage } from '@/pages/contacts';
+import { JournalPage } from '@/pages/journal';
+import { ArticlePage } from '@/pages/article';
+import { ConsultationIsland } from '../islands/consultation-island';
+import {
+  siteSettings,
+  homePage,
+  faq,
+  socialLinks,
+  articles,
+  services,
+} from '@/shared/api/mocks/data';
+import { resolveArticleImages } from '../data/article-images';
+const publicArticles = await resolveArticleImages(articles, 1440);
+const contacts = {
+  email: 'hello@example.com',
+  phone: '+7 000 000-00-00',
+  telegramUrl: null,
+  address: 'Адрес',
+};
+---
+
+<BaseLayout
+  preview
+  settings={siteSettings}
+  contacts={contacts}
+  socials={socialLinks}
+  title="Предпросмотр сайта"
+>
+  <meta slot="head" name="robots" content="noindex,nofollow" />
+  {
+    ['art', 'landscape'].map((key) => (
+      <meta
+        data-cms-cover={key}
+        content={
+          publicArticles[articles.findIndex((a) => a.coverImage === key)]
+            ?.coverImage ?? ''
+        }
+      />
+    ))
+  }
+  <p id="preview-placeholder" class="page-container section-space">
+    Откройте предпросмотр из админки сайта.
+  </p>
+  <div data-preview-page="home" hidden>
+    <HomePage
+      preview
+      data={homePage}
+      services={services}
+      faq={faq}
+      socials={socialLinks}
+      articles={publicArticles}
+      ><ConsultationIsland slot="contact-form" services={services} /></HomePage
+    >
+  </div>
+  <div data-preview-page="about" hidden>
+    <AboutPage preview data={homePage} />
+  </div>
+  <div data-preview-page="coaching" hidden>
+    <CoachingPage
+      preview
+      data={homePage}
+      services={services}
+      faq={faq}
+      socials={socialLinks}
+      ><ConsultationIsland
+        slot="contact-form"
+        services={services}
+      /></CoachingPage
+    >
+  </div>
+  <div data-preview-page="contacts" hidden>
+    <ContactsPage preview contacts={contacts} faq={faq} socials={socialLinks}
+      ><ConsultationIsland
+        slot="contact-form"
+        services={services}
+      /></ContactsPage
+    >
+  </div>
+  <div data-preview-page="journal" hidden>
+    <JournalPage preview><div data-cms-react="journal"></div></JournalPage>
+  </div>
+  <div data-preview-page="article" hidden>
+    <ArticlePage preview article={publicArticles[0]!} />
+  </div>
+</BaseLayout>
+<script>
+  import { startPreview } from '@/pages/cms-preview';
+  startPreview();
+  window.addEventListener('message', (event) => {
+    if (event.source === window.parent && event.data?.type === 'cms:document') {
+      const placeholder = document.getElementById('preview-placeholder');
+      if (
+        placeholder &&
+        document.querySelector('[data-preview-page]:not([hidden])')
+      )
+        placeholder.hidden = true;
+    }
+  });
+</script>

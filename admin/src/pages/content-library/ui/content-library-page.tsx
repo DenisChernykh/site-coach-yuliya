@@ -41,7 +41,9 @@ export function ArticlesPage() {
                       {article.content.title || 'Без заголовка'}
                     </p>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {article.published ? 'Опубликована' : 'Черновик'}
+                      {article.published
+                        ? 'Включена в публикацию'
+                        : 'Не показывать'}
                     </p>
                   </button>
                 </li>
@@ -117,7 +119,9 @@ export function ProgramsPage() {
                       {program.content.title || 'Без названия'}
                     </p>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {program.published ? 'Опубликована' : 'Черновик'}
+                      {program.published
+                        ? 'Включена в публикацию'
+                        : 'Не показывать'}
                     </p>
                   </button>
                 </li>

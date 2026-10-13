@@ -7,6 +7,32 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/v1/page-layouts": {
+      "get": {
+        "operationId": "getPageLayouts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CmsPageDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Опубликованный порядок и видимость секций",
+        "tags": [
+          "page-layouts"
+        ]
+      }
+    },
     "/v1/site": {
       "get": {
         "operationId": "getSiteSettings",
@@ -400,6 +426,65 @@
   },
   "components": {
     "schemas": {
+      "CmsPageDto": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/CmsBlockDto"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "type": "array"
+          },
+          "key": {
+            "enum": [
+              "home",
+              "about",
+              "coaching",
+              "contacts",
+              "journal"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "blocks"
+        ],
+        "type": "object"
+      },
+      "CmsBlockDto": {
+        "properties": {
+          "description": {
+            "maxLength": 10000,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "eyebrow": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "id": {
+            "maxLength": 40,
+            "type": "string"
+          },
+          "note": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 1000,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "enabled"
+        ],
+        "type": "object"
+      },
       "SiteSettingsDto": {
         "properties": {
           "description": {

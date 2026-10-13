@@ -1,4 +1,6 @@
 ---
+import { loadPageLayouts } from '@/entities/cms';
+const layouts = await loadPageLayouts();
 import BaseLayout from '../layouts/base-layout.astro';
 import { ConsultationIsland } from '../islands/consultation-island';
 import { resolveArticleImages } from '../data/article-images';
@@ -27,6 +29,7 @@ const articles = await resolveArticleImages(rawArticles, 960);
   title="Юля Валишина — от поиска себя к проявленности"
 >
   <HomePage
+    layouts={layouts}
     data={home}
     services={services}
     faq={faq}

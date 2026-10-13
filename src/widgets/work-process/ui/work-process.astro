@@ -8,18 +8,18 @@ const { steps } = Astro.props;
 
 <section class="process" aria-labelledby="process-title">
   <div class="page-container">
-    <p class="eyebrow">Шаг за шагом</p>
-    <h2 id="process-title">В твоём темпе. В диалоге.</h2>
-    <ol class="process-grid">
+    <p class="eyebrow" data-cms-copy="eyebrow">Шаг за шагом</p>
+    <h2 id="process-title" data-cms-copy="title">В твоём темпе. В диалоге.</h2>
+    <ol class="process-grid" data-cms-list="home.process">
       {
         steps.map((step, index) => (
-          <li>
+          <li data-cms-item>
             <>
-              <span class="step-number">
+              <span class="step-number" data-cms-index>
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
+              <h3 data-cms-field=".title">{step.title}</h3>
+              <p data-cms-field=".description">{step.description}</p>
             </>
           </li>
         ))

@@ -1,4 +1,6 @@
 ---
+import { PageSections } from '@/entities/cms';
+import type { CmsPageDto } from '@/shared/api';
 import { Image } from 'astro:assets';
 import type { HomePageDto } from '@/entities/site';
 import type { ServiceDto } from '@/entities/service';
@@ -17,277 +19,396 @@ import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
+  layouts?: CmsPageDto[];
+  preview?: boolean;
   data: HomePageDto;
   services: ServiceDto[];
   faq: FaqItemDto[];
   socials: SocialLinkDto[];
   articles: ArticleDto[];
 }
-const { data, services, faq, socials, articles } = Astro.props;
+const {
+  layouts,
+  preview = false,
+  data,
+  services,
+  faq,
+  socials,
+  articles,
+} = Astro.props;
 ---
 
-<section class="hero" aria-labelledby="hero-title">
-  <div class="page-container hero-grid">
-    <div class="hero-content">
-      <p class="eyebrow">{data.hero.eyebrow}</p>
-      <h1 id="hero-title">
-        {
-          data.hero.headingLines.map((line, index) => (
-            <span
-              class:list={[
-                index === data.hero.headingLines.length - 1 && 'italic-line',
-              ]}
+<PageSections pageKey="home" layouts={layouts} preview={preview}>
+  <Fragment slot="hero">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="page-container hero-grid">
+        <div class="hero-content">
+          <p
+            class="eyebrow"
+            data-cms-field="home.hero.eyebrow"
+            data-cms-copy="eyebrow"
+          >
+            {data.hero.eyebrow}
+          </p>
+          <h1
+            id="hero-title"
+            data-cms-list="home.hero.headingLines"
+            data-cms-last-class="italic-line"
+          >
+            {
+              data.hero.headingLines.map((line, index) => (
+                <span
+                  data-cms-item
+                  data-cms-value
+                  class:list={[
+                    index === data.hero.headingLines.length - 1 &&
+                      'italic-line',
+                  ]}
+                >
+                  {line}
+                </span>
+              ))
+            }
+          </h1>
+          <p
+            class="hero-description"
+            data-cms-field="home.hero.description"
+            data-cms-copy="description"
+          >
+            {data.hero.description}
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class:list={[buttonVariants(), 'hero-cta']}
+              >Бесплатно познакомиться <ArrowUpRight
+                size={18}
+                aria-hidden="true"
+              /></a
             >
-              {line}
-            </span>
-          ))
-        }
-      </h1>
-      <p class="hero-description">{data.hero.description}</p>
-      <div class="hero-actions">
-        <a href="#contact" class:list={[buttonVariants(), 'hero-cta']}
-          >Бесплатно познакомиться <ArrowUpRight
-            size={18}
-            aria-hidden="true"
-          /></a
-        >
-        <a href={routes.coaching} class="text-link"
-          >Индивидуальный коучинг <span aria-hidden="true">↗</span></a
-        >
+            <a href={routes.coaching} class="text-link"
+              >Индивидуальный коучинг <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <p class="meeting-note" data-cms-field="home.hero.meetingNote">
+            {data.hero.meetingNote}
+          </p>
+        </div>
+        <figure class="hero-figure">
+          <div class="hero-media">
+            <Image
+              src={portrait}
+              alt="Демонстрационный портрет для макета сайта Юли Валишиной"
+              width={1040}
+              height={1212}
+              format="webp"
+              quality={85}
+              loading="eager"
+              fetchpriority="high"
+            />
+            <div class="video-trigger"><VideoIntroduction client:load /></div>
+          </div>
+          <figcaption>
+            Демонстрационный AI-портрет · заменить фото Юли
+          </figcaption>
+        </figure>
       </div>
-      <p class="meeting-note">{data.hero.meetingNote}</p>
-    </div>
-    <figure class="hero-figure">
-      <div class="hero-media">
+    </section>
+  </Fragment>
+  <Fragment slot="concerns">
+    <section class="concerns" aria-labelledby="concerns-title">
+      <div class="page-container">
+        <div class="concerns-heading">
+          <h2 id="concerns-title" data-cms-copy="title">
+            Не обязательно знать ответ.<br />Достаточно начать с вопроса.
+          </h2><p>На любом этапе можно<br />{' '}найти свой следующий шаг.</p>
+        </div>
+        <div class="concerns-grid" data-cms-list="home.concerns">
+          {
+            data.concerns.map((concern, index) => (
+              <article data-cms-item>
+                <>
+                  <span class="small-number" data-cms-index>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h3 data-cms-field=".title">{concern.title}</h3>
+                  <p data-cms-field=".description">{concern.description}</p>
+                  <a href="#contact" class="text-link">
+                    Это про меня <span aria-hidden="true">↗</span>
+                  </a>
+                </>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="about">
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="page-container about-grid">
         <Image
           src={portrait}
-          alt="Демонстрационный портрет для макета сайта Юли Валишиной"
-          width={1040}
-          height={1212}
+          alt="Демонстрационный портрет коуча"
+          width={780}
+          height={876}
           format="webp"
-          quality={85}
-          loading="eager"
-          fetchpriority="high"
+          loading="lazy"
         />
-        <div class="video-trigger"><VideoIntroduction client:load /></div>
-      </div>
-      <figcaption>Демонстрационный AI-портрет · заменить фото Юли</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="concerns" aria-labelledby="concerns-title">
-  <div class="page-container">
-    <div class="concerns-heading">
-      <h2 id="concerns-title">
-        Не обязательно знать ответ.<br />Достаточно начать с вопроса.
-      </h2><p>На любом этапе можно<br />{' '}найти свой следующий шаг.</p>
-    </div>
-    <div class="concerns-grid">
-      {
-        data.concerns.map((concern, index) => (
-          <article>
-            <>
-              <span class="small-number">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <h3>{concern.title}</h3>
-              <p>{concern.description}</p>
-              <a href="#contact" class="text-link">
-                Это про меня <span aria-hidden="true">↗</span>
-              </a>
-            </>
-          </article>
-        ))
-      }
-    </div>
-  </div>
-</section>
-
-<section id="about" class="about" aria-labelledby="about-title">
-  <div class="page-container about-grid">
-    <Image
-      src={portrait}
-      alt="Демонстрационный портрет коуча"
-      width={780}
-      height={876}
-      format="webp"
-      loading="lazy"
-    />
-    <div class="about-copy">
-      <p class="eyebrow">{data.about.eyebrow}</p><h2 id="about-title">
-        {data.about.title}
-      </h2>{data.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}<a
-        href={routes.about}
-        class="text-link"
-        >Моя история и подход <span aria-hidden="true">↗</span></a
-      >
-    </div>
-  </div>
-</section>
-
-<section id="approach" class="approach" aria-labelledby="approach-title">
-  <div class="page-container approach-grid">
-    <div class="approach-copy">
-      <p class="eyebrow">{data.approach.eyebrow}</p><h2 id="approach-title">
-        {data.approach.title}
-      </h2><p>{data.approach.description}</p><blockquote>
-        {data.approach.quote}
-      </blockquote>
-    </div>
-    <ol class="approach-steps">
-      {
-        data.approach.steps.map((step, index) => (
-          <li>
-            <>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <div>
-                <>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </>
-              </div>
-            </>
-          </li>
-        ))
-      }
-    </ol>
-  </div>
-</section>
-
-<Pricing services={services} />
-<WorkProcess steps={data.process} />
-<WorkBoundaries />
-
-<section class="section-space cases" aria-labelledby="cases-title">
-  <div class="page-container cases-inner">
-    <div class="cases-heading">
-      <h2 id="cases-title" class="section-heading">
-        У каждого пути<br />свой поворот.
-      </h2><p class="fine-print">
-        Истории из материалов Юли.<br />{' '}Публикация — после согласия
-        клиенток.
-      </p>
-    </div>
-    <div class="cases-grid">
-      {
-        data.caseStudies.map((story, index) => (
-          <article
-            class:list={[
-              'case-card',
-              index % 2 === 0 ? 'bg-accent' : 'bg-secondary',
-            ]}
+        <div class="about-copy" data-cms-list="home.about.paragraphs">
+          <p
+            class="eyebrow"
+            data-cms-field="home.about.eyebrow"
+            data-cms-copy="eyebrow"
           >
-            <>
-              <h3>{story.title}</h3>
-              <dl>
+            {data.about.eyebrow}
+          </p><h2
+            id="about-title"
+            data-cms-field="home.about.title"
+            data-cms-copy="title"
+          >
+            {data.about.title}
+          </h2>{
+            data.about.paragraphs.map((paragraph) => (
+              <p data-cms-item data-cms-value>
+                {paragraph}
+              </p>
+            ))
+          }<a href={routes.about} class="text-link"
+            >Моя история и подход <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="approach">
+    <section id="approach" class="approach" aria-labelledby="approach-title">
+      <div class="page-container approach-grid">
+        <div class="approach-copy">
+          <p
+            class="eyebrow"
+            data-cms-field="home.approach.eyebrow"
+            data-cms-copy="eyebrow"
+          >
+            {data.approach.eyebrow}
+          </p><h2
+            id="approach-title"
+            data-cms-field="home.approach.title"
+            data-cms-copy="title"
+          >
+            {data.approach.title}
+          </h2><p data-cms-field="home.approach.description">
+            {data.approach.description}
+          </p><blockquote data-cms-field="home.approach.quote">
+            {data.approach.quote}
+          </blockquote>
+        </div>
+        <ol class="approach-steps" data-cms-list="home.approach.steps">
+          {
+            data.approach.steps.map((step, index) => (
+              <li data-cms-item>
                 <>
+                  <span data-cms-index>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                   <div>
                     <>
-                      <dt>С чем пришла</dt>
-                      <dd>{story.request}</dd>
-                    </>
-                  </div>
-                  <div>
-                    <>
-                      <dt>Что исследовали</dt>
-                      <dd>{story.exploration}</dd>
-                    </>
-                  </div>
-                  <div>
-                    <>
-                      <dt>Следующий шаг</dt>
-                      <dd>{story.result}</dd>
+                      <h3 data-cms-field=".title">{step.title}</h3>
+                      <p data-cms-field=".description">{step.description}</p>
                     </>
                   </div>
                 </>
-              </dl>
-              <StoryDialog client:visible story={story} />
-            </>
-          </article>
-        ))
-      }
-    </div>
-    <p class="fine-print">
-      Пересказ исходных кейсов без имён. Опыт индивидуален; одинаковый результат
-      не гарантируется.
-    </p>
-  </div>
-</section>
-
-<section class="art-practice" aria-labelledby="art-title">
-  <div class="page-container art-grid">
-    <figure>
-      <Image
-        src={art}
-        alt="Создание коллажа из бумаги и фотографий за светлым столом"
-        width={1200}
-        height={912}
-        format="webp"
-        loading="lazy"
-      /><figcaption>Демонстрационный AI-снимок творческого процесса</figcaption>
-    </figure>
-    <div class="art-copy">
-      <p class="eyebrow">{data.artPractice.eyebrow}</p><h2
-        id="art-title"
-        class="section-heading"
-      >
-        {data.artPractice.title}
-      </h2><p>{data.artPractice.description}</p><div class="art-details">
-        {data.artPractice.details.map((detail) => <p>{detail}</p>)}
-      </div><a
-        href="#contact"
-        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
-        >Узнать о следующей встрече <ArrowUpRight
-          size={18}
-          aria-hidden="true"
-        /></a
-      ><p class="fine-print">Ближайшая дата и стоимость уточняются.</p>
-    </div>
-  </div>
-</section>
-<section class="other-formats" aria-label="Другие способы начать">
-  <div class="page-container products-grid">
-    {
-      data.products.map((product) => (
-        <article>
-          <>
-            <p class="eyebrow">{product.eyebrow}</p>
-            <h2>{product.title}</h2>
-            <p>{product.description}</p>
-            <a href="#contact" class="text-link">
-              {product.actionLabel} <span aria-hidden="true">↗</span>
-            </a>
-          </>
-        </article>
-      ))
-    }
-  </div>
-</section>
-
-<section class="journal-preview" aria-labelledby="journal-preview-title">
-  <div class="page-container">
-    <div class="journal-heading">
-      <div>
-        <p class="eyebrow">Мысли и практики</p><h2
-          id="journal-preview-title"
-          class="section-heading"
-        >
-          Чуть ближе к себе.
-        </h2>
-      </div><a href={routes.journal} class="text-link"
-        >Открыть журнал <span aria-hidden="true">↗</span></a
-      >
-    </div>
-    <div class="articles-grid">
-      {articles.slice(0, 2).map((article) => <ArticleCard article={article} />)}
-    </div>
-  </div>
-</section>
-
-<Faq items={faq} />
-<Contact socials={socials}><slot name="contact-form" /></Contact>
-
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="pricing">
+    <Pricing services={services} />
+  </Fragment>
+  <Fragment slot="process">
+    <WorkProcess steps={data.process} />
+  </Fragment>
+  <Fragment slot="boundaries">
+    <WorkBoundaries />
+  </Fragment>
+  <Fragment slot="cases">
+    <section class="section-space cases" aria-labelledby="cases-title">
+      <div class="page-container cases-inner">
+        <div class="cases-heading">
+          <h2 id="cases-title" class="section-heading" data-cms-copy="title">
+            У каждого пути<br />свой поворот.
+          </h2><p class="fine-print">
+            Истории из материалов Юли.<br />{' '}Публикация — после согласия
+            клиенток.
+          </p>
+        </div>
+        <div class="cases-grid" data-cms-list="home.caseStudies">
+          {
+            data.caseStudies.map((story, index) => (
+              <article
+                data-cms-item
+                class:list={[
+                  'case-card',
+                  index % 2 === 0 ? 'bg-accent' : 'bg-secondary',
+                ]}
+              >
+                <>
+                  <h3 data-cms-field=".title">{story.title}</h3>
+                  <dl>
+                    <>
+                      <div>
+                        <>
+                          <dt>С чем пришла</dt>
+                          <dd data-cms-field=".request">{story.request}</dd>
+                        </>
+                      </div>
+                      <div>
+                        <>
+                          <dt>Что исследовали</dt>
+                          <dd data-cms-field=".exploration">
+                            {story.exploration}
+                          </dd>
+                        </>
+                      </div>
+                      <div>
+                        <>
+                          <dt>Следующий шаг</dt>
+                          <dd data-cms-field=".result">{story.result}</dd>
+                        </>
+                      </div>
+                    </>
+                  </dl>
+                  <StoryDialog client:visible story={story} />
+                </>
+              </article>
+            ))
+          }
+        </div>
+        <p class="fine-print">
+          Пересказ исходных кейсов без имён. Опыт индивидуален; одинаковый
+          результат не гарантируется.
+        </p>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="art">
+    <section class="art-practice" aria-labelledby="art-title">
+      <div class="page-container art-grid">
+        <figure>
+          <Image
+            src={art}
+            alt="Создание коллажа из бумаги и фотографий за светлым столом"
+            width={1200}
+            height={912}
+            format="webp"
+            loading="lazy"
+          /><figcaption>
+            Демонстрационный AI-снимок творческого процесса
+          </figcaption>
+        </figure>
+        <div class="art-copy">
+          <p
+            class="eyebrow"
+            data-cms-field="home.artPractice.eyebrow"
+            data-cms-copy="eyebrow"
+          >
+            {data.artPractice.eyebrow}
+          </p><h2
+            id="art-title"
+            class="section-heading"
+            data-cms-field="home.artPractice.title"
+            data-cms-copy="title"
+          >
+            {data.artPractice.title}
+          </h2><p data-cms-field="home.artPractice.description">
+            {data.artPractice.description}
+          </p><div class="art-details" data-cms-list="home.artPractice.details">
+            {
+              data.artPractice.details.map((detail) => (
+                <p data-cms-item data-cms-value>
+                  {detail}
+                </p>
+              ))
+            }
+          </div><a
+            href="#contact"
+            class:list={[
+              buttonVariants(),
+              'h-14 px-6 gap-[18px] text-sm w-fit',
+            ]}
+            >Узнать о следующей встрече <ArrowUpRight
+              size={18}
+              aria-hidden="true"
+            /></a
+          ><p class="fine-print">Ближайшая дата и стоимость уточняются.</p>
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="products">
+    <section class="other-formats" aria-label="Другие способы начать">
+      <div class="page-container products-grid" data-cms-list="home.products">
+        {
+          data.products.map((product) => (
+            <article data-cms-item>
+              <>
+                <p
+                  class="eyebrow"
+                  data-cms-field=".eyebrow"
+                  data-cms-copy="eyebrow"
+                >
+                  {product.eyebrow}
+                </p>
+                <h2 data-cms-field=".title" data-cms-copy="title">
+                  {product.title}
+                </h2>
+                <p data-cms-field=".description">{product.description}</p>
+                <a href="#contact" class="text-link">
+                  {product.actionLabel} <span aria-hidden="true">↗</span>
+                </a>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="articles">
+    <section class="journal-preview" aria-labelledby="journal-preview-title">
+      <div class="page-container">
+        <div class="journal-heading">
+          <div>
+            <p class="eyebrow" data-cms-copy="eyebrow">Мысли и практики</p><h2
+              id="journal-preview-title"
+              class="section-heading"
+              data-cms-copy="title"
+            >
+              Чуть ближе к себе.
+            </h2>
+          </div><a href={routes.journal} class="text-link"
+            >Открыть журнал <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="articles-grid" data-cms-react="articles">
+          {
+            articles
+              .slice(0, 2)
+              .map((article) => <ArticleCard article={article} />)
+          }
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="faq">
+    <Faq preview={preview} items={faq} />
+  </Fragment>
+  <Fragment slot="contact">
+    <Contact preview={preview} socials={socials}
+      ><slot name="contact-form" /></Contact
+    >
+  </Fragment>
+</PageSections>
 <style>
   .hero {
     padding-block: 64px 56px;

@@ -1,8 +1,8 @@
 ---
 import type { SocialLinkDto } from '@/entities/social-link';
-import { Button, buttonVariants } from '@/shared/ui';
-import { ArrowUpRight } from 'lucide-react';
+import { TelegramLink } from './telegram-link';
 interface Props {
+  preview?: boolean;
   socials: SocialLinkDto[];
   telegramUrl?: string | null;
 }
@@ -14,38 +14,22 @@ const telegram =
 <section id="contact" class="contact" aria-labelledby="contact-title">
   <div class="page-container contact-grid">
     <div class="contact-copy">
-      <p class="eyebrow">Первый шаг</p>
-      <h2 id="contact-title">Начнём<br />со знакомства?</h2>
+      <p class="eyebrow" data-cms-copy="eyebrow">Первый шаг</p>
+      <h2 id="contact-title" data-cms-copy="title">
+        Начнём<br />со знакомства?
+      </h2>
       <p class="contact-note">
         До 30 минут · онлайн · бесплатно<br />{' '}Поговорим о твоём запросе и
         поймём,<br />{' '}какой формат тебе подходит.
       </p>
-      {
-        telegram ? (
-          <a
-            href={telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-            class:list={[
-              buttonVariants(),
-              'h-14 w-fit gap-[18px] px-6 text-sm',
-            ]}
-          >
-            Написать в Telegram <ArrowUpRight size={18} aria-hidden="true" />
-          </a>
-        ) : (
-          <Button
-            disabled
-            className="h-14 w-fit gap-[18px] px-6 text-sm disabled:opacity-60"
-          >
-            Написать в Telegram{' '}
-            <ArrowUpRight className="size-[18px]" aria-hidden="true" />
-          </Button>
-        )
-      }
+      <div data-cms-react="telegram" style="display:contents">
+        <TelegramLink url={telegram} />
+      </div>
       {
         !telegram && (
-          <p class="fine-print">Telegram подключим после получения адреса.</p>
+          <p class="fine-print" data-cms-no-telegram>
+            Telegram подключим после получения адреса.
+          </p>
         )
       }
     </div>

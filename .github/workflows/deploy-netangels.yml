@@ -70,6 +70,8 @@ jobs:
       - name: Check and build admin
         if: inputs.target != 'site'
         working-directory: admin
+        env:
+          VITE_CMS_PREVIEW_URL: ${{ vars.PUBLIC_SITE_URL }}/cms-preview/
         run: |
           pnpm install --frozen-lockfile
           pnpm check

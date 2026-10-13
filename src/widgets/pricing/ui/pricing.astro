@@ -12,9 +12,10 @@ const { services } = Astro.props;
   <div class="page-container pricing-inner">
     <div class="pricing-heading">
       <div>
-        <p class="eyebrow">Индивидуальный коучинг</p><h2
+        <p class="eyebrow" data-cms-copy="eyebrow">Индивидуальный коучинг</p><h2
           id="formats-title"
           class="section-heading"
+          data-cms-copy="title"
         >
           Место для твоих<br />вопросов и решений.
         </h2>
@@ -23,7 +24,7 @@ const { services } = Astro.props;
         Онлайн · 60 минут<br />От одной встречи к регулярной работе
       </p>
     </div>
-    <div class="pricing-grid">
+    <div class="pricing-grid" data-cms-react="programs">
       {services.map((service) => <ServiceCard service={service} />)}
     </div>
     <div class="intro-offer">

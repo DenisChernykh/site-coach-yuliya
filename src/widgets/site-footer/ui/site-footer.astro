@@ -16,21 +16,33 @@ const { settings, contacts } = Astro.props;
 >
   <div class="page-container footer-inner">
     <div>
-      <a href="/" class="footer-name">{settings.name}</a><p class="fine-print">
+      <a href="/" class="footer-name" data-cms-field="site.name"
+        >{settings.name}</a
+      ><p class="fine-print">
         © 2026 · {settings.profession}
       </p>
       {
         (contacts.email || contacts.phone || contacts.address) && (
           <address class="footer-contacts">
             {contacts.email && (
-              <a href={`mailto:${contacts.email}`}>{contacts.email}</a>
+              <a
+                href={`mailto:${contacts.email}`}
+                data-cms-field="contacts.email"
+              >
+                {contacts.email}
+              </a>
             )}
             {contacts.phone && (
-              <a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>
+              <a
+                href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}
+                data-cms-field="contacts.phone"
+              >
                 {contacts.phone}
               </a>
             )}
-            {contacts.address && <span>{contacts.address}</span>}
+            {contacts.address && (
+              <span data-cms-field="contacts.address">{contacts.address}</span>
+            )}
           </address>
         )
       }

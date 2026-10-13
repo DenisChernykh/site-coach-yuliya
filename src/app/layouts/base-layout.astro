@@ -11,6 +11,7 @@ import { loadSocialLinks, type SocialLinkDto } from '@/entities/social-link';
 import '../styles/index.css';
 
 interface Props {
+  preview?: boolean;
   settings: SiteSettingsDto;
   socials?: SocialLinkDto[];
   contacts?: ContactDetailsDto;
@@ -19,6 +20,7 @@ interface Props {
 }
 const {
   settings,
+  preview = false,
   title = settings.name,
   description = settings.description,
   socials: initialSocials,
@@ -39,12 +41,21 @@ const contacts = initialContacts ?? (await loadContacts());
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Перейти к содержимому</a>
     <SiteHeader settings={settings} />
     <main id="main-content"><slot /></main>
     <SiteFooter settings={settings} contacts={contacts} />
-    <SocialLinks client:load items={socials} />
+    {
+      preview ? (
+        <div data-cms-react="socials" style="display:contents">
+          <SocialLinks items={socials} />
+        </div>
+      ) : (
+        <SocialLinks client:load items={socials} />
+      )
+    }
   </body>
 </html>

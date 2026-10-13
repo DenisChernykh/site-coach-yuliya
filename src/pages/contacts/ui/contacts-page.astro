@@ -1,4 +1,6 @@
 ---
+import { PageSections } from '@/entities/cms';
+import type { CmsPageDto } from '@/shared/api';
 import type { ContactDetailsDto } from '@/entities/site';
 import type { SocialLinkDto } from '@/entities/social-link';
 import type { FaqItemDto } from '@/entities/faq';
@@ -6,83 +8,123 @@ import { Contact } from '@/widgets/contact';
 import { Faq } from '@/widgets/faq';
 import { routes } from '@/shared/routes';
 interface Props {
+  layouts?: CmsPageDto[];
+  preview?: boolean;
   contacts: ContactDetailsDto;
   socials: SocialLinkDto[];
   faq: FaqItemDto[];
 }
-const { contacts, socials, faq } = Astro.props;
+const { layouts, preview = false, contacts, socials, faq } = Astro.props;
 const profiles = socials.filter((item) => item.url);
 const hasDetails = Boolean(
   contacts.email || contacts.phone || contacts.address || profiles.length,
 );
 ---
 
-<section
-  class="contacts-header page-container"
-  aria-labelledby="contacts-page-title"
->
-  <nav class="breadcrumb" aria-label="Хлебные крошки">
-    <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
-      aria-current="page">Контакты</span
-    >
-  </nav>
-  <p class="eyebrow">Контакты</p>
-  <h1 id="contacts-page-title">Будем<br />на связи.</h1>
-  <p class="contacts-description">
-    Можно прийти с вопросом, с несколькими идеями или пока без точной
-    формулировки. Выбери удобный способ связи — начнём с бесплатного знакомства.
-  </p>
-</section>
-<Contact socials={socials} telegramUrl={contacts.telegramUrl}
-  ><slot name="contact-form" /></Contact
->
-{
-  hasDetails && (
+<PageSections pageKey="contacts" layouts={layouts} preview={preview}>
+  <Fragment slot="hero">
     <section
-      class="contact-details page-container"
-      aria-labelledby="other-contacts-title"
+      class="contacts-header page-container"
+      aria-labelledby="contacts-page-title"
     >
-      <h2 id="other-contacts-title">Другие способы связи</h2>
-      <address>
-        {contacts.email && (
-          <div>
-            <p class="eyebrow">Электронная почта</p>
-            <a href={`mailto:${contacts.email}`}>{contacts.email}</a>
-          </div>
-        )}
-        {contacts.phone && (
-          <div>
-            <p class="eyebrow">Телефон</p>
-            <a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>
-              {contacts.phone}
-            </a>
-          </div>
-        )}
-        {contacts.address && (
-          <div>
-            <p class="eyebrow">Адрес</p>
-            <p>{contacts.address}</p>
-          </div>
-        )}
-        {profiles.length > 0 && (
-          <div>
-            <p class="eyebrow">Социальные сети</p>
-            <ul>
-              {profiles.map((item) => (
-                <li>
-                  <a href={item.url!} target="_blank" rel="noopener noreferrer">
-                    {item.label} <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </address>
+      <nav class="breadcrumb" aria-label="Хлебные крошки">
+        <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
+          aria-current="page">Контакты</span
+        >
+      </nav>
+      <p class="eyebrow" data-cms-copy="eyebrow">Контакты</p>
+      <h1 id="contacts-page-title" data-cms-copy="title">
+        Будем<br />на связи.
+      </h1>
+      <p class="contacts-description" data-cms-copy="description">
+        Можно прийти с вопросом, с несколькими идеями или пока без точной
+        формулировки. Выбери удобный способ связи — начнём с бесплатного
+        знакомства.
+      </p>
     </section>
-  )
-}
-<Faq items={faq} />
+  </Fragment>
+  <Fragment slot="contact">
+    <Contact
+      preview={preview}
+      socials={socials}
+      telegramUrl={contacts.telegramUrl}><slot name="contact-form" /></Contact
+    >
+  </Fragment>
+  <Fragment slot="details">
+    {
+      hasDetails && (
+        <section
+          class="contact-details page-container"
+          aria-labelledby="other-contacts-title"
+        >
+          <h2 id="other-contacts-title" data-cms-copy="title">
+            Другие способы связи
+          </h2>
+          <address>
+            {contacts.email && (
+              <div>
+                <p class="eyebrow" data-cms-copy="eyebrow">
+                  Электронная почта
+                </p>
+                <a
+                  href={`mailto:${contacts.email}`}
+                  data-cms-field="contacts.email"
+                  data-cms-field="contacts.email"
+                >
+                  {contacts.email}
+                </a>
+              </div>
+            )}
+            {contacts.phone && (
+              <div>
+                <p class="eyebrow">Телефон</p>
+                <a
+                  href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}
+                  data-cms-field="contacts.phone"
+                  data-cms-field="contacts.phone"
+                >
+                  {contacts.phone}
+                </a>
+              </div>
+            )}
+            {contacts.address && (
+              <div>
+                <p class="eyebrow">Адрес</p>
+                <p
+                  data-cms-field="contacts.address"
+                  data-cms-field="contacts.address"
+                >
+                  {contacts.address}
+                </p>
+              </div>
+            )}
+            {profiles.length > 0 && (
+              <div>
+                <p class="eyebrow">Социальные сети</p>
+                <ul>
+                  {profiles.map((item) => (
+                    <li>
+                      <a
+                        href={item.url!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.label} <span aria-hidden="true">↗</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </address>
+        </section>
+      )
+    }
+  </Fragment>
+  <Fragment slot="faq">
+    <Faq preview={preview} items={faq} />
+  </Fragment>
+</PageSections>
 <style>
   .contacts-header {
     padding-block: 56px 64px;

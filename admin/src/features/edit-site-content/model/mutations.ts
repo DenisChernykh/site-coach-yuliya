@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRevalidator } from 'react-router'
-import { contentKeys } from '@/entities/site-content'
+import { contentKeys, cmsKey } from '@/entities/site-content'
 import {
   adminCreateArticle,
   adminUpdateArticle,
@@ -33,6 +33,7 @@ export function useContentMutation<T, R>(
     mutationFn,
     onSuccess: async () => {
       await Promise.all([
+        client.invalidateQueries({ queryKey: cmsKey() }),
         client.invalidateQueries({ queryKey: contentKeys[kind]() }),
         client.invalidateQueries({ queryKey: contentKeys.publication() }),
         ...(kind === 'contacts'

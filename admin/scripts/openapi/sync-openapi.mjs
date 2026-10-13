@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -74,6 +75,7 @@ export async function syncOpenApi({ source, destination }) {
 
 function resolvePairedBackendSource() {
   const fallback = resolve(process.cwd(), '../backend/docs/api/openapi.json')
+  if (existsSync(fallback)) return fallback
 
   try {
     const worktreeList = execFileSync(

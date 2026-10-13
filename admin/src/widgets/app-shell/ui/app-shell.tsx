@@ -1,3 +1,4 @@
+import { CmsPublicationBar } from '@/features/edit-site-content'
 import { useState, type CSSProperties, type PropsWithChildren } from 'react'
 import { SidebarResize } from './sidebar-resize'
 import {
@@ -31,6 +32,7 @@ import {
 
 const icons = {
   '/': Inbox,
+  '/editor': Layers,
   '/articles': FileText,
   '/programs': Layers,
   '/contacts': Mail,
@@ -123,7 +125,12 @@ export function AppShell({ children }: PropsWithChildren) {
           <span className="text-sm font-medium">{label}</span>
         </header>
         <Container className="min-w-0 flex-1 pb-10">
-          {canManage && <PublicationStatus />}
+          {canManage && (
+            <>
+              <PublicationStatus />
+              {pathname !== '/editor' && <CmsPublicationBar />}
+            </>
+          )}
           <div className="pt-7">{children}</div>
         </Container>
       </SidebarInset>

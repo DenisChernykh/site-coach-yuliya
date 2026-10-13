@@ -18,6 +18,7 @@ import { articleMarkdown } from '../model/article-markdown'
 import { contentError } from '../model/errors'
 import { useSaveArticle } from '../model/mutations'
 import { ContentFields } from './content-fields'
+import { ArticlePreview } from './cms-preview'
 import { useContentNavigationGuard } from '../model/use-content-navigation-guard'
 
 const primaryMetadataKeys = ['title', 'topic', 'description']
@@ -133,13 +134,22 @@ export function ArticleForm({
                     })
                   }
                 />
-                <RichTextEditor
-                  label="Текст статьи"
-                  value={field.value.bodyMarkdown ?? ''}
-                  onChange={(value) =>
-                    field.onChange({ ...field.value, bodyMarkdown: value })
-                  }
-                />
+                <div className="grid min-w-0 gap-6 xl:grid-cols-2">
+                  <RichTextEditor
+                    label="Текст статьи"
+                    value={field.value.bodyMarkdown ?? ''}
+                    onChange={(value) =>
+                      field.onChange({ ...field.value, bodyMarkdown: value })
+                    }
+                  />
+                  <ArticlePreview
+                    article={{
+                      ...field.value,
+                      slug:
+                        save.data?.content.slug ?? article?.content.slug ?? '',
+                    }}
+                  />
+                </div>
                 <details className="space-y-4 border-t pt-4">
                   <summary className="cursor-pointer text-sm font-medium">
                     Карточки, обложка и дополнительные блоки
@@ -164,7 +174,7 @@ export function ArticleForm({
             className="size-4 accent-primary"
             {...form.register('published')}
           />
-          Опубликовать на сайте
+          Включить в публикацию сайта
         </label>
         <TextField
           label="Порядок в списке"
@@ -188,7 +198,8 @@ export function ArticleForm({
       )}
       {notice && (
         <p role="status" className="text-sm text-muted-foreground">
-          Статья сохранена. Обновление сайта поставлено в очередь.
+          Статья сохранена в черновике. Нажмите «Опубликовать сохранённое»,
+          чтобы обновить сайт.
         </p>
       )}
       <Button type="submit" isLoading={save.isPending} loadingLabel="Сохраняем">

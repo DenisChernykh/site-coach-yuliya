@@ -19,8 +19,8 @@ const pathname = Astro.url.pathname;
       class="brand"
       aria-label={`${settings.name} — главная`}
     >
-      <span>{settings.name}</span>
-      <small>{settings.profession}</small>
+      <span data-cms-field="site.name">{settings.name}</span>
+      <small data-cms-field="site.profession">{settings.profession}</small>
     </a>
     <nav class="desktop-navigation" aria-label="Основная навигация">
       {

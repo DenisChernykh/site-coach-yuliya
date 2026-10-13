@@ -182,9 +182,20 @@ model SiteContent {
   home      Json
   faq       Json
   socials   Json
+  pageLayout Json? @map("page_layout")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("site_content")
+}
+
+model SiteCmsDraft {
+  id String @id
+  revision Int @default(1)
+  publishedRevision Int @default(1) @map("published_revision")
+  content Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_cms_drafts")
 }
 
 model Article {

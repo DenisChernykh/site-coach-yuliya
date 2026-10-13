@@ -1,4 +1,6 @@
 ---
+import { loadPageLayouts } from '@/entities/cms';
+const layouts = await loadPageLayouts();
 import BaseLayout from '../layouts/base-layout.astro';
 import { ConsultationIsland } from '../islands/consultation-island';
 import { CoachingPage } from '@/pages/coaching';
@@ -20,7 +22,13 @@ const [settings, home, services, faq, socials] = await Promise.all([
   socials={socials}
   title="Индивидуальный коучинг — Юля Валишина"
 >
-  <CoachingPage data={home} services={services} faq={faq} socials={socials}>
+  <CoachingPage
+    layouts={layouts}
+    data={home}
+    services={services}
+    faq={faq}
+    socials={socials}
+  >
     <ConsultationIsland slot="contact-form" client:load services={services} />
   </CoachingPage>
 </BaseLayout>

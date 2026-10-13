@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router'
 import { clearCurrentSession, currentSessionQueryKey } from '@/entities/session'
 import { ConsultationsPage } from '@/pages/consultations'
 import { ArticlesPage, ProgramsPage } from '@/pages/content-library'
+import { SiteEditorPage } from '@/pages/site-editor'
 import {
   ContactsPage,
   SitePage,
@@ -51,6 +52,7 @@ export const router = createBrowserRouter(
       hydrateFallbackElement: <p className="p-6 text-sm">Проверяем доступ…</p>,
       children: [
         { index: true, element: <ConsultationsPage /> },
+        { path: 'editor', element: <SiteEditorPage /> },
         { path: 'articles', element: <ArticlesPage /> },
         { path: 'programs', element: <ProgramsPage /> },
         { path: 'contacts', element: <ContactsPage /> },

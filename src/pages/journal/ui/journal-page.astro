@@ -2,39 +2,52 @@
 import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
+
+import { PageSections } from '@/entities/cms';
+import type { CmsPageDto } from '@/shared/api';
+interface Props {
+  layouts?: CmsPageDto[];
+  preview?: boolean;
+}
+const { layouts, preview = false } = Astro.props;
 ---
 
-<section class="journal-page">
-  <div class="page-container journal-header">
-    <nav class="breadcrumb" aria-label="Хлебные крошки">
-      <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
-        aria-current="page">Журнал</span
-      >
-    </nav>
-    <p class="eyebrow">Мысли и практики</p>
-    <div class="journal-intro">
-      <h1>Журнал<br />о своём пути.</h1>
-      <p class="journal-description">
-        О поиске своего дела, опоре на себя и смелости проявляться. Читай в
-        своём темпе и забирай то, что откликается.
-      </p>
-    </div>
-  </div>
-  <slot />
-</section>
-<section class="journal-cta">
-  <div class="page-container journal-cta-inner">
-    <div>
-      <h2>Хочется обсудить<br />свою историю?</h2><p>
-        Начнём с бесплатного знакомства до 30 минут.
-      </p>
-    </div><a
-      href={routes.contact}
-      class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
-      >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
-    >
-  </div>
-</section>
+<PageSections pageKey="journal" layouts={layouts} preview={preview}>
+  <Fragment slot="hero">
+    <section class="journal-page">
+      <div class="page-container journal-header">
+        <nav class="breadcrumb" aria-label="Хлебные крошки">
+          <a href={routes.home}>Главная</a><span aria-hidden="true">/</span
+          ><span aria-current="page">Журнал</span>
+        </nav>
+        <p class="eyebrow" data-cms-copy="eyebrow">Мысли и практики</p>
+        <div class="journal-intro">
+          <h1 data-cms-copy="title">Журнал<br />о своём пути.</h1>
+          <p class="journal-description" data-cms-copy="description">
+            О поиске своего дела, опоре на себя и смелости проявляться. Читай в
+            своём темпе и забирай то, что откликается.
+          </p>
+        </div>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="articles"><slot /></Fragment>
+  <Fragment slot="cta"
+    ><section class="journal-cta">
+      <div class="page-container journal-cta-inner">
+        <div>
+          <h2 data-cms-copy="title">Хочется обсудить<br />свою историю?</h2><p>
+            Начнём с бесплатного знакомства до 30 минут.
+          </p>
+        </div><a
+          href={routes.contact}
+          class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
+          >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+        >
+      </div>
+    </section>
+  </Fragment>
+</PageSections>
 <style>
   .journal-page {
     padding-top: 56px;

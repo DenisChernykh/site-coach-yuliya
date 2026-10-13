@@ -1,3 +1,4 @@
+import { defaultPageLayouts } from '@/shared/lib/page-layouts';
 import { ApiProblemError } from '../client/api-errors';
 import {
   articles,
@@ -20,6 +21,9 @@ export async function handleMockRequest<T>(
 
   if (method === 'GET') {
     switch (url.pathname) {
+      case '/v1/page-layouts':
+        result = defaultPageLayouts();
+        break;
       case '/v1/site':
         result = siteSettings;
         break;

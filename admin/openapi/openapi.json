@@ -545,6 +545,200 @@
         ],
         "type": "object"
       },
+      "CmsBlockDto": {
+        "properties": {
+          "description": {
+            "maxLength": 10000,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "eyebrow": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "id": {
+            "maxLength": 40,
+            "type": "string"
+          },
+          "note": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 1000,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "enabled"
+        ],
+        "type": "object"
+      },
+      "CmsDocumentDto": {
+        "properties": {
+          "articles": {
+            "items": {
+              "$ref": "#/components/schemas/ManagedArticleDto"
+            },
+            "type": "array"
+          },
+          "contacts": {
+            "$ref": "#/components/schemas/ContactDetailsDto"
+          },
+          "faq": {
+            "items": {
+              "$ref": "#/components/schemas/FaqItemDto"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "home": {
+            "$ref": "#/components/schemas/HomePageDto"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/CmsPageDto"
+            },
+            "maxItems": 5,
+            "minItems": 5,
+            "type": "array"
+          },
+          "programs": {
+            "items": {
+              "$ref": "#/components/schemas/ManagedProgramDto"
+            },
+            "type": "array"
+          },
+          "site": {
+            "$ref": "#/components/schemas/SiteSettingsDto"
+          },
+          "socials": {
+            "items": {
+              "$ref": "#/components/schemas/SocialLinkDto"
+            },
+            "maxItems": 18,
+            "type": "array"
+          }
+        },
+        "required": [
+          "site",
+          "contacts",
+          "home",
+          "faq",
+          "socials",
+          "pages",
+          "articles",
+          "programs"
+        ],
+        "type": "object"
+      },
+      "CmsPageContentDto": {
+        "properties": {
+          "contacts": {
+            "$ref": "#/components/schemas/ContactDetailsDto"
+          },
+          "faq": {
+            "items": {
+              "$ref": "#/components/schemas/FaqItemDto"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "home": {
+            "$ref": "#/components/schemas/HomePageDto"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/CmsPageDto"
+            },
+            "maxItems": 5,
+            "minItems": 5,
+            "type": "array"
+          },
+          "site": {
+            "$ref": "#/components/schemas/SiteSettingsDto"
+          },
+          "socials": {
+            "items": {
+              "$ref": "#/components/schemas/SocialLinkDto"
+            },
+            "maxItems": 18,
+            "type": "array"
+          }
+        },
+        "required": [
+          "site",
+          "contacts",
+          "home",
+          "faq",
+          "socials",
+          "pages"
+        ],
+        "type": "object"
+      },
+      "CmsPageDto": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/CmsBlockDto"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "type": "array"
+          },
+          "key": {
+            "enum": [
+              "home",
+              "about",
+              "coaching",
+              "contacts",
+              "journal"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "blocks"
+        ],
+        "type": "object"
+      },
+      "CmsRevisionDto": {
+        "properties": {
+          "revision": {
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "revision"
+        ],
+        "type": "object"
+      },
+      "CmsWorkspaceDto": {
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/CmsDocumentDto"
+          },
+          "publishedRevision": {
+            "minimum": 1,
+            "type": "number"
+          },
+          "revision": {
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "revision",
+          "publishedRevision",
+          "content"
+        ],
+        "type": "object"
+      },
       "ConcernDto": {
         "properties": {
           "description": {
@@ -1311,6 +1505,22 @@
         },
         "required": [
           "roleKeys"
+        ],
+        "type": "object"
+      },
+      "SaveCmsDraftDto": {
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/CmsPageContentDto"
+          },
+          "revision": {
+            "minimum": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "revision",
+          "content"
         ],
         "type": "object"
       },
@@ -4253,6 +4463,116 @@
         "summary": "List code-owned roles",
         "tags": [
           "admin auth"
+        ]
+      }
+    },
+    "/v1/admin/cms": {
+      "get": {
+        "operationId": "adminGetCms",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsWorkspaceDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Черновик сайта и его версия",
+        "tags": [
+          "cms"
+        ]
+      }
+    },
+    "/v1/admin/cms/draft": {
+      "put": {
+        "operationId": "adminSaveCmsDraft",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveCmsDraftDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsWorkspaceDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Сохранить черновик без публикации",
+        "tags": [
+          "cms"
+        ]
+      }
+    },
+    "/v1/admin/cms/publish": {
+      "post": {
+        "operationId": "adminPublishCms",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CmsRevisionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsWorkspaceDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Поставить сохранённый черновик в очередь публикации",
+        "tags": [
+          "cms"
         ]
       }
     },
@@ -8191,6 +8511,32 @@
         ]
       }
     },
+    "/v1/page-layouts": {
+      "get": {
+        "operationId": "getPageLayouts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CmsPageDto"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [],
+        "summary": "Опубликованный порядок и видимость секций",
+        "tags": [
+          "page-layouts"
+        ]
+      }
+    },
     "/v1/services": {
       "get": {
         "operationId": "getServices",
@@ -8325,6 +8671,14 @@
     {
       "description": "Пересборка и публикация сайта",
       "name": "publication"
+    },
+    {
+      "description": "Черновики и явная публикация контента",
+      "name": "cms"
+    },
+    {
+      "description": "Опубликованный порядок секций страниц",
+      "name": "page-layouts"
     },
     {
       "description": "Protected account administration endpoints.",

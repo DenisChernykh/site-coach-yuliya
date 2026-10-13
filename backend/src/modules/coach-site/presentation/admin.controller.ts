@@ -25,7 +25,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { RequirePermission } from '@/modules/identity-access'
-import { SiteContentService } from '../application/content.service'
+import { SiteCmsService } from '../application/cms.service'
 import { ConsultationsService } from '../application/consultations.service'
 import { SiteRecordNotFoundError } from '../application/site-errors'
 import {
@@ -60,7 +60,7 @@ import {
 @ApiSecurity('csrfToken')
 export class AdminContentController {
   public constructor(
-    @Inject(SiteContentService) private readonly site: SiteContentService,
+    @Inject(SiteCmsService) private readonly site: SiteCmsService,
   ) {}
 
   @Get('site')

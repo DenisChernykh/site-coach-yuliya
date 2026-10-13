@@ -94,7 +94,7 @@ describe('contact editing', () => {
         screen.getByRole('button', { name: 'Сохранить изменения' }),
       )
       await screen.findByText(
-        'Изменения сохранены. Обновление сайта поставлено в очередь.',
+        'Изменения сохранены в черновике. Нажмите «Опубликовать сохранённое», чтобы обновить сайт.',
       )
       expect(editor.writes).toHaveLength(1)
       expect(editor.writes[0]).toMatchObject({

@@ -87,7 +87,7 @@ export function ProgramForm({
             className="size-4 accent-primary"
             {...form.register('published')}
           />
-          Опубликовать на сайте
+          Включить в публикацию сайта
         </label>
         <TextField
           label="Порядок в списке"
@@ -109,7 +109,8 @@ export function ProgramForm({
       )}
       {notice && (
         <p role="status" className="text-sm text-muted-foreground">
-          Программа сохранена. Обновление сайта поставлено в очередь.
+          Программа сохранена в черновике. Нажмите «Опубликовать сохранённое»,
+          чтобы обновить сайт.
         </p>
       )}
       <Button type="submit" isLoading={save.isPending} loadingLabel="Сохраняем">

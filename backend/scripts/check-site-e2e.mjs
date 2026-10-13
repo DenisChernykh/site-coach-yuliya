@@ -122,6 +122,20 @@ async function http(
   return { response, body: result }
 }
 
+async function publishDraft() {
+  const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
+    .body
+  return (
+    await http(
+      '/v1/admin/cms/publish',
+      'POST',
+      { revision: workspace.revision },
+      200,
+      true,
+    )
+  ).body
+}
+
 try {
   await owner.query(`CREATE DATABASE ${databaseName}`)
   pool = new Pool({ connectionString: databaseUrl })
@@ -212,6 +226,92 @@ try {
   )
 
   const initial = JSON.parse(await readFile('content/initial.json', 'utf8'))
+  await http('/v1/admin/cms', 'GET', undefined, 401)
+  const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
+    .body
+  assert.equal(workspace.revision, workspace.publishedRevision)
+  const originalHome = (await http('/v1/home')).body
+  const pageContent = structuredClone(workspace.content)
+  delete pageContent.articles
+  delete pageContent.programs
+  const changed = structuredClone(pageContent)
+  changed.home.hero.description = 'Только в черновике'
+  const section = changed.pages[0].blocks.splice(2, 1)[0]
+  changed.pages[0].blocks.splice(1, 0, section)
+  changed.pages[0].blocks.find((b) => b.id === 'concerns').enabled = false
+  const beforeCms = (
+    await http('/v1/admin/publication', 'GET', undefined, 200, true)
+  ).body.requestedRevision
+  const savedPages = (
+    await http(
+      '/v1/admin/cms/draft',
+      'PUT',
+      { revision: workspace.revision, content: changed },
+      200,
+      true,
+    )
+  ).body
+  assert.equal(savedPages.revision, workspace.revision + 1)
+  assert.deepEqual((await http('/v1/home')).body, originalHome)
+  assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    beforeCms,
+  )
+  await http(
+    '/v1/admin/cms/draft',
+    'PUT',
+    { revision: workspace.revision, content: changed },
+    409,
+    true,
+  )
+  await http(
+    '/v1/admin/cms/publish',
+    'POST',
+    { revision: workspace.revision },
+    409,
+    true,
+  )
+  const broken = structuredClone(changed)
+  broken.pages[0].blocks[0].enabled = false
+  await http(
+    '/v1/admin/cms/draft',
+    'PUT',
+    { revision: savedPages.revision, content: broken },
+    422,
+    true,
+  )
+  await publishDraft()
+  assert.equal(
+    (await http('/v1/home')).body.hero.description,
+    'Только в черновике',
+  )
+  const publishedLayout = (await http('/v1/page-layouts')).body
+  assert.equal(publishedLayout[0].blocks[1].id, 'about')
+  assert.equal(
+    publishedLayout[0].blocks.find((b) => b.id === 'concerns').enabled,
+    false,
+  )
+  const once = (
+    await http('/v1/admin/publication', 'GET', undefined, 200, true)
+  ).body.requestedRevision
+  await publishDraft()
+  assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    once,
+  )
+  await http(
+    '/v1/admin/cms/draft',
+    'PUT',
+    { revision: savedPages.revision, content: pageContent },
+    200,
+    true,
+  )
+  await publishDraft()
+  process.stdout.write(
+    'PASS CMS draft isolation, migration, section ordering, visibility, optimistic concurrency and idempotent publication\n',
+  )
   await http(
     '/v1/consultations',
     'POST',
@@ -435,6 +535,8 @@ try {
     200,
     true,
   )
+  await http('/v1/articles/acceptance-draft', 'GET', undefined, 404)
+  await publishDraft()
   assert.equal(
     (await http('/v1/articles/acceptance-draft')).body.bodyMarkdown,
     draft.content.bodyMarkdown,
@@ -449,6 +551,7 @@ try {
     204,
     true,
   )
+  await publishDraft()
   command(['dist/bootstrap/content/main.js'], env)
   await http(`/v1/articles/${initial.articles[0].slug}`, 'GET', undefined, 404)
   assert.equal(
@@ -535,6 +638,12 @@ try {
   ).body
   assert.equal(contacts.telegramUrl, combinedContacts.links[0].url)
   assert.equal(
+    (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
+      .requestedRevision,
+    beforeContacts,
+  )
+  await publishDraft()
+  assert.equal(
     (await http('/v1/contacts')).body.telegramUrl,
     combinedContacts.links[0].url,
   )
@@ -588,6 +697,7 @@ try {
     200,
     true,
   )
+  await publishDraft()
   await publisher.runOnce(new AbortController().signal)
   assert.equal((await publications.get()).status, 'PENDING')
   await pool.query(
@@ -753,6 +863,18 @@ try {
   }
   await provider?.close(AbortSignal.timeout(3000))
   await pool?.end()
+  const closeDeadline = Date.now() + 5000
+  let connections
+  do {
+    connections = (
+      await owner.query(
+        'SELECT count(*)::int AS total FROM pg_stat_activity WHERE datname = $1',
+        [databaseName],
+      )
+    ).rows[0].total
+    if (connections > 0) await delay(50)
+  } while (connections > 0 && Date.now() < closeDeadline)
+  assert.equal(connections, 0, 'Fixture database still has active connections')
   await owner.query(`DROP DATABASE IF EXISTS ${databaseName} WITH (FORCE)`)
   await owner.end()
   if (ownAdminDirectory)

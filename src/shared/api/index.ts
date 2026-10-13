@@ -1,4 +1,6 @@
 export { isMockMode } from './client/api-fetch';
+export { getPageLayouts } from './generated/page-layouts/page-layouts';
+export type { CmsPageDto, CmsBlockDto } from './generated/model';
 export {
   ApiProblemError,
   ApiNetworkError,

@@ -1,4 +1,6 @@
 ---
+import { PageSections } from '@/entities/cms';
+import type { CmsPageDto } from '@/shared/api';
 import { Image } from 'astro:assets';
 import type { HomePageDto } from '@/entities/site';
 import { WorkBoundaries } from '@/widgets/work-boundaries';
@@ -8,117 +10,162 @@ import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 import { story } from '../model/story';
 interface Props {
+  layouts?: CmsPageDto[];
+  preview?: boolean;
   data: HomePageDto;
 }
-const { data } = Astro.props;
+const { layouts, preview = false, data } = Astro.props;
 ---
 
-<section class="about-hero" aria-labelledby="about-page-title">
-  <div class="page-container hero-grid">
-    <div class="hero-copy">
-      <nav class="breadcrumb" aria-label="Хлебные крошки">
-        <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><span
-          aria-current="page">Обо мне</span
-        >
-      </nav>
-      <p class="eyebrow">{data.about.eyebrow}</p>
-      <h1 id="about-page-title">{data.about.title}</h1>
-      <p class="hero-description">
-        {data.about.paragraphs[1] ?? data.about.paragraphs[0]}
-      </p>
-      <a
-        href={routes.contact}
-        class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
-        >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
-      >
-      <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
-      <p class="fine-print">Демонстрационный AI-портрет · заменить фото Юли</p>
-    </div>
-    <Image
-      src={portrait}
-      alt="Демонстрационный портрет Юли для макета страницы обо мне"
-      width={840}
-      height={1060}
-      format="webp"
-      quality={85}
-      loading="eager"
-      class="portrait"
-    />
-  </div>
-</section>
-<section id="story" class="history" aria-labelledby="history-title">
-  <div class="page-container history-grid">
-    <div>
-      <h2 id="history-title">Не чужой маршрут.<br />Свой следующий шаг.</h2><p
-        class="history-intro"
-      >
-        {data.about.paragraphs[0]}
-      </p>
-    </div>
-    <ol class="story-list">
-      {
-        story.map((step) => (
-          <li>
-            <>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-            </>
-          </li>
-        ))
-      }
-    </ol>
-  </div>
-</section>
-<section
-  id="approach"
-  class="about-approach"
-  aria-labelledby="about-approach-title"
->
-  <div class="page-container approach-grid">
-    <div class="approach-copy">
-      <p class="eyebrow">{data.approach.eyebrow}</p><h2
-        id="about-approach-title"
-      >
-        {data.approach.title}
-      </h2><p>{data.approach.description}</p><blockquote>
-        {data.approach.quote}
-      </blockquote>
-    </div>
-    <ol class="approach-steps">
-      {
-        data.approach.steps.map((step, index) => (
-          <li>
-            <>
-              <span class="step-number">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <div>
+<PageSections pageKey="about" layouts={layouts} preview={preview}>
+  <Fragment slot="hero">
+    <section class="about-hero" aria-labelledby="about-page-title">
+      <div class="page-container hero-grid">
+        <div class="hero-copy">
+          <nav class="breadcrumb" aria-label="Хлебные крошки">
+            <a href={routes.home}>Главная</a><span aria-hidden="true">/</span
+            ><span aria-current="page">Обо мне</span>
+          </nav>
+          <p
+            class="eyebrow"
+            data-cms-field="home.about.eyebrow"
+            data-cms-copy="eyebrow"
+          >
+            {data.about.eyebrow}
+          </p>
+          <h1
+            id="about-page-title"
+            data-cms-field="home.about.title"
+            data-cms-copy="title"
+          >
+            {data.about.title}
+          </h1>
+          <p
+            class="hero-description"
+            data-cms-field="home.about.paragraphs.1"
+            data-cms-fallback="home.about.paragraphs.0"
+            data-cms-copy="description"
+          >
+            {data.about.paragraphs[1] ?? data.about.paragraphs[0]}
+          </p>
+          <a
+            href={routes.contact}
+            class:list={[
+              buttonVariants(),
+              'h-14 w-fit gap-[18px] px-6 text-sm',
+            ]}
+            >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
+          >
+          <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
+          <p class="fine-print">
+            Демонстрационный AI-портрет · заменить фото Юли
+          </p>
+        </div>
+        <Image
+          src={portrait}
+          alt="Демонстрационный портрет Юли для макета страницы обо мне"
+          width={840}
+          height={1060}
+          format="webp"
+          quality={85}
+          loading="eager"
+          class="portrait"
+        />
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="history">
+    <section id="story" class="history" aria-labelledby="history-title">
+      <div class="page-container history-grid">
+        <div>
+          <h2 id="history-title" data-cms-copy="title">
+            Не чужой маршрут.<br />Свой следующий шаг.
+          </h2><p class="history-intro">
+            {data.about.paragraphs[0]}
+          </p>
+        </div>
+        <ol class="story-list">
+          {
+            story.map((step) => (
+              <li data-cms-item>
                 <>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
+                  <h3 data-cms-field=".title">{step.title}</h3>
+                  <p data-cms-field=".description">{step.description}</p>
                 </>
-              </div>
-            </>
-          </li>
-        ))
-      }
-    </ol>
-  </div>
-</section>
-<WorkBoundaries />
-<section class="about-cta">
-  <div class="page-container cta-inner">
-    <div>
-      <h2>Хочется обсудить<br />свою историю?</h2><p>
-        Начнём с бесплатного знакомства до 30 минут.
-      </p>
-    </div><a
-      href={routes.contact}
-      class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
-      >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="approach">
+    <section
+      id="approach"
+      class="about-approach"
+      aria-labelledby="about-approach-title"
     >
-  </div>
-</section>
+      <div class="page-container approach-grid">
+        <div class="approach-copy">
+          <p
+            class="eyebrow"
+            data-cms-field="home.approach.eyebrow"
+            data-cms-copy="eyebrow"
+          >
+            {data.approach.eyebrow}
+          </p><h2
+            id="about-approach-title"
+            data-cms-field="home.approach.title"
+            data-cms-copy="title"
+          >
+            {data.approach.title}
+          </h2><p data-cms-field="home.approach.description">
+            {data.approach.description}
+          </p><blockquote data-cms-field="home.approach.quote">
+            {data.approach.quote}
+          </blockquote>
+        </div>
+        <ol class="approach-steps" data-cms-list="home.approach.steps">
+          {
+            data.approach.steps.map((step, index) => (
+              <li>
+                <>
+                  <span class="step-number" data-cms-index>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <>
+                      <h3 data-cms-field=".title">{step.title}</h3>
+                      <p data-cms-field=".description">{step.description}</p>
+                    </>
+                  </div>
+                </>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+  </Fragment>
+  <Fragment slot="boundaries">
+    <WorkBoundaries />
+  </Fragment>
+  <Fragment slot="cta">
+    <section class="about-cta">
+      <div class="page-container cta-inner">
+        <div>
+          <h2 data-cms-copy="title">Хочется обсудить<br />свою историю?</h2><p>
+            Начнём с бесплатного знакомства до 30 минут.
+          </p>
+        </div><a
+          href={routes.contact}
+          class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
+          >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+        >
+      </div>
+    </section>
+  </Fragment>
+</PageSections>
 <style>
   .about-hero {
     padding-block: 56px 64px;

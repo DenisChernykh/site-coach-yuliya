@@ -33,7 +33,7 @@ export async function configureAdminUi(
       }
       response.setHeader('Cache-Control', 'no-store')
       response.setHeader('X-Robots-Tag', 'noindex, nofollow')
-      response.sendFile(join(directory, 'index.html'))
+      response.sendFile('index.html', { root: directory, dotfiles: 'deny' })
     },
   )
 }

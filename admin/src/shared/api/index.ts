@@ -1,4 +1,18 @@
 import '@/shared/config'
+export {
+  adminGetCms,
+  adminSaveCmsDraft,
+  adminPublishCms,
+  getAdminGetCmsQueryKey,
+} from './generated/cms/cms'
+export type {
+  CmsWorkspaceDto,
+  CmsDocumentDto,
+  CmsPageContentDto,
+  CmsPageDto,
+  CmsBlockDto,
+} from './generated/model'
+export { AdminSaveCmsDraftBody as cmsDraftSchema } from './generated-zod/cms/cms.zod'
 
 export {
   ApiNetworkError,

@@ -116,7 +116,8 @@ function SettingsForm<T>({
       )}
       {saved && (
         <p role="status" className="text-sm text-muted-foreground">
-          Изменения сохранены. Обновление сайта поставлено в очередь.
+          Изменения сохранены в черновике. Нажмите «Опубликовать сохранённое»,
+          чтобы обновить сайт.
         </p>
       )}
       <Button type="submit" isLoading={pending} loadingLabel="Сохраняем">

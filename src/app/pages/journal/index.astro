@@ -1,4 +1,6 @@
 ---
+import { loadPageLayouts } from '@/entities/cms';
+const layouts = await loadPageLayouts();
 import BaseLayout from '../../layouts/base-layout.astro';
 import { JournalIsland } from '../../islands/journal-island';
 import { resolveArticleImages } from '../../data/article-images';
@@ -13,5 +15,7 @@ const articles = await resolveArticleImages(rawArticles, 960);
 ---
 
 <BaseLayout settings={settings} title="Журнал о своём пути — Юля Валишина">
-  <JournalPage><JournalIsland client:load articles={articles} /></JournalPage>
+  <JournalPage layouts={layouts}
+    ><JournalIsland client:load articles={articles} /></JournalPage
+  >
 </BaseLayout>

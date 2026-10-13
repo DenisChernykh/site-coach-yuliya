@@ -17,6 +17,13 @@ import {
   type StructuredLogger,
 } from '@/platform/logging/logging.contracts'
 import { SiteContentService } from '../application/content.service'
+import { SiteCmsService } from '../application/cms.service'
+import { PrismaCmsAdapter } from '../infrastructure/prisma-cms.adapter'
+import { DraftContentAdapter } from '../infrastructure/draft-content.adapter'
+import {
+  CmsController,
+  PublicCmsController,
+} from '../presentation/cms.controller'
 import {
   ConsultationsService,
   DeliverTelegramNotifications,
@@ -51,8 +58,24 @@ export class CoachSiteModule {
         AdminContentController,
         AdminConsultationsController,
         PublicationController,
+        CmsController,
+        PublicCmsController,
       ],
       providers: [
+        {
+          provide: PrismaCmsAdapter,
+          inject: [PrismaClientProvider, TRANSACTION_PORT],
+          useFactory: (
+            database: PrismaClientProvider,
+            transaction: TransactionPort,
+          ) => new PrismaCmsAdapter(database, transaction),
+        },
+        {
+          provide: SiteCmsService,
+          inject: [PrismaCmsAdapter],
+          useFactory: (cms: PrismaCmsAdapter) =>
+            new SiteCmsService(cms, new DraftContentAdapter(cms)),
+        },
         {
           provide: PUBLICATION_PRESENTATION_CONFIG,
           useValue: {

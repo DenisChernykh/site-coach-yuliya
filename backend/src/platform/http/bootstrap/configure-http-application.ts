@@ -43,7 +43,13 @@ export function configureHttpApplication(
 ): void {
   app.use(createRequestContextMiddleware(requestContext))
   if (accessLogMiddleware !== undefined) app.use(accessLogMiddleware)
-  app.use(helmet())
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: { 'frame-src': ["'self'", ...config.http.corsOrigins] },
+      },
+    }),
+  )
   app.use((_request: Request, response: Response, next: NextFunction) => {
     response.setHeader('X-Service-Revision', config.logging.serviceRevision)
     next()

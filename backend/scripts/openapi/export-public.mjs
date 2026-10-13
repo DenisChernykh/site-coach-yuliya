@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 
 const full = JSON.parse(await readFile('docs/api/openapi.json', 'utf8'))
 const publicPaths = [
+  '/v1/page-layouts',
   '/v1/site',
   '/v1/contacts',
   '/v1/home',

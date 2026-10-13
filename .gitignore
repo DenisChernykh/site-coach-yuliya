@@ -18,3 +18,4 @@ dist/
 
 .playwright-cli/
 .demo/
+/output/playwright/
