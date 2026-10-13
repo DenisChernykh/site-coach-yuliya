@@ -15,16 +15,18 @@ export function ContactFields({
   value,
   onChange,
   savedLinks,
+  wide = false,
 }: {
   value: ContactContent
   onChange: (value: ContactContent) => void
   savedLinks: SocialLinkDto[]
+  wide?: boolean
 }) {
   const links = value.links
   const filledLinks = links.filter((link) => isSocialUrl(link.url))
   return (
     <div className="space-y-8">
-      <div className="space-y-4">
+      <div className={wide ? 'grid gap-4 md:grid-cols-3' : 'space-y-4'}>
         {(['email', 'phone', 'address'] as const).map((field) => (
           <ContactInput
             key={field}
@@ -80,7 +82,7 @@ export function ContactFields({
             </p>
           )}
         </div>
-        <div className="grid gap-4">
+        <div className={wide ? 'grid gap-5 md:grid-cols-2' : 'grid gap-4'}>
           {links.map((link) => {
             const valid = isSocialUrl(link.url)
             const changed =

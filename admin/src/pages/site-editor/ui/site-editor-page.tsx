@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useBlocker, useSearchParams } from 'react-router'
+import { Tabs } from '@base-ui/react/tabs'
+import { FileText, Settings, ContactRound } from 'lucide-react'
 import { useCms } from '@/entities/site-content'
 import {
   ContentFields,
@@ -26,6 +28,8 @@ import {
   TextField,
   TextareaField,
 } from '@/shared/ui'
+import { blockLabels } from '../model/section-labels'
+import { SectionList } from './section-list'
 
 const pageLabels = {
   home: 'Главная',
@@ -34,25 +38,6 @@ const pageLabels = {
   contacts: 'Контакты',
   journal: 'Журнал',
 } as const
-const blockLabels: Record<string, string> = {
-  hero: 'Первый экран',
-  concerns: 'Запросы',
-  about: 'Знакомство',
-  approach: 'Подход',
-  pricing: 'Форматы и стоимость',
-  process: 'Как проходит работа',
-  boundaries: 'Границы работы',
-  cases: 'Истории',
-  art: 'Арт-практика',
-  products: 'Другие форматы',
-  articles: 'Статьи',
-  faq: 'Частые вопросы',
-  contact: 'Форма знакомства',
-  history: 'Моя история',
-  cta: 'Приглашение',
-  requests: 'С чем можно прийти',
-  details: 'Способы связи',
-}
 const homeFields: Record<string, keyof CmsPageContentDto['home']> = {
   hero: 'hero',
   concerns: 'concerns',
@@ -94,7 +79,6 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const [dirty, setDirty] = useState(false)
   const { save, publish, pending } = useCmsActions()
   const blocker = useBlocker(dirty)
-  const drag = useRef<string | null>(null)
   const links = contactLinks(content.contacts, content.socials)
   const savedLinks = contactLinks(
     snapshot.content.contacts,
@@ -102,6 +86,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   )
   const contactFields = (
     <ContactFields
+      wide={global === 'contacts'}
       value={{ ...content.contacts, links }}
       savedLinks={savedLinks}
       onChange={(next) => {
@@ -141,19 +126,6 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         p.key === page ? { ...p, blocks: next } : p,
       ),
     })
-  }
-  function move(id: string, destination: number) {
-    const from = current.blocks.findIndex((b) => b.id === id)
-    if (
-      from <= 0 ||
-      destination <= 0 ||
-      destination >= current.blocks.length ||
-      from === destination
-    )
-      return
-    const next = [...current.blocks]
-    next.splice(destination, 0, ...next.splice(from, 1))
-    blocks(next)
   }
   async function saveDraft() {
     const parsed = cmsDraftSchema.safeParse({
@@ -308,306 +280,284 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
           {notice}
         </p>
       )}
-      {!expanded && (
-        <nav
-          aria-label="Панели редактора"
-          className="flex flex-wrap gap-1 xl:hidden"
-        >
-          {Object.entries({
-            pages: 'Страницы',
-            blocks: 'Секции',
-            fields: 'Правки',
-            preview: 'Превью',
-          }).map(([key, label]) => (
-            <Button
-              key={key}
-              variant={panel === key ? 'secondary' : 'ghost'}
-              aria-pressed={panel === key}
-              onClick={() => setPanel(key as typeof panel)}
-            >
-              {label}
-            </Button>
-          ))}
-        </nav>
-      )}
-      <div
-        className={
-          expanded
-            ? ''
-            : 'grid min-w-0 items-start gap-5 xl:grid-cols-[220px_minmax(0,1fr)_320px]'
-        }
+      <Tabs.Root
+        value={global ?? 'pages'}
+        onValueChange={(value) => {
+          if (value === 'pages') setGlobal(null)
+          else if (value === 'site' || value === 'contacts') setGlobal(value)
+        }}
+        className="min-w-0 space-y-5"
       >
         {!expanded && (
-          <aside
-            className={
-              'space-y-5 rounded-lg border p-3' +
-              (panel === 'pages' || panel === 'blocks'
-                ? ''
-                : ' hidden xl:block')
-            }
+          <Tabs.List
+            aria-label="Разделы редактора сайта"
+            className="flex flex-wrap gap-x-2 border-b"
           >
-            <nav
-              aria-label="Страницы сайта"
-              className={
-                panel === 'pages' ? 'grid gap-1' : 'hidden gap-1 xl:grid'
-              }
-            >
-              <p className="px-2 py-1 text-xs font-semibold text-muted-foreground">
-                СТРАНИЦЫ
-              </p>
-              {Object.entries(pageLabels).map(([key, label]) => (
-                <Button
-                  key={key}
-                  variant={page === key && !global ? 'secondary' : 'ghost'}
-                  className="justify-start"
-                  aria-current={page === key && !global ? 'page' : undefined}
-                  onClick={() => {
-                    setPage(key as keyof typeof pageLabels)
-                    setSelected('hero')
-                    setGlobal(null)
-                    setPanel('blocks')
-                  }}
+            {(
+              [
+                ['pages', 'Страницы', FileText],
+                ['site', 'Настройки сайта', Settings],
+                ['contacts', 'Контакты и соцсети', ContactRound],
+              ] as const
+            ).map(([key, label, Icon]) => (
+              <Tabs.Tab
+                key={key}
+                value={key}
+                className="inline-flex min-h-11 items-center gap-2 border-b-2 border-transparent px-3 py-3 text-sm font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-active:border-primary data-active:text-foreground"
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                {label}
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
+        )}
+        {expanded ? (
+          <CmsPreview content={content} page={page} />
+        ) : (
+          <>
+            <Tabs.Panel value="pages" className="min-w-0 space-y-5">
+              <nav
+                aria-label="Панели редактора"
+                className="flex flex-wrap gap-1 xl:hidden"
+              >
+                {Object.entries({
+                  pages: 'Страницы',
+                  blocks: 'Секции',
+                  fields: 'Правки',
+                  preview: 'Превью',
+                }).map(([key, label]) => (
+                  <Button
+                    key={key}
+                    variant={panel === key ? 'secondary' : 'ghost'}
+                    aria-pressed={panel === key}
+                    onClick={() => setPanel(key as typeof panel)}
+                  >
+                    {label}
+                  </Button>
+                ))}
+              </nav>
+              <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[220px_minmax(0,1fr)_320px]">
+                <aside
+                  className={
+                    'space-y-5 rounded-lg border p-3' +
+                    (panel === 'pages' || panel === 'blocks'
+                      ? ''
+                      : ' hidden xl:block')
+                  }
                 >
-                  {label}
-                </Button>
-              ))}
-            </nav>
-            <nav
-              aria-label="Секции страницы"
-              className={
-                panel === 'blocks' ? 'grid gap-2' : 'hidden gap-2 xl:grid'
-              }
-            >
-              <p className="px-2 text-xs font-semibold text-muted-foreground">
-                СЕКЦИИ
-              </p>
-              {current.blocks.map((b, i) => (
-                <div
-                  key={b.id}
-                  draggable={i > 0 && !pending}
-                  onDragStart={() => {
-                    drag.current = b.id
-                  }}
-                  onDragOver={(e) => {
-                    if (i > 0) e.preventDefault()
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault()
-                    if (drag.current) move(drag.current, i)
-                    drag.current = null
-                  }}
-                  className="rounded-md border p-2"
-                >
-                  <div className="flex items-start gap-2">
-                    <Button
-                      size="sm"
-                      variant={
-                        b.id === selected && !global ? 'secondary' : 'ghost'
-                      }
-                      className="h-auto min-h-9 flex-1 justify-start text-left whitespace-normal"
-                      onClick={() => {
-                        setSelected(b.id)
-                        setGlobal(null)
+                  <nav
+                    aria-label="Страницы сайта"
+                    className={
+                      panel === 'pages' ? 'grid gap-1' : 'hidden gap-1 xl:grid'
+                    }
+                  >
+                    <p className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+                      СТРАНИЦЫ
+                    </p>
+                    {Object.entries(pageLabels).map(([key, label]) => (
+                      <Button
+                        key={key}
+                        variant={page === key ? 'secondary' : 'ghost'}
+                        className="justify-start"
+                        aria-current={page === key ? 'page' : undefined}
+                        onClick={() => {
+                          setPage(key as keyof typeof pageLabels)
+                          setSelected('hero')
+                          setPanel('blocks')
+                        }}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </nav>
+                  <nav
+                    aria-label="Секции страницы"
+                    className={
+                      panel === 'blocks' ? 'grid gap-2' : 'hidden gap-2 xl:grid'
+                    }
+                  >
+                    <p className="px-2 text-xs font-semibold text-muted-foreground">
+                      СЕКЦИИ
+                    </p>
+                    <p className="px-2 text-xs leading-relaxed text-muted-foreground">
+                      Перетаскивайте за ⋮⋮. Переключатель скрывает секцию.
+                    </p>
+                    <SectionList
+                      key={page}
+                      blocks={current.blocks}
+                      selected={selected}
+                      pending={pending}
+                      onSelect={(id) => {
+                        setSelected(id)
                         setPanel('fields')
                       }}
-                    >
-                      {blockLabels[b.id]}
-                    </Button>
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      aria-label={'Показывать: ' + blockLabels[b.id]}
-                      checked={b.enabled}
-                      disabled={i === 0 || pending}
-                      className="mt-2 size-4 accent-primary"
-                      onChange={(e) =>
-                        blocks(
-                          current.blocks.map((a) =>
-                            a.id === b.id
-                              ? { ...a, enabled: e.target.checked }
-                              : a,
-                          ),
-                        )
-                      }
+                      onChange={blocks}
                     />
-                  </div>
-                  {i > 0 && (
-                    <div className="flex justify-end">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={i === 1 || pending}
-                        aria-label={'Выше: ' + blockLabels[b.id]}
-                        onClick={() => move(b.id, i - 1)}
-                      >
-                        ↑
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={i === current.blocks.length - 1 || pending}
-                        aria-label={'Ниже: ' + blockLabels[b.id]}
-                        onClick={() => move(b.id, i + 1)}
-                      >
-                        ↓
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
-            <nav
-              aria-label="Общие настройки"
-              className={
-                panel === 'pages' ? 'grid gap-1' : 'hidden gap-1 xl:grid'
-              }
-            >
-              {(['site', 'contacts'] as const).map((key) => (
-                <Button
-                  key={key}
-                  variant={global === key ? 'secondary' : 'ghost'}
-                  className="justify-start"
-                  onClick={() => {
-                    setGlobal(key)
-                    setPanel('fields')
-                  }}
+                  </nav>
+                </aside>
+                <div
+                  className={
+                    panel === 'preview' ? 'min-w-0' : 'hidden min-w-0 xl:block'
+                  }
                 >
-                  {
-                    {
-                      site: 'Настройки сайта',
-                      contacts: 'Контакты и социальные сети',
-                    }[key]
+                  <CmsPreview content={content} page={page} />
+                </div>
+                <aside
+                  className={
+                    'min-w-0 space-y-5 rounded-lg border p-4' +
+                    (panel === 'fields' ? '' : ' hidden xl:block')
                   }
-                </Button>
-              ))}
-            </nav>
-          </aside>
-        )}
-        <div
-          className={
-            expanded || panel === 'preview'
-              ? 'min-w-0'
-              : 'hidden min-w-0 xl:block'
-          }
-        >
-          <CmsPreview content={content} page={page} />
-        </div>
-        {!expanded && (
-          <aside
-            className={
-              'min-w-0 space-y-5 rounded-lg border p-4' +
-              (panel === 'fields' ? '' : ' hidden xl:block')
-            }
-          >
-            <h2 className="text-lg font-semibold">{heading}</h2>
-            {!global && !block.enabled && (
-              <p className="text-sm text-muted-foreground">
-                Секция скрыта. Её содержимое сохранится.
-              </p>
-            )}
-            <fieldset disabled={pending} className="min-w-0 space-y-5">
-              {global === 'contacts' ? (
-                contactFields
-              ) : global === 'site' ? (
-                <ContentFields
-                  value={content.site as unknown as ContentValue}
-                  onChange={(next) =>
-                    change({
-                      ...content,
-                      site: next as unknown as CmsDocumentDto['site'],
-                    })
-                  }
-                />
-              ) : field ? (
-                <>
-                  <p className="text-xs text-muted-foreground">
-                    Общие тексты обновятся на всех страницах, где используются.
+                >
+                  <h2 className="text-lg font-semibold">{heading}</h2>
+                  {!block.enabled && (
+                    <p className="text-sm text-muted-foreground">
+                      Секция скрыта. Её содержимое сохранится.
+                    </p>
+                  )}
+                  <fieldset disabled={pending} className="min-w-0 space-y-5">
+                    {field ? (
+                      <>
+                        <p className="text-xs text-muted-foreground">
+                          Общие тексты обновятся на всех страницах, где
+                          используются.
+                        </p>
+                        <ContentFields
+                          key={page + '-' + field}
+                          value={content.home[field] as unknown as ContentValue}
+                          field={field}
+                          onChange={(next) =>
+                            change({
+                              ...content,
+                              home: { ...content.home, [field]: next },
+                            })
+                          }
+                        />
+                      </>
+                    ) : block.id === 'faq' ? (
+                      <ContentFields
+                        value={content.faq as unknown as ContentValue}
+                        field="items"
+                        onChange={(next) =>
+                          change({
+                            ...content,
+                            faq: next as unknown as CmsDocumentDto['faq'],
+                          })
+                        }
+                      />
+                    ) : block.id === 'details' ? (
+                      <div className="space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                          Контакты и ссылки общие для всех страниц сайта.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => setGlobal('contacts')}
+                        >
+                          Открыть контакты и соцсети
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <TextField
+                          label="Заголовок секции"
+                          placeholder="Текущий заголовок"
+                          value={block.title ?? ''}
+                          onChange={(e) =>
+                            blocks(
+                              current.blocks.map((b) =>
+                                b.id === block.id
+                                  ? { ...b, title: e.target.value }
+                                  : b,
+                              ),
+                            )
+                          }
+                        />
+                        <TextField
+                          label="Подпись над заголовком"
+                          value={block.eyebrow ?? ''}
+                          onChange={(e) =>
+                            blocks(
+                              current.blocks.map((b) =>
+                                b.id === block.id
+                                  ? { ...b, eyebrow: e.target.value }
+                                  : b,
+                              ),
+                            )
+                          }
+                        />
+                        {block.id === 'hero' && (
+                          <TextareaField
+                            label="Описание"
+                            value={block.description ?? ''}
+                            onChange={(e) =>
+                              blocks(
+                                current.blocks.map((b) =>
+                                  b.id === block.id
+                                    ? { ...b, description: e.target.value }
+                                    : b,
+                                ),
+                              )
+                            }
+                          />
+                        )}
+                        {block.id === 'pricing' && (
+                          <p className="text-sm text-muted-foreground">
+                            Форматы и стоимость редактируются в разделе
+                            «Программы».
+                          </p>
+                        )}
+                        {block.id === 'articles' && (
+                          <p className="text-sm text-muted-foreground">
+                            Тексты и порядок статей редактируются в разделе
+                            «Статьи».
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </fieldset>
+                </aside>
+              </div>
+            </Tabs.Panel>
+            <Tabs.Panel value="site" className="min-w-0">
+              <div className="max-w-4xl space-y-6 py-2">
+                <div>
+                  <h2 className="text-lg font-semibold">Настройки сайта</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Имя, описание и меню используются на всём сайте.
                   </p>
+                </div>
+                <fieldset disabled={pending} className="min-w-0">
                   <ContentFields
-                    key={page + '-' + field}
-                    value={content.home[field] as unknown as ContentValue}
-                    field={field}
+                    value={content.site as unknown as ContentValue}
                     onChange={(next) =>
                       change({
                         ...content,
-                        home: { ...content.home, [field]: next },
+                        site: next as unknown as CmsDocumentDto['site'],
                       })
                     }
                   />
-                </>
-              ) : block.id === 'faq' ? (
-                <ContentFields
-                  value={content.faq as unknown as ContentValue}
-                  field="items"
-                  onChange={(next) =>
-                    change({
-                      ...content,
-                      faq: next as unknown as CmsDocumentDto['faq'],
-                    })
-                  }
-                />
-              ) : block.id === 'details' ? (
-                contactFields
-              ) : (
-                <>
-                  <TextField
-                    label="Заголовок секции"
-                    placeholder="Текущий заголовок"
-                    value={block.title ?? ''}
-                    onChange={(e) =>
-                      blocks(
-                        current.blocks.map((b) =>
-                          b.id === block.id
-                            ? { ...b, title: e.target.value }
-                            : b,
-                        ),
-                      )
-                    }
-                  />
-                  <TextField
-                    label="Подпись над заголовком"
-                    value={block.eyebrow ?? ''}
-                    onChange={(e) =>
-                      blocks(
-                        current.blocks.map((b) =>
-                          b.id === block.id
-                            ? { ...b, eyebrow: e.target.value }
-                            : b,
-                        ),
-                      )
-                    }
-                  />
-                  {block.id === 'hero' && (
-                    <TextareaField
-                      label="Описание"
-                      value={block.description ?? ''}
-                      onChange={(e) =>
-                        blocks(
-                          current.blocks.map((b) =>
-                            b.id === block.id
-                              ? { ...b, description: e.target.value }
-                              : b,
-                          ),
-                        )
-                      }
-                    />
-                  )}
-                  {block.id === 'pricing' && (
-                    <p className="text-sm text-muted-foreground">
-                      Форматы и стоимость редактируются в разделе «Программы».
-                    </p>
-                  )}
-                  {block.id === 'articles' && (
-                    <p className="text-sm text-muted-foreground">
-                      Тексты и порядок статей редактируются в разделе «Статьи».
-                    </p>
-                  )}
-                </>
-              )}
-            </fieldset>
-          </aside>
+                </fieldset>
+              </div>
+            </Tabs.Panel>
+            <Tabs.Panel value="contacts" className="min-w-0">
+              <div className="max-w-5xl space-y-6 py-2">
+                <div>
+                  <h2 className="text-lg font-semibold">
+                    Контакты и социальные сети
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Контактные данные и ссылки используются на всех страницах
+                    сайта.
+                  </p>
+                </div>
+                <fieldset disabled={pending} className="min-w-0">
+                  {contactFields}
+                </fieldset>
+              </div>
+            </Tabs.Panel>
+          </>
         )}
-      </div>
+      </Tabs.Root>
     </div>
   )
 }

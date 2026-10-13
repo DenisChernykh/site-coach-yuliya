@@ -70,6 +70,102 @@ function show(
 }
 
 describe('unified CMS editing', () => {
+  it('opens the shared contacts tab from the contact page without a duplicate inspector form', async () => {
+    const editor = show('?page=contacts&section=details')
+    try {
+      const user = userEvent.setup()
+      await screen.findByRole('heading', { name: 'Способы связи', level: 2 })
+      expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
+      await user.click(
+        screen.getByRole('button', { name: 'Открыть контакты и соцсети' }),
+      )
+      expect(
+        screen.getByRole('tab', { name: 'Контакты и соцсети' }),
+      ).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByLabelText('Email')).toHaveValue('coach@example.com')
+      expect(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      ).toBeDisabled()
+      await user.click(screen.getByRole('tab', { name: 'Страницы' }))
+      expect(
+        screen.getByRole('heading', { name: 'Способы связи', level: 2 }),
+      ).toBeVisible()
+    } finally {
+      editor.dispose()
+    }
+  })
+
+  it('keeps edits across workspace tabs and saves site settings, contacts and section visibility in one draft', async () => {
+    const editor = show()
+    try {
+      const user = userEvent.setup()
+      await screen.findByLabelText('Email')
+      await user.clear(screen.getByLabelText('Email'))
+      await user.type(screen.getByLabelText('Email'), 'new@example.com')
+      await user.click(screen.getByRole('tab', { name: 'Настройки сайта' }))
+      await user.clear(screen.getByLabelText('Имя'))
+      await user.type(screen.getByLabelText('Имя'), 'Новое имя')
+      await user.click(screen.getByRole('tab', { name: 'Страницы' }))
+      expect(
+        screen.getByRole('switch', { name: 'Показывать: Первый экран' }),
+      ).toBeDisabled()
+      expect(
+        screen.queryByRole('button', {
+          name: 'Переместить секцию: Первый экран',
+        }),
+      ).not.toBeInTheDocument()
+      await user.click(
+        screen.getByRole('switch', { name: 'Показывать: Запросы' }),
+      )
+      await user.click(screen.getByRole('tab', { name: 'Контакты и соцсети' }))
+      expect(screen.getByLabelText('Email')).toHaveValue('new@example.com')
+      await user.click(screen.getByRole('tab', { name: 'Настройки сайта' }))
+      expect(screen.getByLabelText('Имя')).toHaveValue('Новое имя')
+      expect(
+        screen.getByRole('button', { name: 'Опубликовать' }),
+      ).toBeDisabled()
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      expect(editor.writes).toHaveLength(1)
+      expect(editor.writes[0].content.contacts?.email).toBe('new@example.com')
+      expect(editor.writes[0].content.site?.name).toBe('Новое имя')
+      const home = editor.writes[0].content.pages?.find(
+        (page) => page.key === 'home',
+      )
+      expect(home?.blocks[0]).toMatchObject({ id: 'hero', enabled: true })
+      expect(
+        home?.blocks.find((block) => block.id === 'concerns')?.enabled,
+      ).toBe(false)
+    } finally {
+      editor.dispose()
+    }
+  })
+
+  it('supports keyboard navigation between the visible workspace tabs', async () => {
+    const editor = show('?settings=site')
+    try {
+      const user = userEvent.setup()
+      const settings = await screen.findByRole('tab', {
+        name: 'Настройки сайта',
+      })
+      settings.focus()
+      await user.keyboard('{ArrowRight}{Enter}')
+      expect(
+        screen.getByRole('tab', { name: 'Контакты и соцсети' }),
+      ).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByLabelText('Email')).toBeVisible()
+      expect(
+        screen.queryByRole('heading', { name: 'Настройки сайта', level: 2 }),
+      ).not.toBeInTheDocument()
+    } finally {
+      editor.dispose()
+    }
+  })
+
   it('clears a contact and Telegram with one click, preserves other fields, and saves nulls', async () => {
     const editor = show()
     try {
