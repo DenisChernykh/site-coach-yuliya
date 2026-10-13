@@ -136,6 +136,96 @@ async function publishDraft() {
   ).body
 }
 
+async function checkNavigationMigration() {
+  const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
+    .body
+  const connection = await pool.connect()
+  try {
+    await connection.query('BEGIN')
+    const legacy = structuredClone(workspace.content)
+    const oldNavigation = legacy.site.navigation
+      .filter((item) => item.href !== '/contacts/')
+      .map((item) =>
+        item.href === '/about/'
+          ? { label: 'Своя история', href: '/#about' }
+          : item,
+      )
+    oldNavigation.push({
+      label: 'Мой канал',
+      href: 'https://example.test/channel#about',
+    })
+    legacy.site.navigation = oldNavigation
+    const navigation = [
+      ...oldNavigation.map((item) =>
+        item.href === '/#about' ? { ...item, href: '/about/' } : item,
+      ),
+      { label: 'Контакты', href: '/contacts/' },
+    ]
+    const originalSite = (
+      await connection.query('SELECT settings FROM site_content')
+    ).rows[0].settings
+    await connection.query('UPDATE site_content SET settings = $1::jsonb', [
+      JSON.stringify({ ...originalSite, navigation: oldNavigation }),
+    ])
+    await connection.query(
+      'UPDATE site_cms_drafts SET content = $1::jsonb, revision = 10, published_revision = 10',
+      [JSON.stringify(legacy)],
+    )
+    const migration = await readFile(
+      'prisma/migrations/20261013130000_site_navigation_pages/migration.sql',
+      'utf8',
+    )
+    await connection.query(migration)
+    const published = (await connection.query('SELECT * FROM site_content'))
+      .rows[0]
+    const first = (await connection.query('SELECT * FROM site_cms_drafts'))
+      .rows[0]
+    assert.deepEqual(published.settings, { ...originalSite, navigation })
+    assert.deepEqual(first.content, {
+      ...legacy,
+      site: { ...legacy.site, navigation },
+    })
+    assert.equal(first.revision, 11)
+    assert.equal(first.published_revision, 11)
+    await connection.query(migration)
+    assert.deepEqual(
+      (await connection.query('SELECT * FROM site_content')).rows[0],
+      published,
+    )
+    assert.deepEqual(
+      (await connection.query('SELECT * FROM site_cms_drafts')).rows[0],
+      first,
+    )
+
+    const unsaved = structuredClone(first.content)
+    unsaved.site.navigation = oldNavigation
+    unsaved.home.hero.description = 'Неопубликованный текст'
+    await connection.query(
+      'UPDATE site_cms_drafts SET content = $1::jsonb, revision = 12',
+      [JSON.stringify(unsaved)],
+    )
+    await connection.query(migration)
+    const draft = (await connection.query('SELECT * FROM site_cms_drafts'))
+      .rows[0]
+    assert.deepEqual(draft.content, {
+      ...unsaved,
+      site: { ...unsaved.site, navigation },
+    })
+    assert.equal(draft.revision, 13)
+    assert.equal(draft.published_revision, 11)
+    assert.deepEqual(
+      (await connection.query('SELECT * FROM site_content')).rows[0],
+      published,
+    )
+    process.stdout.write(
+      'PASS navigation migration, custom link preservation, draft revisions and idempotence\n',
+    )
+  } finally {
+    await connection.query('ROLLBACK')
+    connection.release()
+  }
+}
+
 try {
   await owner.query(`CREATE DATABASE ${databaseName}`)
   pool = new Pool({ connectionString: databaseUrl })
@@ -272,6 +362,7 @@ try {
     'PASS SEO validation, protected editing, publication scheduling and seed preservation\n',
   )
 
+  await checkNavigationMigration()
   await http('/v1/admin/cms', 'GET', undefined, 401)
   const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
     .body

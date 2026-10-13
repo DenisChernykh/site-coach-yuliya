@@ -11,6 +11,7 @@ import {
   blankItem,
   itemTemplates,
   labelFor,
+  navigationLinkDescription,
   type ContentValue,
 } from '../model/content-fields'
 type Props = {
@@ -191,11 +192,13 @@ export function ContentFields({ value, onChange, field = '' }: Props) {
       />
     )
   const help =
-    field === 'slug' || field === 'id'
-      ? 'Латинские буквы, цифры и дефисы.'
-      : field === 'coverImage'
-        ? 'Встроенные обложки: art или landscape. Можно указать https:// ссылку или путь /images/…'
-        : undefined
+    field === 'href'
+      ? navigationLinkDescription(String(value ?? ''))
+      : field === 'slug' || field === 'id'
+        ? 'Латинские буквы, цифры и дефисы.'
+        : field === 'coverImage'
+          ? 'Встроенные обложки: art или landscape. Можно указать https:// ссылку или путь /images/…'
+          : undefined
   return longFields.has(field) ? (
     <TextareaField
       label={labelFor(field)}

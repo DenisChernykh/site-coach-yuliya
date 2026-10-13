@@ -11,18 +11,7 @@ import initialContent from '../../../../backend/content/initial.json';
 
 export const seoSettings = initialContent.seo satisfies SeoSettingsDto;
 
-export const siteSettings = {
-  name: 'Юля Валишина',
-  profession: 'Коуч по реализации и проявленности',
-  description:
-    'От поиска себя к проявленности. Индивидуальный коучинг, арт-практики и бережное исследование своего пути с Юлей Валишиной.',
-  navigation: [
-    { label: 'Обо мне', href: '/#about' },
-    { label: 'Подход', href: '/#approach' },
-    { label: 'Коучинг', href: '/coaching/' },
-    { label: 'Журнал', href: '/journal/' },
-  ],
-} satisfies SiteSettingsDto;
+export const siteSettings = initialContent.settings satisfies SiteSettingsDto;
 
 export const homePage = {
   hero: {

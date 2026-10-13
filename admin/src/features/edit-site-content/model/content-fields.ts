@@ -8,6 +8,25 @@ export type ContentValue =
   | ContentValue[]
   | { [key: string]: ContentValue }
 
+const destinations: Record<string, string> = {
+  '/': 'Главная страница.',
+  '/about/': 'Отдельная страница «Обо мне».',
+  '/coaching/': 'Отдельная страница «Коучинг».',
+  '/journal/': 'Отдельная страница «Журнал».',
+  '/contacts/': 'Отдельная страница «Контакты».',
+  '/privacy/': 'Страница «Политика конфиденциальности».',
+  '/#approach': 'Секция «Подход» на главной странице.',
+}
+
+export function navigationLinkDescription(href: string): string {
+  return (
+    destinations[href] ??
+    (href.includes('#')
+      ? 'Якорь ведёт к секции страницы. Например, /#approach — «Подход» на главной.'
+      : 'Адрес страницы сайта, например /about/, или полная ссылка на другой сайт.')
+  )
+}
+
 export const fieldLabels: Record<string, string> = {
   name: 'Имя',
   profession: 'Специализация',

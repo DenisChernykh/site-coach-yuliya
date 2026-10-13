@@ -1,8 +1,8 @@
 export {
   getHomePage as loadHomePage,
   getContacts as loadContacts,
+  getSiteSettings as loadSiteSettings,
 } from '@/shared/api';
-export { loadSiteSettings } from './model/site-settings';
 export { getSeoSettings as loadSeoSettings } from '@/shared/api';
 export {
   resolvePageSeo,

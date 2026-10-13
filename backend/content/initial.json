@@ -6,7 +6,7 @@
     "navigation": [
       {
         "label": "Обо мне",
-        "href": "/#about"
+        "href": "/about/"
       },
       {
         "label": "Подход",
@@ -19,6 +19,10 @@
       {
         "label": "Журнал",
         "href": "/journal/"
+      },
+      {
+        "label": "Контакты",
+        "href": "/contacts/"
       }
     ]
   },

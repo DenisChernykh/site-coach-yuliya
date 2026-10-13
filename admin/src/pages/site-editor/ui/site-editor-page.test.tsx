@@ -70,6 +70,40 @@ function show(
 }
 
 describe('unified CMS editing', () => {
+  it('explains page and section destinations and preserves a manually edited anchor in the draft', async () => {
+    const editor = show('?settings=site')
+    try {
+      const user = userEvent.setup()
+      await screen.findByLabelText('Имя')
+      const links = screen.getAllByRole('textbox', {
+        name: 'Ссылка',
+      }) as HTMLInputElement[]
+      const about = links.find((input) => input.value === '/about/')!
+      const approach = links.find((input) => input.value === '/#approach')!
+      expect(about).toHaveAccessibleDescription('Отдельная страница «Обо мне».')
+      expect(approach).toHaveAccessibleDescription(
+        'Секция «Подход» на главной странице.',
+      )
+      await user.clear(about)
+      await user.type(about, '/about/#approach')
+      expect(about).toHaveAccessibleDescription(
+        /Якорь ведёт к секции страницы/u,
+      )
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      expect(editor.writes[0].content.site.navigation).toContainEqual({
+        label: 'Обо мне',
+        href: '/about/#approach',
+      })
+    } finally {
+      editor.dispose()
+    }
+  })
+
   it('opens the shared contacts tab from the contact page without a duplicate inspector form', async () => {
     const editor = show('?page=contacts&section=details')
     try {
