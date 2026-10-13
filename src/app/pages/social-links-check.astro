@@ -1,0 +1,28 @@
+---
+import { SocialLinks } from '@/widgets/social-links';
+import { SocialLinkDtoId } from '@/shared/api/generated/model/socialLinkDtoId';
+import '../styles/index.css';
+const count = Number(Astro.url.searchParams.get('count') ?? 18);
+const items = Object.values(SocialLinkDtoId)
+  .slice(0, count)
+  .map((id) => ({
+    id,
+    label: id,
+    url: `https://example.com/${id}`,
+  }));
+---
+
+<html lang="ru">
+  <head
+    ><meta charset="UTF-8" /><meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    /><title>Social links check</title></head
+  >
+  <body
+    ><main><h1>Проверка соцсетей</h1></main><SocialLinks
+      client:load
+      items={items}
+    /></body
+  >
+</html>
