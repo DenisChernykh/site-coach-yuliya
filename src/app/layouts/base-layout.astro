@@ -45,6 +45,6 @@ const contacts = initialContacts ?? (await loadContacts());
     <SiteHeader settings={settings} />
     <main id="main-content"><slot /></main>
     <SiteFooter settings={settings} contacts={contacts} />
-    <SocialLinks client:load items={socials} />
+    <SocialLinks client:load items={socials} phone={contacts.phone} />
   </body>
 </html>
