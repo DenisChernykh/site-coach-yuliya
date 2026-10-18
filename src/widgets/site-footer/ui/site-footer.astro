@@ -16,7 +16,7 @@ const { settings, contacts } = Astro.props;
 >
   <div class="page-container footer-inner">
     <div>
-      <a href="/" class="footer-name" data-cms-field="site.name"
+      <a href={routes.home} class="footer-name" data-cms-field="site.name"
         >{settings.name}</a
       ><p class="fine-print">
         © 2026 · {settings.profession}

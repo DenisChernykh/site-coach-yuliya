@@ -1,4 +1,5 @@
 import Markdown from 'react-markdown';
+import { withBase } from '@/shared/routes';
 
 export function MarkdownArticleBody({ markdown }: { markdown: string }) {
   let heading = 0;
@@ -13,7 +14,7 @@ export function MarkdownArticleBody({ markdown }: { markdown: string }) {
             <h2 id={`article-heading-${++heading}`}>{children}</h2>
           ),
           a: ({ children, href }) => (
-            <a href={href} rel="noreferrer">
+            <a href={href ? withBase(href) : href} rel="noreferrer">
               {children}
             </a>
           ),

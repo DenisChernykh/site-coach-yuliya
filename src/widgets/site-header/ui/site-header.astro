@@ -1,7 +1,7 @@
 ---
 import type { SiteSettingsDto } from '@/entities/site';
 import { MobileNavigation } from '@/features/mobile-navigation';
-import { routes } from '@/shared/routes';
+import { routes, withBase } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -33,8 +33,8 @@ const pathname = Astro.url.pathname;
           <a
             data-cms-item
             data-cms-href=".href"
-            href={item.href}
-            aria-current={item.href === pathname ? 'page' : undefined}
+            href={withBase(item.href)}
+            aria-current={withBase(item.href) === pathname ? 'page' : undefined}
           >
             <span data-cms-field=".label">{item.label}</span>
           </a>
@@ -66,7 +66,11 @@ const pathname = Astro.url.pathname;
   </div>
   <noscript
     ><nav class="no-js-navigation" aria-label="Навигация">
-      {settings.navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      {
+        settings.navigation.map((item) => (
+          <a href={withBase(item.href)}>{item.label}</a>
+        ))
+      }
     </nav></noscript
   >
 </header>

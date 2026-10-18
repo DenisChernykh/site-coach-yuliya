@@ -3,6 +3,9 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  site: process.env.PUBLIC_SITE_URL || undefined,
+  base: process.env.PUBLIC_SITE_BASE || '/',
+  outDir: process.env.GITHUB_PAGES === 'true' ? './dist-pages' : './dist',
   srcDir: './src/app',
   output: 'static',
   devToolbar: { enabled: false },

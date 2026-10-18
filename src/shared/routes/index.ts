@@ -1,10 +1,20 @@
+export function withBase(
+  path: string,
+  base = import.meta.env?.BASE_URL ?? '/',
+): string {
+  if (!path.startsWith('/') || path.startsWith('//')) return path;
+  const prefix = base.replace(/\/$/u, '');
+  if (!prefix || path === prefix || path.startsWith(`${prefix}/`)) return path;
+  return `${prefix}${path}`;
+}
+
 export const routes = {
-  home: '/',
-  about: '/about/',
-  contacts: '/contacts/',
-  coaching: '/coaching/',
-  journal: '/journal/',
-  contact: '/contacts/#contact',
-  privacy: '/privacy/',
-  article: (slug: string) => `/journal/${encodeURIComponent(slug)}/`,
+  home: withBase('/'),
+  about: withBase('/about/'),
+  contacts: withBase('/contacts/'),
+  coaching: withBase('/coaching/'),
+  journal: withBase('/journal/'),
+  contact: withBase('/contacts/#contact'),
+  privacy: withBase('/privacy/'),
+  article: (slug: string) => withBase(`/journal/${encodeURIComponent(slug)}/`),
 } as const;

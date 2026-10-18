@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { MessageCircle, Phone, X } from 'lucide-react';
 import type { SocialLinkDto } from '@/entities/social-link';
 import { Button } from '@/shared/ui';
+import { withBase } from '@/shared/routes';
 import styles from './social-links.module.css';
 import overflowStyles from './social-links-overflow.module.css';
 
@@ -123,7 +124,7 @@ export function SocialLinks({
               style={
                 {
                   '--social-index': items.length - index,
-                  '--icon-url': `url('/icons/${item.id}.svg')`,
+                  '--icon-url': `url('${withBase(`/icons/${item.id}.svg`)}')`,
                 } as CSSProperties
               }
               tabIndex={expanded ? 0 : -1}

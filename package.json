@@ -12,6 +12,7 @@
     "demo:tunnel": "node scripts/demo/start.mjs",
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro check && astro build",
+    "build:pages": "node scripts/pages/build.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "typecheck": "astro check",
     "api:sync": "node scripts/openapi/sync.mjs",

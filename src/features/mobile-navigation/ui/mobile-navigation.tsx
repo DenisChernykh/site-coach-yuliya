@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Menu, ArrowUpRight, X } from 'lucide-react';
 import type { NavigationItemDto } from '@/entities/site';
-import { routes } from '@/shared/routes';
+import { routes, withBase } from '@/shared/routes';
 import {
   Button,
   Sheet,
@@ -61,7 +61,7 @@ export function MobileNavigation({
           {navigation.map((item) => (
             <a
               key={item.href}
-              href={item.href}
+              href={withBase(item.href)}
               onClick={() => setOpen(false)}
               className="border-b py-5 font-heading text-[34px]"
             >
