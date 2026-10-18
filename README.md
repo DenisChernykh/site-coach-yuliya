@@ -37,7 +37,7 @@ pnpm build:pages
 ```
 
 Результат — `dist-pages/`, адрес по умолчанию —
-`https://denischernykh.github.io/site-coach-yuliya-pages/`.
+`https://denischernykh.github.io/site-coach-yuliya/`.
 Для другого адреса задайте `PUBLIC_SITE_URL` (origin) и `PUBLIC_SITE_BASE`
 (путь репозитория с `/`). Навигация, ссылки на статьи и иконки учитывают этот путь.
 Обычная сборка и локальное демо продолжают использовать корень `/`.
@@ -48,6 +48,10 @@ pnpm build:pages
 отключена, пока в SEO-контенте не указан основной домен.
 Для публикации достаточно содержимого `dist-pages/`, включая `.nojekyll`;
 исходники, `.env` и база данных в сборку не входят.
+
+Workflow `.github/workflows/deploy-pages.yml` проверяет фронтенд, собирает демо
+и публикует его на GitHub Pages после push в `main`. Его также можно запустить
+вручную в GitHub Actions. Источник Pages в настройках репозитория — GitHub Actions.
 
 SEO редактируется в `/admin/seo`: общие настройки, основной HTTPS-домен,
 заголовки и описания шести страниц, превью ссылок и индексация. У каждой статьи

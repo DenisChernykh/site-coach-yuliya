@@ -8,8 +8,7 @@ const result = spawnSync('pnpm', ['build'], {
     GITHUB_PAGES: 'true',
     PUBLIC_SITE_URL:
       process.env.PUBLIC_SITE_URL || 'https://denischernykh.github.io',
-    PUBLIC_SITE_BASE:
-      process.env.PUBLIC_SITE_BASE || '/site-coach-yuliya-pages/',
+    PUBLIC_SITE_BASE: process.env.PUBLIC_SITE_BASE || '/site-coach-yuliya/',
     PUBLIC_DATA_SOURCE: 'mock',
     PUBLIC_API_BASE_URL: '',
     API_INTERNAL_BASE_URL: '',
