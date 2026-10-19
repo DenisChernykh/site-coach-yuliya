@@ -79,6 +79,7 @@
   animation: appear 0.18s ease-out;
 }
 .player {
+  --controls-height: 68px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -88,6 +89,9 @@
   border-radius: 10px;
   background: #101a23;
   box-shadow: 0 18px 80px rgb(0 0 0 / 24%);
+}
+.player[data-multiple-groups] {
+  --controls-height: 120px;
 }
 .progress {
   position: absolute;
@@ -155,12 +159,13 @@
 }
 .media {
   position: absolute;
-  inset: 0 0 56px;
+  inset: 0 0 var(--controls-height);
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: pan-y;
   user-select: none;
+  cursor: pointer;
 }
 .media > img,
 .media > video {
@@ -182,7 +187,7 @@
 }
 .caption {
   position: absolute;
-  bottom: 76px;
+  bottom: calc(var(--controls-height) + 20px);
   left: 24px;
   right: 24px;
   z-index: 2;
@@ -213,19 +218,79 @@
   text-decoration: none;
   pointer-events: auto;
 }
-.navigation {
+.controls {
   position: absolute;
-  bottom: 6px;
-  left: 12px;
-  right: 12px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--controls-height);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #101a23;
+}
+.navigation {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
-  color: rgb(255 255 255 / 70%);
+  min-height: 48px;
 }
-.navigation button:disabled {
-  opacity: 0.3;
+.navigation button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #142b3d;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
+}
+.navigation button:hover:enabled {
+  background: #d9e7f1;
+  border-color: #d9e7f1;
+}
+.counter {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+  text-align: center;
+  color: #fff;
+}
+.counter small {
+  font-size: 11px;
+  color: #c3ced7;
+}
+.groupNavigation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.groupNavigation button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 1px solid #718697;
+  border-radius: 7px;
+  background: #213544;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.groupNavigation svg {
+  flex: none;
+}
+.groupNavigation button:hover:enabled {
+  background: #344e62;
+  border-color: #bdcbd6;
+}
+.navigation button:disabled,
+.groupNavigation button:disabled {
+  opacity: 0.4;
   cursor: default;
 }
 .status {

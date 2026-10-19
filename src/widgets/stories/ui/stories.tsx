@@ -3,6 +3,8 @@ import { Dialog } from '@base-ui/react/dialog';
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Pause,
   Play,
   Volume2,
@@ -12,6 +14,7 @@ import {
 import type { StoryGroupDto } from '@/shared/api';
 import { storyMediaUrl } from '@/shared/lib/story-media';
 import { storyEntries } from '../model/stories';
+import { storyGestureDirection } from '../model/navigation';
 import styles from './stories.module.css';
 
 export function Stories({
@@ -30,6 +33,11 @@ export function Stories({
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const current = entries[index];
+  const groupIndex = groups.findIndex(
+    (group) => group.id === current?.group.id,
+  );
+  const previousGroup = groups[groupIndex - 1];
+  const nextGroup = groups[groupIndex + 1];
   if (!groups.length)
     return preview ? (
       <p className={styles.empty}>
@@ -39,6 +47,10 @@ export function Stories({
   const next = () => {
     if (index + 1 < entries.length) setIndex(index + 1);
     else setOpen(false);
+  };
+  const openGroup = (group: StoryGroupDto | undefined) => {
+    if (group)
+      setIndex(entries.findIndex((entry) => entry.group.id === group.id));
   };
   return (
     <Dialog.Root open={open && Boolean(current)} onOpenChange={setOpen}>
@@ -78,6 +90,12 @@ export function Stories({
               onNext={next}
               onPrevious={() => setIndex(Math.max(0, index - 1))}
               hasPrevious={index > 0}
+              groupPosition={groupIndex}
+              groupCount={groups.length}
+              previousGroupTitle={previousGroup?.title}
+              nextGroupTitle={nextGroup?.title}
+              onPreviousGroup={() => openGroup(previousGroup)}
+              onNextGroup={() => openGroup(nextGroup)}
             />
           )}
         </Dialog.Popup>
@@ -92,12 +110,24 @@ function StoryPlayer({
   onNext,
   onPrevious,
   hasPrevious,
+  groupPosition,
+  groupCount,
+  previousGroupTitle,
+  nextGroupTitle,
+  onPreviousGroup,
+  onNextGroup,
 }: {
   entry: ReturnType<typeof storyEntries>[number];
   mediaBaseUrl?: string;
   onNext: () => void;
   onPrevious: () => void;
   hasPrevious: boolean;
+  groupPosition: number;
+  groupCount: number;
+  previousGroupTitle?: string;
+  nextGroupTitle?: string;
+  onPreviousGroup: () => void;
+  onNextGroup: () => void;
 }) {
   const { group, slide, slides, position } = entry;
   const video = useRef<HTMLVideoElement>(null);
@@ -143,10 +173,16 @@ function StoryPlayer({
     }, 50);
     return () => window.clearInterval(timer);
   }, [stopped, slide.type, slide.durationSeconds]);
-  const touch = useRef<{ x: number; y: number } | null>(null);
+  const touch = useRef<{
+    x: number;
+    y: number;
+    time: number;
+    pointerId: number;
+  } | null>(null);
   return (
     <div
       className={styles.player}
+      data-multiple-groups={groupCount > 1 || undefined}
       onKeyDown={(event) => {
         if (event.key === 'ArrowRight') {
           event.preventDefault();
@@ -201,25 +237,30 @@ function StoryPlayer({
       <div
         className={styles.media}
         onPointerDown={(event) => {
-          touch.current = { x: event.clientX, y: event.clientY };
+          if (!event.isPrimary || event.button !== 0) return;
+          touch.current = {
+            x: event.clientX,
+            y: event.clientY,
+            time: performance.now(),
+            pointerId: event.pointerId,
+          };
           event.currentTarget.setPointerCapture(event.pointerId);
           setHolding(true);
         }}
         onPointerUp={(event) => {
-          setHolding(false);
           const start = touch.current;
+          if (!start || start.pointerId !== event.pointerId) return;
+          setHolding(false);
           touch.current = null;
-          if (
-            start &&
-            Math.abs(event.clientX - start.x) > 50 &&
-            Math.abs(event.clientX - start.x) >
-              Math.abs(event.clientY - start.y)
-          ) {
-            if (event.clientX < start.x) onNext();
-            else onPrevious();
-          }
+          const direction = storyGestureDirection(
+            start,
+            { x: event.clientX, y: event.clientY, time: performance.now() },
+            event.currentTarget.getBoundingClientRect(),
+          );
+          if (direction === 'next') onNext();
+          if (direction === 'previous') onPrevious();
         }}
-        onPointerCancel={() => {
+        onLostPointerCapture={() => {
           setHolding(false);
           touch.current = null;
         }}
@@ -269,22 +310,54 @@ function StoryPlayer({
           </a>
         )}
       </div>
-      <nav className={styles.navigation} aria-label="Переключение сторис">
-        <button
-          type="button"
-          aria-label="Предыдущий слайд"
-          disabled={!hasPrevious}
-          onClick={onPrevious}
-        >
-          <ChevronLeft size={22} />
-        </button>
-        <span>
-          {position + 1} / {slides.length}
-        </span>
-        <button type="button" aria-label="Следующий слайд" onClick={onNext}>
-          <ChevronRight size={22} />
-        </button>
-      </nav>
+      <div className={styles.controls}>
+        <nav className={styles.navigation} aria-label="Переключение слайдов">
+          <button
+            type="button"
+            aria-label="Предыдущий слайд"
+            disabled={!hasPrevious}
+            onClick={onPrevious}
+          >
+            <ChevronLeft size={28} />
+          </button>
+          <span className={styles.counter}>
+            Слайд {position + 1} из {slides.length}
+            {groupCount > 1 && (
+              <small>
+                Подборка {groupPosition + 1} из {groupCount}
+              </small>
+            )}
+          </span>
+          <button type="button" aria-label="Следующий слайд" onClick={onNext}>
+            <ChevronRight size={28} />
+          </button>
+        </nav>
+        {groupCount > 1 && (
+          <nav
+            className={styles.groupNavigation}
+            aria-label="Переключение подборок"
+          >
+            <button
+              type="button"
+              aria-label={`Предыдущая подборка${previousGroupTitle ? ': ' + previousGroupTitle : ''}`}
+              disabled={!previousGroupTitle}
+              onClick={onPreviousGroup}
+            >
+              <ChevronsLeft size={20} />
+              <span>Предыдущая подборка</span>
+            </button>
+            <button
+              type="button"
+              aria-label={`Следующая подборка${nextGroupTitle ? ': ' + nextGroupTitle : ''}`}
+              disabled={!nextGroupTitle}
+              onClick={onNextGroup}
+            >
+              <span>Следующая подборка</span>
+              <ChevronsRight size={20} />
+            </button>
+          </nav>
+        )}
+      </div>
     </div>
   );
 }
