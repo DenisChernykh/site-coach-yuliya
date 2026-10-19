@@ -6,21 +6,34 @@
 
 ## Методы
 
-| Метод | Путь                  | Назначение                                | operationId          |
-| ----- | --------------------- | ----------------------------------------- | -------------------- |
-| GET   | `/v1/page-layouts`    | Опубликованный порядок и видимость секций | `getPageLayouts`     |
-| GET   | `/v1/site`            | Настройки сайта                           | `getSiteSettings`    |
-| GET   | `/v1/seo`             | SEO сайта и страниц                       | `getSeoSettings`     |
-| GET   | `/v1/contacts`        | Контактные данные                         | `getContacts`        |
-| GET   | `/v1/home`            | Контент главной                           | `getHomePage`        |
-| GET   | `/v1/services`        | Опубликованные программы                  | `getServices`        |
-| GET   | `/v1/articles`        | Опубликованные статьи                     | `getArticles`        |
-| GET   | `/v1/articles/{slug}` | Опубликованная статья                     | `getArticle`         |
-| GET   | `/v1/faq`             | Частые вопросы                            | `getFaq`             |
-| GET   | `/v1/social-links`    | Социальные сети                           | `getSocialLinks`     |
-| POST  | `/v1/consultations`   | Сохранить заявку на знакомство            | `createConsultation` |
+| Метод | Путь                   | Назначение                                | operationId          |
+| ----- | ---------------------- | ----------------------------------------- | -------------------- |
+| GET   | `/v1/story-media/{id}` | Фото или видео сторис с поддержкой Range  | `getStoryMedia`      |
+| GET   | `/v1/page-layouts`     | Опубликованный порядок и видимость секций | `getPageLayouts`     |
+| GET   | `/v1/site`             | Настройки сайта                           | `getSiteSettings`    |
+| GET   | `/v1/seo`              | SEO сайта и страниц                       | `getSeoSettings`     |
+| GET   | `/v1/contacts`         | Контактные данные                         | `getContacts`        |
+| GET   | `/v1/home`             | Контент главной                           | `getHomePage`        |
+| GET   | `/v1/services`         | Опубликованные программы                  | `getServices`        |
+| GET   | `/v1/articles`         | Опубликованные статьи                     | `getArticles`        |
+| GET   | `/v1/articles/{slug}`  | Опубликованная статья                     | `getArticle`         |
+| GET   | `/v1/faq`              | Частые вопросы                            | `getFaq`             |
+| GET   | `/v1/social-links`     | Социальные сети                           | `getSocialLinks`     |
+| POST  | `/v1/consultations`    | Сохранить заявку на знакомство            | `createConsultation` |
 
 ## Модели
+
+### ProblemResponseDto
+
+| Поле        | Тип    | Обязательно |
+| ----------- | ------ | ----------- |
+| `code`      | string | да          |
+| `detail`    | string | да          |
+| `instance`  | string | да          |
+| `requestId` | string | да          |
+| `status`    | number | да          |
+| `title`     | string | да          |
+| `type`      | string | да          |
 
 ### CmsPageDto
 
@@ -101,16 +114,17 @@
 
 ### HomePageDto
 
-| Поле          | Тип            | Обязательно |
-| ------------- | -------------- | ----------- |
-| `about`       | AboutDto       | да          |
-| `approach`    | ApproachDto    | да          |
-| `artPractice` | ArtPracticeDto | да          |
-| `caseStudies` | CaseStudyDto[] | да          |
-| `concerns`    | ConcernDto[]   | да          |
-| `hero`        | HeroDto        | да          |
-| `process`     | StepDto[]      | да          |
-| `products`    | ProductDto[]   | да          |
+| Поле          | Тип             | Обязательно |
+| ------------- | --------------- | ----------- |
+| `about`       | AboutDto        | да          |
+| `approach`    | ApproachDto     | да          |
+| `artPractice` | ArtPracticeDto  | да          |
+| `caseStudies` | CaseStudyDto[]  | да          |
+| `concerns`    | ConcernDto[]    | да          |
+| `hero`        | HeroDto         | да          |
+| `process`     | StepDto[]       | да          |
+| `products`    | ProductDto[]    | да          |
+| `stories`     | StoryGroupDto[] | нет         |
 
 ### AboutDto
 
@@ -184,6 +198,29 @@
 | `id`          | string | да          |
 | `title`       | string | да          |
 
+### StoryGroupDto
+
+| Поле           | Тип             | Обязательно |
+| -------------- | --------------- | ----------- |
+| `coverMediaId` | string          | да          |
+| `enabled`      | boolean         | да          |
+| `id`           | string          | да          |
+| `slides`       | StorySlideDto[] | да          |
+| `title`        | string          | да          |
+
+### StorySlideDto
+
+| Поле              | Тип     | Обязательно |
+| ----------------- | ------- | ----------- |
+| `caption`         | string  | да          |
+| `durationSeconds` | number  | да          |
+| `enabled`         | boolean | да          |
+| `id`              | string  | да          |
+| `linkLabel`       | string  | да          |
+| `linkUrl`         | string  | да          |
+| `mediaId`         | string  | да          |
+| `type`            | string  | да          |
+
 ### ServiceDto
 
 | Поле          | Тип      | Обязательно |
@@ -231,18 +268,6 @@
 | `paragraphs` | string[] | да          |
 | `summary`    | string   | да          |
 | `title`      | string   | да          |
-
-### ProblemResponseDto
-
-| Поле        | Тип    | Обязательно |
-| ----------- | ------ | ----------- |
-| `code`      | string | да          |
-| `detail`    | string | да          |
-| `instance`  | string | да          |
-| `requestId` | string | да          |
-| `status`    | number | да          |
-| `title`     | string | да          |
-| `type`      | string | да          |
 
 ### FaqItemDto
 

@@ -1,4 +1,5 @@
 export { isMockMode } from './client/api-fetch';
+export type { StoryGroupDto, StorySlideDto } from './generated/model';
 export { getPageLayouts } from './generated/page-layouts/page-layouts';
 export type { CmsPageDto, CmsBlockDto } from './generated/model';
 export {

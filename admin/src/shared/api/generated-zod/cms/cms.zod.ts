@@ -45,6 +45,23 @@ export const adminGetCms200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminGetCms200ResponseContentFaqMax = 100
 
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
+
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin = 2
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax = 30
+
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax = 80
+
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax = 2000
+
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp =
+  new RegExp('^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$')
+export const adminGetCms200ResponseContentHomeStoriesItemSlidesMax = 30
+
+export const adminGetCms200ResponseContentHomeStoriesItemTitleMax = 80
+
+export const adminGetCms200ResponseContentHomeStoriesMax = 20
+
 export const adminGetCms200ResponseContentPagesItemBlocksItemDescriptionMax = 10000
 
 export const adminGetCms200ResponseContentPagesItemBlocksItemEyebrowMax = 300
@@ -361,6 +378,56 @@ export const AdminGetCms200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      stories: zod
+        .array(
+          zod.strictObject({
+            coverMediaId: zod.uuid(),
+            enabled: zod.boolean(),
+            id: zod.uuid(),
+            slides: zod
+              .array(
+                zod.strictObject({
+                  caption: zod
+                    .string()
+                    .max(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax,
+                    ),
+                  durationSeconds: zod
+                    .number()
+                    .min(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin,
+                    )
+                    .max(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax,
+                    ),
+                  enabled: zod.boolean(),
+                  id: zod.uuid(),
+                  linkLabel: zod
+                    .string()
+                    .max(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax,
+                    ),
+                  linkUrl: zod
+                    .string()
+                    .max(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax,
+                    )
+                    .regex(
+                      adminGetCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp,
+                    ),
+                  mediaId: zod.uuid(),
+                  type: zod.enum(['image', 'video']),
+                }),
+              )
+              .max(adminGetCms200ResponseContentHomeStoriesItemSlidesMax),
+            title: zod
+              .string()
+              .min(1)
+              .max(adminGetCms200ResponseContentHomeStoriesItemTitleMax),
+          }),
+        )
+        .max(adminGetCms200ResponseContentHomeStoriesMax)
+        .optional(),
     }),
     pages: zod
       .array(
@@ -641,6 +708,23 @@ export const adminSaveCmsDraftBodyContentContactsTelegramUrlMax = 500
 
 export const adminSaveCmsDraftBodyContentFaqMax = 100
 
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemCaptionMax = 1000
+
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemDurationSecondsMin = 2
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemDurationSecondsMax = 30
+
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkLabelMax = 80
+
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkUrlMax = 2000
+
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkUrlRegExp =
+  new RegExp('^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$')
+export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesMax = 30
+
+export const adminSaveCmsDraftBodyContentHomeStoriesItemTitleMax = 80
+
+export const adminSaveCmsDraftBodyContentHomeStoriesMax = 20
+
 export const adminSaveCmsDraftBodyContentPagesItemBlocksItemDescriptionMax = 10000
 
 export const adminSaveCmsDraftBodyContentPagesItemBlocksItemEyebrowMax = 300
@@ -749,6 +833,56 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      stories: zod
+        .array(
+          zod.strictObject({
+            coverMediaId: zod.uuid(),
+            enabled: zod.boolean(),
+            id: zod.uuid(),
+            slides: zod
+              .array(
+                zod.strictObject({
+                  caption: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemCaptionMax,
+                    ),
+                  durationSeconds: zod
+                    .number()
+                    .min(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemDurationSecondsMin,
+                    )
+                    .max(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemDurationSecondsMax,
+                    ),
+                  enabled: zod.boolean(),
+                  id: zod.uuid(),
+                  linkLabel: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkLabelMax,
+                    ),
+                  linkUrl: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkUrlMax,
+                    )
+                    .regex(
+                      adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemLinkUrlRegExp,
+                    ),
+                  mediaId: zod.uuid(),
+                  type: zod.enum(['image', 'video']),
+                }),
+              )
+              .max(adminSaveCmsDraftBodyContentHomeStoriesItemSlidesMax),
+            title: zod
+              .string()
+              .min(1)
+              .max(adminSaveCmsDraftBodyContentHomeStoriesItemTitleMax),
+          }),
+        )
+        .max(adminSaveCmsDraftBodyContentHomeStoriesMax)
+        .optional(),
     }),
     pages: zod
       .array(
@@ -866,6 +1000,23 @@ export const adminSaveCmsDraft200ResponseContentContactsPhoneMax = 80
 export const adminSaveCmsDraft200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminSaveCmsDraft200ResponseContentFaqMax = 100
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin = 2
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax = 30
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax = 80
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax = 2000
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp =
+  new RegExp('^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$')
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesMax = 30
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesItemTitleMax = 80
+
+export const adminSaveCmsDraft200ResponseContentHomeStoriesMax = 20
 
 export const adminSaveCmsDraft200ResponseContentPagesItemBlocksItemDescriptionMax = 10000
 
@@ -1182,6 +1333,56 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      stories: zod
+        .array(
+          zod.strictObject({
+            coverMediaId: zod.uuid(),
+            enabled: zod.boolean(),
+            id: zod.uuid(),
+            slides: zod
+              .array(
+                zod.strictObject({
+                  caption: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemCaptionMax,
+                    ),
+                  durationSeconds: zod
+                    .number()
+                    .min(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin,
+                    )
+                    .max(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax,
+                    ),
+                  enabled: zod.boolean(),
+                  id: zod.uuid(),
+                  linkLabel: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax,
+                    ),
+                  linkUrl: zod
+                    .string()
+                    .max(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax,
+                    )
+                    .regex(
+                      adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp,
+                    ),
+                  mediaId: zod.uuid(),
+                  type: zod.enum(['image', 'video']),
+                }),
+              )
+              .max(adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesMax),
+            title: zod
+              .string()
+              .min(1)
+              .max(adminSaveCmsDraft200ResponseContentHomeStoriesItemTitleMax),
+          }),
+        )
+        .max(adminSaveCmsDraft200ResponseContentHomeStoriesMax)
+        .optional(),
     }),
     pages: zod
       .array(
@@ -1546,6 +1747,23 @@ export const adminPublishCms200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminPublishCms200ResponseContentFaqMax = 100
 
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
+
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin = 2
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax = 30
+
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax = 80
+
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax = 2000
+
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp =
+  new RegExp('^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$')
+export const adminPublishCms200ResponseContentHomeStoriesItemSlidesMax = 30
+
+export const adminPublishCms200ResponseContentHomeStoriesItemTitleMax = 80
+
+export const adminPublishCms200ResponseContentHomeStoriesMax = 20
+
 export const adminPublishCms200ResponseContentPagesItemBlocksItemDescriptionMax = 10000
 
 export const adminPublishCms200ResponseContentPagesItemBlocksItemEyebrowMax = 300
@@ -1861,6 +2079,56 @@ export const AdminPublishCms200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      stories: zod
+        .array(
+          zod.strictObject({
+            coverMediaId: zod.uuid(),
+            enabled: zod.boolean(),
+            id: zod.uuid(),
+            slides: zod
+              .array(
+                zod.strictObject({
+                  caption: zod
+                    .string()
+                    .max(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax,
+                    ),
+                  durationSeconds: zod
+                    .number()
+                    .min(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMin,
+                    )
+                    .max(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemDurationSecondsMax,
+                    ),
+                  enabled: zod.boolean(),
+                  id: zod.uuid(),
+                  linkLabel: zod
+                    .string()
+                    .max(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkLabelMax,
+                    ),
+                  linkUrl: zod
+                    .string()
+                    .max(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlMax,
+                    )
+                    .regex(
+                      adminPublishCms200ResponseContentHomeStoriesItemSlidesItemLinkUrlRegExp,
+                    ),
+                  mediaId: zod.uuid(),
+                  type: zod.enum(['image', 'video']),
+                }),
+              )
+              .max(adminPublishCms200ResponseContentHomeStoriesItemSlidesMax),
+            title: zod
+              .string()
+              .min(1)
+              .max(adminPublishCms200ResponseContentHomeStoriesItemTitleMax),
+          }),
+        )
+        .max(adminPublishCms200ResponseContentHomeStoriesMax)
+        .optional(),
     }),
     pages: zod
       .array(

@@ -14,7 +14,7 @@ test('published sections default to the existing order and remain visible', () =
   );
   assert.deepEqual(
     pages[0]?.blocks.slice(0, 4).map((b) => b.id),
-    ['hero', 'concerns', 'about', 'approach'],
+    ['hero', 'stories', 'concerns', 'about'],
   );
 });
 test('section text is escaped and leaves surrounding markup and original defaults intact', () => {

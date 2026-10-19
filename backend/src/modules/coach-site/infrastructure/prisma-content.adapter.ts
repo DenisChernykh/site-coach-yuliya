@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { articleSlug } from '../domain/content-identifiers'
+import { visibleStories } from '../domain/stories'
 import { Prisma, type PrismaClient } from '@/generated/prisma/client'
 import type { TransactionPort } from '@/shared/application/transaction.port'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
@@ -110,7 +111,8 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     return json<ContactDetailsDto>((await this.site()).contacts)
   }
   public async getHome(): Promise<HomePageDto> {
-    return json<HomePageDto>((await this.site()).home)
+    const home = json<HomePageDto>((await this.site()).home)
+    return { ...home, stories: visibleStories(home.stories ?? []) }
   }
   public async getFaq(): Promise<FaqItemDto[]> {
     return json<FaqItemDto[]>((await this.site()).faq)

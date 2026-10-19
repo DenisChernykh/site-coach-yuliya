@@ -63,6 +63,7 @@ export function createOpenApiDocument(
     .addTag('admin consultations', 'Обработка заявок')
     .addTag('publication', 'Пересборка и публикация сайта')
     .addTag('cms', 'Черновики и явная публикация контента')
+    .addTag('story-media', 'Фото и видео для сторис')
     .addTag('page-layouts', 'Опубликованный порядок секций страниц')
     .addTag('admin auth', 'Protected account administration endpoints.')
     .addCookieAuth(

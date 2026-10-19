@@ -20,6 +20,12 @@ import { SiteContentService } from '../application/content.service'
 import { SiteCmsService } from '../application/cms.service'
 import { PrismaCmsAdapter } from '../infrastructure/prisma-cms.adapter'
 import { DraftContentAdapter } from '../infrastructure/draft-content.adapter'
+import { PrismaStoryMediaAdapter } from '../infrastructure/prisma-story-media.adapter'
+import { StoryMediaService } from '../application/story-media.service'
+import {
+  AdminStoryMediaController,
+  PublicStoryMediaController,
+} from '../presentation/story-media.controller'
 import {
   CmsController,
   PublicCmsController,
@@ -54,6 +60,8 @@ export class CoachSiteModule {
       module: CoachSiteModule,
       imports: [DatabaseModule, RedisModule, LifecycleModule],
       controllers: [
+        AdminStoryMediaController,
+        PublicStoryMediaController,
         PublicSiteController,
         AdminContentController,
         AdminConsultationsController,
@@ -62,6 +70,18 @@ export class CoachSiteModule {
         PublicCmsController,
       ],
       providers: [
+        {
+          provide: PrismaStoryMediaAdapter,
+          inject: [PrismaClientProvider],
+          useFactory: (database: PrismaClientProvider) =>
+            new PrismaStoryMediaAdapter(database),
+        },
+        {
+          provide: StoryMediaService,
+          inject: [PrismaStoryMediaAdapter],
+          useFactory: (media: PrismaStoryMediaAdapter) =>
+            new StoryMediaService(media),
+        },
         {
           provide: PrismaCmsAdapter,
           inject: [
@@ -77,9 +97,9 @@ export class CoachSiteModule {
         },
         {
           provide: SiteCmsService,
-          inject: [PrismaCmsAdapter],
-          useFactory: (cms: PrismaCmsAdapter) =>
-            new SiteCmsService(cms, new DraftContentAdapter(cms)),
+          inject: [PrismaCmsAdapter, StoryMediaService],
+          useFactory: (cms: PrismaCmsAdapter, media: StoryMediaService) =>
+            new SiteCmsService(cms, new DraftContentAdapter(cms), media),
         },
         {
           provide: PUBLICATION_PRESENTATION_CONFIG,

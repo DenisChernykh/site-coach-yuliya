@@ -175,6 +175,17 @@ enum TelegramDeliveryStatus {
   FAILED
 }
 
+model StoryMedia {
+  id String @id @default(uuid()) @db.Uuid
+  name String @db.VarChar(200)
+  mimeType String @map("mime_type") @db.VarChar(40)
+  size Int
+  data Bytes
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("story_media")
+}
+
 model SiteContent {
   id        String   @id
   settings  Json

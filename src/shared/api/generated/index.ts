@@ -8,3 +8,4 @@ export * from './seo/seo.ts';
 export * from './services/services.ts';
 export * from './site/site.ts';
 export * from './social-links/social-links.ts';
+export * from './story-media/story-media.ts';

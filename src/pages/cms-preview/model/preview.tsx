@@ -1,6 +1,7 @@
 import { MobileNavigation } from '@/features/mobile-navigation';
 import { TelegramLink } from '@/widgets/contact';
 import { SocialLinks } from '@/widgets/social-links';
+import { Stories } from '@/widgets/stories';
 import { createRoot, type Root } from 'react-dom/client';
 import {
   ArticleCard,
@@ -265,6 +266,15 @@ export function startPreview() {
           .querySelectorAll<HTMLElement>('[data-cms-react]')
           .forEach((node) => {
             const type = node.dataset.cmsReact;
+            if (type === 'stories')
+              render(
+                node,
+                <Stories
+                  stories={content.home.stories ?? []}
+                  mediaBaseUrl={parentOrigin}
+                  preview
+                />,
+              );
             if (type === 'programs')
               render(
                 node,

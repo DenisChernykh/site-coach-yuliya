@@ -7,6 +7,7 @@ import {
   ConsultationRateLimitError,
   DeliveryRetryConflictError,
   InvalidProgramError,
+  InvalidStoryMediaError,
   SiteContentConflictError,
   SiteRecordNotFoundError,
 } from '../application/site-errors'
@@ -14,6 +15,17 @@ import {
 export const COACH_SITE_HTTP_PROBLEMS: HttpProblemContribution = Object.freeze({
   definitions: Object.freeze([INVALID_PROGRAM_PROBLEM]),
   map(error: unknown): HttpProblemMapping | undefined {
+    if (error instanceof InvalidStoryMediaError)
+      return {
+        code: 'VALIDATION_FAILED',
+        errors: [
+          {
+            pointer: '/home/stories',
+            code: 'invalid_media',
+            detail: 'Invalid media file or story reference.',
+          },
+        ],
+      }
     if (error instanceof SiteRecordNotFoundError) return { code: 'NOT_FOUND' }
     if (
       error instanceof SiteContentConflictError ||

@@ -13,6 +13,7 @@ import type { ConcernDto } from './concernDto.ts';
 import type { HeroDto } from './heroDto.ts';
 import type { ProductDto } from './productDto.ts';
 import type { StepDto } from './stepDto.ts';
+import type { StoryGroupDto } from './storyGroupDto.ts';
 
 export type HomePageDto = {
   about: AboutDto;
@@ -23,4 +24,6 @@ export type HomePageDto = {
   hero: HeroDto;
   process: StepDto[];
   products: ProductDto[];
+  /** @maxItems 20 */
+  stories?: StoryGroupDto[];
 };

@@ -70,6 +70,73 @@ function show(
 }
 
 describe('unified CMS editing', () => {
+  it('keeps story order and hidden slides in the saved draft', async () => {
+    const id = 'b66d592e-b32e-4ea0-9876-74cacd4f5a25'
+    const fixture = createCmsFixture()
+    const slide = {
+      id,
+      mediaId: id,
+      type: 'image' as const,
+      caption: 'Первая подпись',
+      durationSeconds: 5,
+      linkLabel: '',
+      linkUrl: '',
+      enabled: true,
+    }
+    const first = {
+      id,
+      title: 'Знакомство',
+      coverMediaId: id,
+      enabled: true,
+      slides: [
+        slide,
+        {
+          ...slide,
+          id: '06246e15-0669-427b-93c6-ab54c8d3f4cc',
+          caption: 'Вторая подпись',
+        },
+      ],
+    }
+    const second = {
+      ...first,
+      id: 'bca228ab-149d-4783-97fa-a6908dbd93ac',
+      title: 'Отзывы',
+      slides: [],
+    }
+    const editor = show('?settings=stories', {
+      home: { ...fixture.content.home, stories: [first, second] },
+    })
+    try {
+      const user = userEvent.setup()
+      await screen.findByLabelText('Название подборки')
+      await user.click(
+        screen.getByRole('button', { name: 'Опустить подборку «Знакомство»' }),
+      )
+      await user.click(screen.getByRole('button', { name: 'Опустить слайд 1' }))
+      await user.click(
+        screen.getByRole('switch', { name: 'Показывать слайд 1' }),
+      )
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      const stories = editor.writes[0].content.home.stories!
+      expect(stories.map((story) => story.title)).toEqual([
+        'Отзывы',
+        'Знакомство',
+      ])
+      expect(
+        stories[1].slides.map((item) => [item.caption, item.enabled]),
+      ).toEqual([
+        ['Вторая подпись', false],
+        ['Первая подпись', true],
+      ])
+    } finally {
+      editor.dispose()
+    }
+  })
   it('explains page and section destinations and preserves a manually edited anchor in the draft', async () => {
     const editor = show('?settings=site')
     try {

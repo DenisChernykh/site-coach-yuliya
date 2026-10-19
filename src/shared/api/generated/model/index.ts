@@ -40,5 +40,8 @@ export * from './siteSettingsDto.ts';
 export * from './socialLinkDto.ts';
 export * from './socialLinkDtoId.ts';
 export * from './stepDto.ts';
+export * from './storyGroupDto.ts';
+export * from './storySlideDto.ts';
+export * from './storySlideDtoType.ts';
 export * from './validationProblemResponseDto.ts';
 export * from './validationProblemResponseDtoCode.ts';

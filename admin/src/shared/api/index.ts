@@ -1,4 +1,6 @@
 import '@/shared/config'
+export { adminUploadStoryMedia } from './generated/story-media/story-media'
+export type { StoryGroupDto, StorySlideDto } from './generated/model'
 export {
   adminGetCms,
   adminSaveCmsDraft,

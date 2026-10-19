@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { randomBytes } from 'node:crypto'
+import { randomBytes, randomUUID } from 'node:crypto'
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -134,6 +134,169 @@ async function publishDraft() {
       true,
     )
   ).body
+}
+
+async function checkStories() {
+  const png = await readFile('../design/assets/portrait.png')
+  const upload = {
+    name: 'portrait.png',
+    mimeType: 'image/png',
+    base64: png.toString('base64'),
+  }
+  await http('/v1/admin/story-media', 'POST', upload, 401)
+  const noCsrf = await fetch(`${origin}/v1/admin/story-media`, {
+    method: 'POST',
+    headers: {
+      Origin: origin,
+      Cookie: cookie,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(upload),
+  })
+  assert.equal(noCsrf.status, 403)
+  assert.ok(noCsrf.headers.get('content-security-policy'))
+  const image = (await http('/v1/admin/story-media', 'POST', upload, 201, true))
+    .body
+  assert.equal(image.size, png.length)
+  assert.equal(image.type, 'image')
+  const bytes = await readFile('test/fixtures/stories/short.webm')
+  const video = (
+    await http(
+      '/v1/admin/story-media',
+      'POST',
+      {
+        name: 'short.webm',
+        mimeType: 'video/webm',
+        base64: bytes.toString('base64'),
+      },
+      201,
+      true,
+    )
+  ).body
+  await http(
+    '/v1/admin/story-media',
+    'POST',
+    { ...upload, base64: Buffer.from('<svg/>').toString('base64') },
+    422,
+    true,
+  )
+  const full = await fetch(`${origin}/v1/story-media/${image.id}`)
+  assert.equal(full.status, 200)
+  assert.equal(full.headers.get('content-type'), 'image/png')
+  assert.equal(full.headers.get('cross-origin-resource-policy'), 'cross-origin')
+  assert.deepEqual(Buffer.from(await full.arrayBuffer()), png)
+  for (const [range, start, end] of [
+    ['bytes=0-31', 0, 31],
+    ['bytes=100-', 100, bytes.length - 1],
+    ['bytes=-12', bytes.length - 12, bytes.length - 1],
+  ]) {
+    const response = await fetch(`${origin}/v1/story-media/${video.id}`, {
+      headers: { Range: range },
+    })
+    assert.equal(response.status, 206)
+    assert.equal(
+      response.headers.get('content-range'),
+      `bytes ${start}-${end}/${bytes.length}`,
+    )
+    assert.deepEqual(
+      Buffer.from(await response.arrayBuffer()),
+      bytes.subarray(start, end + 1),
+    )
+  }
+  const invalid = await fetch(`${origin}/v1/story-media/${video.id}`, {
+    headers: { Range: `bytes=${bytes.length}-` },
+  })
+  assert.equal(invalid.status, 416)
+  assert.equal(invalid.headers.get('cache-control'), 'no-store')
+  const workspace = (await http('/v1/admin/cms', 'GET', undefined, 200, true))
+    .body
+  const content = structuredClone(workspace.content)
+  delete content.articles
+  delete content.programs
+  delete content.seo
+  const photoSlide = {
+    id: randomUUID(),
+    mediaId: image.id,
+    type: 'image',
+    caption: 'Фото из админки',
+    durationSeconds: 30,
+    enabled: true,
+    linkLabel: 'Узнать о коучинге',
+    linkUrl: '/coaching/',
+  }
+  const videoSlide = {
+    ...photoSlide,
+    id: randomUUID(),
+    mediaId: video.id,
+    type: 'video',
+    caption: 'Видео из админки',
+    linkLabel: '',
+    linkUrl: '',
+  }
+  const first = {
+    id: randomUUID(),
+    title: 'Знакомство',
+    coverMediaId: image.id,
+    enabled: true,
+    slides: [
+      photoSlide,
+      videoSlide,
+      { ...photoSlide, id: randomUUID(), enabled: false },
+    ],
+  }
+  const second = {
+    ...first,
+    id: randomUUID(),
+    title: 'Как проходят встречи',
+    slides: [{ ...photoSlide, id: randomUUID() }],
+  }
+  const hidden = {
+    ...first,
+    id: randomUUID(),
+    title: 'Скрытая подборка',
+    enabled: false,
+  }
+  content.home.stories = [second, hidden, first]
+  const previous = (await http('/v1/home')).body.stories
+  const saved = (
+    await http(
+      '/v1/admin/cms/draft',
+      'PUT',
+      { revision: workspace.revision, content },
+      200,
+      true,
+    )
+  ).body
+  assert.deepEqual((await http('/v1/home')).body.stories, previous)
+  assert.deepEqual(
+    (await http('/v1/admin/cms', 'GET', undefined, 200, true)).body.content.home
+      .stories,
+    content.home.stories,
+  )
+  const broken = structuredClone(content)
+  broken.home.stories[0].coverMediaId = video.id
+  await http(
+    '/v1/admin/cms/draft',
+    'PUT',
+    { revision: saved.revision, content: broken },
+    422,
+    true,
+  )
+  await publishDraft()
+  const published = (await http('/v1/home')).body.stories
+  assert.deepEqual(
+    published.map((group) => group.title),
+    [second.title, first.title],
+  )
+  assert.equal(published[1].slides.length, 2)
+  assert.equal(
+    (await http('/v1/admin/cms', 'GET', undefined, 200, true)).body.content.home
+      .stories.length,
+    3,
+  )
+  process.stdout.write(
+    'PASS authenticated media uploads, actual byte checks, video ranges, persistent drafts, ordered publication and hidden stories\n',
+  )
 }
 
 async function checkNavigationMigration() {
@@ -419,7 +582,10 @@ try {
   delete pageContent.seo
   const changed = structuredClone(pageContent)
   changed.home.hero.description = 'Только в черновике'
-  const section = changed.pages[0].blocks.splice(2, 1)[0]
+  const section = changed.pages[0].blocks.splice(
+    changed.pages[0].blocks.findIndex((block) => block.id === 'about'),
+    1,
+  )[0]
   changed.pages[0].blocks.splice(1, 0, section)
   changed.pages[0].blocks.find((b) => b.id === 'concerns').enabled = false
   const beforeCms = (
@@ -1090,6 +1256,7 @@ try {
   process.stdout.write(
     'PASS persisted form sources, admin list/detail/update, historical fallback and first-source deduplication\n',
   )
+  await checkStories()
   await http('/v1/auth/logout', 'POST', {}, 204, true)
   await http('/v1/admin/consultations', 'GET', undefined, 401, true)
   assert.ok(!logs.includes(credentials.password))

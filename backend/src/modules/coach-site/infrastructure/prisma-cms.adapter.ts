@@ -10,6 +10,7 @@ import {
 import {
   initialPages,
   validPages,
+  withStoriesBlock,
   type CmsDocument,
   type CmsPage,
   type CmsPageContent,
@@ -92,7 +93,10 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     return {
       revision: row.revision,
       publishedRevision: row.publishedRevision,
-      content: json<CmsDocument>(row.content),
+      content: {
+        ...json<CmsDocument>(row.content),
+        pages: withStoriesBlock(json<CmsDocument>(row.content).pages),
+      },
     }
   }
   public get(): Promise<CmsWorkspace> {
@@ -110,7 +114,9 @@ export class PrismaCmsAdapter implements SiteCmsPort {
       }),
     )
     if (!site) throw new SiteRecordNotFoundError()
-    return site.pageLayout ? json<CmsPage[]>(site.pageLayout) : initialPages()
+    return site.pageLayout
+      ? withStoriesBlock(json<CmsPage[]>(site.pageLayout))
+      : initialPages()
   }
   public mutate<T>(change: (document: CmsDocument) => T): Promise<T> {
     return this.transaction.run(() =>

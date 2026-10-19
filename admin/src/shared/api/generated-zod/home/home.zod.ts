@@ -10,6 +10,23 @@ import * as zod from 'zod'
 /**
  * @summary Контент главной
  */
+export const getHomePage200ResponseStoriesItemSlidesItemCaptionMax = 1000
+
+export const getHomePage200ResponseStoriesItemSlidesItemDurationSecondsMin = 2
+export const getHomePage200ResponseStoriesItemSlidesItemDurationSecondsMax = 30
+
+export const getHomePage200ResponseStoriesItemSlidesItemLinkLabelMax = 80
+
+export const getHomePage200ResponseStoriesItemSlidesItemLinkUrlMax = 2000
+
+export const getHomePage200ResponseStoriesItemSlidesItemLinkUrlRegExp =
+  new RegExp('^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$')
+export const getHomePage200ResponseStoriesItemSlidesMax = 30
+
+export const getHomePage200ResponseStoriesItemTitleMax = 80
+
+export const getHomePage200ResponseStoriesMax = 20
+
 export const GetHomePage200Response = zod.strictObject({
   about: zod.strictObject({
     eyebrow: zod.string(),
@@ -72,4 +89,48 @@ export const GetHomePage200Response = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  stories: zod
+    .array(
+      zod.strictObject({
+        coverMediaId: zod.uuid(),
+        enabled: zod.boolean(),
+        id: zod.uuid(),
+        slides: zod
+          .array(
+            zod.strictObject({
+              caption: zod
+                .string()
+                .max(getHomePage200ResponseStoriesItemSlidesItemCaptionMax),
+              durationSeconds: zod
+                .number()
+                .min(
+                  getHomePage200ResponseStoriesItemSlidesItemDurationSecondsMin,
+                )
+                .max(
+                  getHomePage200ResponseStoriesItemSlidesItemDurationSecondsMax,
+                ),
+              enabled: zod.boolean(),
+              id: zod.uuid(),
+              linkLabel: zod
+                .string()
+                .max(getHomePage200ResponseStoriesItemSlidesItemLinkLabelMax),
+              linkUrl: zod
+                .string()
+                .max(getHomePage200ResponseStoriesItemSlidesItemLinkUrlMax)
+                .regex(
+                  getHomePage200ResponseStoriesItemSlidesItemLinkUrlRegExp,
+                ),
+              mediaId: zod.uuid(),
+              type: zod.enum(['image', 'video']),
+            }),
+          )
+          .max(getHomePage200ResponseStoriesItemSlidesMax),
+        title: zod
+          .string()
+          .min(1)
+          .max(getHomePage200ResponseStoriesItemTitleMax),
+      }),
+    )
+    .max(getHomePage200ResponseStoriesMax)
+    .optional(),
 })

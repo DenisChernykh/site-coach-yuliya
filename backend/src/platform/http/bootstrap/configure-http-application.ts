@@ -40,6 +40,11 @@ export function configureHttpApplication(
   requestContext: RequestContext,
   requestTracker?: ActiveRequestTracker,
   accessLogMiddleware?: RequestHandler,
+  jsonBodyLimits: readonly {
+    method: string
+    path: string
+    limitBytes: number
+  }[] = [],
 ): void {
   app.use(createRequestContextMiddleware(requestContext))
   if (accessLogMiddleware !== undefined) app.use(accessLogMiddleware)
@@ -63,6 +68,16 @@ export function configureHttpApplication(
   app.use(createTrafficGateMiddleware(lifecycle))
   if (requestTracker !== undefined) app.use(requestTracker.middleware())
   app.use(cookieParser())
+  for (const override of jsonBodyLimits) {
+    app.useBodyParser('json', {
+      limit: override.limitBytes,
+      type: (request) =>
+        request.method === override.method &&
+        request.url?.split('?')[0] === override.path &&
+        request.headers['content-type']?.split(';')[0]?.trim().toLowerCase() ===
+          'application/json',
+    })
+  }
   app.useBodyParser('json', { limit: config.http.jsonBodyLimitBytes })
   app.useBodyParser('urlencoded', {
     extended: false,

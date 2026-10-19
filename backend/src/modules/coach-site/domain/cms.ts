@@ -12,6 +12,7 @@ import type {
 export const pageBlocks = {
   home: [
     'hero',
+    'stories',
     'concerns',
     'about',
     'approach',
@@ -56,6 +57,20 @@ export const initialPages = (): CmsPage[] =>
     key: key as CmsPageKey,
     blocks: ids.map((id) => ({ id, enabled: true })),
   }))
+export function withStoriesBlock(pages: CmsPage[]): CmsPage[] {
+  return pages.map((page) =>
+    page.key === 'home' && !page.blocks.some((block) => block.id === 'stories')
+      ? {
+          ...page,
+          blocks: [
+            page.blocks[0]!,
+            { id: 'stories', enabled: true },
+            ...page.blocks.slice(1),
+          ],
+        }
+      : page,
+  )
+}
 export function validPages(pages: CmsPage[]): boolean {
   return (
     pages.length === Object.keys(pageBlocks).length &&

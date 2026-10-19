@@ -1,4 +1,5 @@
 import type { ConsultationSource } from './consultation'
+import type { StoryGroup } from './stories'
 
 export interface NavigationItemDto {
   readonly label: string
@@ -97,6 +98,7 @@ export interface ProductDto {
 }
 
 export interface HomePageDto {
+  readonly stories?: StoryGroup[]
   readonly hero: HeroDto
   readonly concerns: ConcernDto[]
   readonly about: AboutDto

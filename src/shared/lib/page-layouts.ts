@@ -3,6 +3,7 @@ import type { CmsPageDto } from '../api/generated/model';
 const blocks = {
   home: [
     'hero',
+    'stories',
     'concerns',
     'about',
     'approach',

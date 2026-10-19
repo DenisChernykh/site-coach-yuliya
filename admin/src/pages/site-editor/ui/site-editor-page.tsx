@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useBlocker, useSearchParams } from 'react-router'
 import { Tabs } from '@base-ui/react/tabs'
-import { FileText, Settings, ContactRound } from 'lucide-react'
+import { FileText, Settings, ContactRound, CirclePlay } from 'lucide-react'
 import { useCms } from '@/entities/site-content'
 import {
   ContentFields,
+  StoriesEditor,
   ContactFields,
   contactLinks,
   isSocialUrl,
@@ -57,16 +58,18 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const initialSection =
     initialPage.blocks.find((b) => b.id === params.get('section'))?.id ?? 'hero'
   const initialSettings =
-    params.get('settings') === 'site'
-      ? 'site'
-      : params.get('settings') === 'contacts'
-        ? 'contacts'
-        : null
+    params.get('settings') === 'stories'
+      ? 'stories'
+      : params.get('settings') === 'site'
+        ? 'site'
+        : params.get('settings') === 'contacts'
+          ? 'contacts'
+          : null
   const [snapshot, setSnapshot] = useState(initial)
   const [content, setContent] = useState<CmsDocumentDto>(initial.content)
   const [page, setPage] = useState<keyof typeof pageLabels>(initialPage.key)
   const [selected, setSelected] = useState(initialSection)
-  const [global, setGlobal] = useState<'site' | 'contacts' | null>(
+  const [global, setGlobal] = useState<'site' | 'contacts' | 'stories' | null>(
     initialSettings,
   )
   const [expanded, setExpanded] = useState(false)
@@ -77,6 +80,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const [error, setError] = useState('')
   const [conflict, setConflict] = useState(false)
   const [dirty, setDirty] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const { save, publish, pending } = useCmsActions()
   const blocker = useBlocker(dirty)
   const links = contactLinks(content.contacts, content.socials)
@@ -180,6 +184,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
     ? {
         site: 'Настройки сайта',
         contacts: 'Контакты и социальные сети',
+        stories: 'Сторис',
       }[global]
     : blockLabels[block.id]
   return (
@@ -198,17 +203,22 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
-            disabled={!dirty || pending}
+            disabled={!dirty || pending || uploading}
             onClick={saveDraft}
           >
             Сохранить черновик
           </Button>
-          <Button variant="outline" onClick={() => setExpanded(!expanded)}>
+          <Button
+            variant="outline"
+            disabled={uploading}
+            onClick={() => setExpanded(!expanded)}
+          >
             {expanded ? 'Вернуться к редактированию' : 'Предпросмотр'}
           </Button>
           <Button
             disabled={
               dirty ||
+              uploading ||
               pending ||
               snapshot.revision === snapshot.publishedRevision
             }
@@ -283,8 +293,13 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
       <Tabs.Root
         value={global ?? 'pages'}
         onValueChange={(value) => {
+          if (uploading) return
           if (value === 'pages') setGlobal(null)
           else if (value === 'site' || value === 'contacts') setGlobal(value)
+          else if (value === 'stories') {
+            setGlobal('stories')
+            setPage('home')
+          }
         }}
         className="min-w-0 space-y-5"
       >
@@ -296,6 +311,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
             {(
               [
                 ['pages', 'Страницы', FileText],
+                ['stories', 'Сторис', CirclePlay],
                 ['site', 'Настройки сайта', Settings],
                 ['contacts', 'Контакты и соцсети', ContactRound],
               ] as const
@@ -433,6 +449,35 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                           }
                         />
                       </>
+                    ) : block.id === 'stories' ? (
+                      <div className="space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                          Обложки, фото, видео и порядок слайдов.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setGlobal('stories')
+                            setPage('home')
+                          }}
+                        >
+                          Редактировать сторис
+                        </Button>
+                        <TextField
+                          label="Заголовок секции"
+                          value={block.title ?? ''}
+                          placeholder="Знакомство в историях"
+                          onChange={(event) =>
+                            blocks(
+                              current.blocks.map((item) =>
+                                item.id === block.id
+                                  ? { ...item, title: event.target.value }
+                                  : item,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
                     ) : block.id === 'faq' ? (
                       <ContentFields
                         value={content.faq as unknown as ContentValue}
@@ -516,6 +561,22 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                     )}
                   </fieldset>
                 </aside>
+              </div>
+            </Tabs.Panel>
+            <Tabs.Panel value="stories" className="min-w-0">
+              <div className="max-w-5xl py-2">
+                <StoriesEditor
+                  value={content.home.stories ?? []}
+                  disabled={pending}
+                  onUploadingChange={setUploading}
+                  onChange={(stories) =>
+                    change({ ...content, home: { ...content.home, stories } })
+                  }
+                />
+                <p className="mt-6 text-sm text-muted-foreground">
+                  Проверьте результат кнопкой «Предпросмотр», затем сохраните
+                  черновик и опубликуйте.
+                </p>
               </div>
             </Tabs.Panel>
             <Tabs.Panel value="site" className="min-w-0">

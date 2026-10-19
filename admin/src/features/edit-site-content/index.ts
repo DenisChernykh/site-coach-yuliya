@@ -1,4 +1,5 @@
 export { ArticleForm } from './ui/article-form'
+export { StoriesEditor } from './ui/stories-editor'
 export { ProgramForm } from './ui/program-form'
 export { DeleteContentButton } from './ui/delete-content-button'
 export { ContentFields } from './ui/content-fields'

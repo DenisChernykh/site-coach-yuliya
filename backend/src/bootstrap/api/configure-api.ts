@@ -100,6 +100,13 @@ export async function configureApi(
       logger,
       correlation,
     }),
+    [
+      {
+        method: 'POST',
+        path: '/v1/admin/story-media',
+        limitBytes: 41 * 1024 * 1024,
+      },
+    ],
   )
   const docsPolicy =
     config.docs.mode === 'protected'

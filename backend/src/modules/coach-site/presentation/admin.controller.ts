@@ -137,7 +137,7 @@ export class AdminContentController {
     summary: 'Сохранить главную страницу',
   })
   public updateHome(@Body() input: HomePageDto): Promise<HomePageDto> {
-    return this.site.content.updateHome(input)
+    return this.site.updateHome(input)
   }
 
   @Get('faq')

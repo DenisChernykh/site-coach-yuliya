@@ -1111,6 +1111,14 @@
               "$ref": "#/components/schemas/ProductDto"
             },
             "type": "array"
+          },
+          "stories": {
+            "items": {
+              "$ref": "#/components/schemas/StoryGroupDto"
+            },
+            "maxItems": 20,
+            "type": "array",
+            "uniqueItems": true
           }
         },
         "required": [
@@ -1838,6 +1846,121 @@
         ],
         "type": "object"
       },
+      "StoryGroupDto": {
+        "properties": {
+          "coverMediaId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "slides": {
+            "items": {
+              "$ref": "#/components/schemas/StorySlideDto"
+            },
+            "maxItems": 30,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "title": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "coverMediaId",
+          "enabled",
+          "slides"
+        ],
+        "type": "object"
+      },
+      "StoryMediaDto": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "type": {
+            "enum": [
+              "image",
+              "video"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mimeType",
+          "type",
+          "size"
+        ],
+        "type": "object"
+      },
+      "StorySlideDto": {
+        "properties": {
+          "caption": {
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "durationSeconds": {
+            "maximum": 30,
+            "minimum": 2,
+            "type": "number"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "linkLabel": {
+            "maxLength": 80,
+            "type": "string"
+          },
+          "linkUrl": {
+            "maxLength": 2000,
+            "pattern": "^(?:$|https://[^\\s]+|/(?!/)[^\\s]*)$",
+            "type": "string"
+          },
+          "mediaId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "image",
+              "video"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mediaId",
+          "type",
+          "caption",
+          "durationSeconds",
+          "linkLabel",
+          "linkUrl",
+          "enabled"
+        ],
+        "type": "object"
+      },
       "TelegramDeliveryDto": {
         "properties": {
           "attempts": {
@@ -1906,6 +2029,37 @@
             "type": "string"
           }
         },
+        "type": "object"
+      },
+      "UploadStoryMediaDto": {
+        "properties": {
+          "base64": {
+            "format": "byte",
+            "maxLength": 41943040,
+            "minLength": 4,
+            "type": "string"
+          },
+          "mimeType": {
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp",
+              "video/mp4",
+              "video/webm"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "mimeType",
+          "base64"
+        ],
         "type": "object"
       },
       "ValidationProblemResponseDto": {
@@ -5536,6 +5690,149 @@
         ]
       }
     },
+    "/v1/admin/story-media": {
+      "post": {
+        "operationId": "adminUploadStoryMedia",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadStoryMediaDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoryMediaDto"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "AUTHENTICATION_REQUIRED": {
+                    "summary": "Authentication required",
+                    "value": {
+                      "code": "AUTHENTICATION_REQUIRED",
+                      "detail": "Valid authentication is required for this request.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 401,
+                      "title": "Authentication required",
+                      "type": "https://nest-js-starter.invalid/problems/authentication-required"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Authentication required"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "AUTHORIZATION_DENIED": {
+                    "summary": "Authorization denied",
+                    "value": {
+                      "code": "AUTHORIZATION_DENIED",
+                      "detail": "The authenticated principal cannot perform this request.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 403,
+                      "title": "Authorization denied",
+                      "type": "https://nest-js-starter.invalid/problems/authorization-denied"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Authorization denied"
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "PAYLOAD_TOO_LARGE": {
+                    "summary": "Payload too large",
+                    "value": {
+                      "code": "PAYLOAD_TOO_LARGE",
+                      "detail": "The request payload exceeds the configured limit.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 413,
+                      "title": "Payload too large",
+                      "type": "https://nest-js-starter.invalid/problems/payload-too-large"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Payload too large"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "Validation failed",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "detail": "One or more request fields are invalid.",
+                      "errors": [
+                        {
+                          "code": "invalid_email",
+                          "detail": "The field must be a valid email address.",
+                          "pointer": "/email"
+                        }
+                      ],
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 422,
+                      "title": "Validation failed",
+                      "type": "https://nest-js-starter.invalid/problems/validation-failed"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemResponseDto"
+                }
+              }
+            },
+            "description": "Validation failed"
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Загрузить фото или видео для сторис",
+        "tags": [
+          "story-media"
+        ]
+      }
+    },
     "/v1/articles": {
       "get": {
         "operationId": "getArticles",
@@ -8849,6 +9146,135 @@
           "social-links"
         ]
       }
+    },
+    "/v1/story-media/{id}": {
+      "get": {
+        "operationId": "getStoryMedia",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Single byte range, for example bytes=0-1023 or bytes=-1024",
+            "in": "header",
+            "name": "Range",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "video/mp4": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "video/webm": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Media bytes"
+          },
+          "206": {
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "video/mp4": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "video/webm": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Partial media bytes"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "NOT_FOUND": {
+                    "summary": "Resource not found",
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "detail": "The requested resource does not exist.",
+                      "instance": "urn:request:01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "requestId": "01J3G1TQ9YQ7R7FQZ5P6M2K8A4",
+                      "status": 404,
+                      "title": "Resource not found",
+                      "type": "https://nest-js-starter.invalid/problems/not-found"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemResponseDto"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "416": {
+            "description": "Requested range not satisfiable"
+          }
+        },
+        "security": [],
+        "summary": "Фото или видео сторис с поддержкой Range",
+        "tags": [
+          "story-media"
+        ]
+      }
     }
   },
   "servers": [
@@ -8917,6 +9343,10 @@
     {
       "description": "Черновики и явная публикация контента",
       "name": "cms"
+    },
+    {
+      "description": "Фото и видео для сторис",
+      "name": "story-media"
     },
     {
       "description": "Опубликованный порядок секций страниц",

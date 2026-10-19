@@ -1,5 +1,6 @@
 export const blockLabels: Record<string, string> = {
   hero: 'Первый экран',
+  stories: 'Сторис',
   concerns: 'Запросы',
   about: 'Знакомство',
   approach: 'Подход',

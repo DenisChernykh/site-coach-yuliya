@@ -1,4 +1,5 @@
 import { socialNetworks, type SocialNetwork } from '../domain/content'
+import { StoryGroupDto } from './stories.dto'
 import {
   consultationSources,
   type ConsultationSource,
@@ -10,6 +11,7 @@ import {
   IsDefined,
   IsArray,
   ArrayMaxSize,
+  ArrayUnique,
   IsString,
   IsBoolean,
   IsInt,
@@ -247,6 +249,18 @@ export class ProductDto {
 }
 
 export class HomePageDto {
+  @ApiPropertyOptional({
+    type: () => [StoryGroupDto],
+    maxItems: 20,
+    uniqueItems: true,
+  })
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsArray()
+  @ArrayMaxSize(20)
+  @ArrayUnique((story: StoryGroupDto) => story.id)
+  @ValidateNested({ each: true })
+  @Type(() => StoryGroupDto)
+  public readonly stories?: StoryGroupDto[]
   @IsDefined()
   @ValidateNested()
   @Type(() => HeroDto)
