@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import type { StoryGroupDto } from '@/shared/api';
 import { storyMediaUrl } from '@/shared/lib/story-media';
+import { withBase } from '@/shared/routes';
 import { storyEntries } from '../model/stories';
 import { storyGesture } from '../model/navigation';
 import styles from './stories.module.css';
@@ -350,7 +351,7 @@ function StoryPlayer({
       <div className={styles.caption}>
         {slide.caption && <p>{slide.caption}</p>}
         {slide.linkUrl && slide.linkLabel && (
-          <a href={slide.linkUrl} onFocus={() => setPaused(true)}>
+          <a href={withBase(slide.linkUrl)} onFocus={() => setPaused(true)}>
             {slide.linkLabel} <span aria-hidden="true">↗</span>
           </a>
         )}

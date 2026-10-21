@@ -8,12 +8,14 @@ import type {
   SocialLinkDto,
 } from '../generated/model';
 import initialContent from '../../../../backend/content/initial.json';
+import { demoStories } from './stories';
 
 export const seoSettings = initialContent.seo satisfies SeoSettingsDto;
 
 export const siteSettings = initialContent.settings satisfies SiteSettingsDto;
 
 export const homePage = {
+  stories: demoStories,
   hero: {
     eyebrow: 'От поиска себя к проявленности',
     headingLines: ['Создай', 'инструкцию', 'к себе.'],
