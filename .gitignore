@@ -20,3 +20,7 @@ dist-pages/
 .playwright-cli/
 .demo/
 /output/playwright/
+.env.local
+.env.production
+.dev.vars
+!*.example
