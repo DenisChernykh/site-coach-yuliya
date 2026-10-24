@@ -11,6 +11,7 @@ import { HttpAdapterHost } from '@nestjs/core'
 
 import { RequestContext } from '@/platform/http/context/request-context'
 import { REQUEST_ID_HEADER } from '@/platform/http/context/request-id'
+import { completeProtectedRequest } from '@/platform/http/policy/protected-request-completion'
 import {
   STRUCTURED_LOGGER,
   type StructuredLogger,
@@ -35,6 +36,7 @@ export class ProblemExceptionFilter implements ExceptionFilter<unknown> {
 
   /** Writes at most one response and one error record for an unexpected 5xx. */
   public catch(exception: unknown, host: ArgumentsHost): void {
+    completeProtectedRequest(host.switchToHttp().getRequest<object>())
     const { httpAdapter } = this.adapterHost
     const response = host.switchToHttp().getResponse<unknown>()
     if (httpAdapter.isHeadersSent(response)) return

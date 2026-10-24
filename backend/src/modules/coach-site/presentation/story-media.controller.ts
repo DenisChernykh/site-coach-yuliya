@@ -49,10 +49,14 @@ export class AdminStoryMediaController {
   @ApiBody({ type: UploadStoryMediaDto })
   @ApiCreatedResponse({ type: StoryMediaDto })
   @ApiProblemResponses(
+    'MALFORMED_REQUEST',
     'VALIDATION_FAILED',
     'PAYLOAD_TOO_LARGE',
     'AUTHENTICATION_REQUIRED',
     'AUTHORIZATION_DENIED',
+    'UNSUPPORTED_MEDIA_TYPE',
+    'RATE_LIMIT_EXCEEDED',
+    'DEPENDENCY_UNAVAILABLE',
   )
   public upload(@Body() input: UploadStoryMediaDto): Promise<StoryMediaDto> {
     return this.media.upload(input)

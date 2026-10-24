@@ -9,6 +9,8 @@ import { createApiRuntimeConfig } from '@/platform/config/runtime-environment'
 import type { DatabaseLifecycle } from '@/platform/database/database.contracts'
 import { DATABASE_LIFECYCLE } from '@/platform/database/database.tokens'
 import { configureHttpApplication } from '@/platform/http/bootstrap/configure-http-application'
+import { PRE_BODY_ACCESS_POLICY } from '@/platform/http/policy/protected-json-body.contracts'
+import { STORY_MEDIA_UPLOAD } from '@/modules/coach-site/composition/story-media-upload.policy'
 import { ApplicationLifecycleState } from '@/platform/lifecycle/application-lifecycle.state'
 import type { RedisLifecycle } from '@/platform/redis/redis-lifecycle'
 import { REDIS_LIFECYCLE } from '@/platform/redis/redis.tokens'
@@ -102,9 +104,12 @@ export async function configureApi(
     }),
     [
       {
-        method: 'POST',
-        path: '/v1/admin/story-media',
-        limitBytes: 41 * 1024 * 1024,
+        ...STORY_MEDIA_UPLOAD,
+        accessPolicy: app.get(PRE_BODY_ACCESS_POLICY),
+        maxConcurrent: 2,
+        requestsPerWindow: 60,
+        windowMs: 60_000,
+        timeoutMs: config.http.requestTimeoutMs,
       },
     ],
   )

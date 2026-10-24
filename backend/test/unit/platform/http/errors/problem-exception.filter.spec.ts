@@ -102,7 +102,10 @@ function createFixture(headersSent = false): {
   const requestContext = new RequestContext()
   const logger = { write: jest.fn() }
   const host = {
-    switchToHttp: () => ({ getResponse: () => response }),
+    switchToHttp: () => ({
+      getResponse: () => response,
+      getRequest: () => ({}),
+    }),
   } as ArgumentsHost
   return {
     filter: new ProblemExceptionFilter(

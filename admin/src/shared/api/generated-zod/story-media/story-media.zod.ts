@@ -37,6 +37,40 @@ export const AdminUploadStoryMedia201Response = zod.strictObject({
   type: zod.enum(['image', 'video']),
 })
 
+export const adminUploadStoryMedia400ResponseStatusMin = 400
+export const adminUploadStoryMedia400ResponseStatusMax = 599
+
+export const AdminUploadStoryMedia400Response = zod.strictObject({
+  code: zod.enum([
+    'AUTHENTICATION_REQUIRED',
+    'AUTHORIZATION_DENIED',
+    'AUTH_ACCOUNT_ETAG_MALFORMED',
+    'AUTH_ACCOUNT_PRECONDITION_FAILED',
+    'AUTH_ACCOUNT_PRECONDITION_REQUIRED',
+    'AUTH_TOKEN_INVALID_OR_EXPIRED',
+    'CONFLICT',
+    'DEPENDENCY_UNAVAILABLE',
+    'EMAIL_VERIFICATION_REQUIRED',
+    'INTERNAL_ERROR',
+    'INVALID_PROGRAM',
+    'MALFORMED_REQUEST',
+    'NOT_FOUND',
+    'PAYLOAD_TOO_LARGE',
+    'RATE_LIMIT_EXCEEDED',
+    'UNSUPPORTED_MEDIA_TYPE',
+    'VALIDATION_FAILED',
+  ]),
+  detail: zod.string(),
+  instance: zod.string(),
+  requestId: zod.string(),
+  status: zod
+    .number()
+    .min(adminUploadStoryMedia400ResponseStatusMin)
+    .max(adminUploadStoryMedia400ResponseStatusMax),
+  title: zod.string(),
+  type: zod.url(),
+})
+
 export const adminUploadStoryMedia401ResponseStatusMin = 400
 export const adminUploadStoryMedia401ResponseStatusMax = 599
 
@@ -139,6 +173,40 @@ export const AdminUploadStoryMedia413Response = zod.strictObject({
   type: zod.url(),
 })
 
+export const adminUploadStoryMedia415ResponseStatusMin = 400
+export const adminUploadStoryMedia415ResponseStatusMax = 599
+
+export const AdminUploadStoryMedia415Response = zod.strictObject({
+  code: zod.enum([
+    'AUTHENTICATION_REQUIRED',
+    'AUTHORIZATION_DENIED',
+    'AUTH_ACCOUNT_ETAG_MALFORMED',
+    'AUTH_ACCOUNT_PRECONDITION_FAILED',
+    'AUTH_ACCOUNT_PRECONDITION_REQUIRED',
+    'AUTH_TOKEN_INVALID_OR_EXPIRED',
+    'CONFLICT',
+    'DEPENDENCY_UNAVAILABLE',
+    'EMAIL_VERIFICATION_REQUIRED',
+    'INTERNAL_ERROR',
+    'INVALID_PROGRAM',
+    'MALFORMED_REQUEST',
+    'NOT_FOUND',
+    'PAYLOAD_TOO_LARGE',
+    'RATE_LIMIT_EXCEEDED',
+    'UNSUPPORTED_MEDIA_TYPE',
+    'VALIDATION_FAILED',
+  ]),
+  detail: zod.string(),
+  instance: zod.string(),
+  requestId: zod.string(),
+  status: zod
+    .number()
+    .min(adminUploadStoryMedia415ResponseStatusMin)
+    .max(adminUploadStoryMedia415ResponseStatusMax),
+  title: zod.string(),
+  type: zod.url(),
+})
+
 export const adminUploadStoryMedia422ResponseErrorsItemCodeRegExp = new RegExp(
   '^[a-z][a-z0-9_]*$',
 )
@@ -185,6 +253,74 @@ export const AdminUploadStoryMedia422Response = zod.strictObject({
     .number()
     .min(adminUploadStoryMedia422ResponseStatusMin)
     .max(adminUploadStoryMedia422ResponseStatusMax),
+  title: zod.string(),
+  type: zod.url(),
+})
+
+export const adminUploadStoryMedia429ResponseStatusMin = 400
+export const adminUploadStoryMedia429ResponseStatusMax = 599
+
+export const AdminUploadStoryMedia429Response = zod.strictObject({
+  code: zod.enum([
+    'AUTHENTICATION_REQUIRED',
+    'AUTHORIZATION_DENIED',
+    'AUTH_ACCOUNT_ETAG_MALFORMED',
+    'AUTH_ACCOUNT_PRECONDITION_FAILED',
+    'AUTH_ACCOUNT_PRECONDITION_REQUIRED',
+    'AUTH_TOKEN_INVALID_OR_EXPIRED',
+    'CONFLICT',
+    'DEPENDENCY_UNAVAILABLE',
+    'EMAIL_VERIFICATION_REQUIRED',
+    'INTERNAL_ERROR',
+    'INVALID_PROGRAM',
+    'MALFORMED_REQUEST',
+    'NOT_FOUND',
+    'PAYLOAD_TOO_LARGE',
+    'RATE_LIMIT_EXCEEDED',
+    'UNSUPPORTED_MEDIA_TYPE',
+    'VALIDATION_FAILED',
+  ]),
+  detail: zod.string(),
+  instance: zod.string(),
+  requestId: zod.string(),
+  status: zod
+    .number()
+    .min(adminUploadStoryMedia429ResponseStatusMin)
+    .max(adminUploadStoryMedia429ResponseStatusMax),
+  title: zod.string(),
+  type: zod.url(),
+})
+
+export const adminUploadStoryMedia503ResponseStatusMin = 400
+export const adminUploadStoryMedia503ResponseStatusMax = 599
+
+export const AdminUploadStoryMedia503Response = zod.strictObject({
+  code: zod.enum([
+    'AUTHENTICATION_REQUIRED',
+    'AUTHORIZATION_DENIED',
+    'AUTH_ACCOUNT_ETAG_MALFORMED',
+    'AUTH_ACCOUNT_PRECONDITION_FAILED',
+    'AUTH_ACCOUNT_PRECONDITION_REQUIRED',
+    'AUTH_TOKEN_INVALID_OR_EXPIRED',
+    'CONFLICT',
+    'DEPENDENCY_UNAVAILABLE',
+    'EMAIL_VERIFICATION_REQUIRED',
+    'INTERNAL_ERROR',
+    'INVALID_PROGRAM',
+    'MALFORMED_REQUEST',
+    'NOT_FOUND',
+    'PAYLOAD_TOO_LARGE',
+    'RATE_LIMIT_EXCEEDED',
+    'UNSUPPORTED_MEDIA_TYPE',
+    'VALIDATION_FAILED',
+  ]),
+  detail: zod.string(),
+  instance: zod.string(),
+  requestId: zod.string(),
+  status: zod
+    .number()
+    .min(adminUploadStoryMedia503ResponseStatusMin)
+    .max(adminUploadStoryMedia503ResponseStatusMax),
   title: zod.string(),
   type: zod.url(),
 })

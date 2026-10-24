@@ -18,6 +18,9 @@ import { createCorsOptions } from './cors-options'
 import { createTrafficGateMiddleware } from './traffic-gate.middleware'
 import { trustedProxySetting } from './trusted-proxy'
 import type { ActiveRequestTracker } from './active-request-tracker'
+import type { ProtectedJsonBody } from '../policy/protected-json-body.contracts'
+import { createProtectedJsonAdmission } from './protected-json-admission.middleware'
+import { ProtectedRequestCompletionInterceptor } from '../policy/protected-request-completion.interceptor'
 
 /** Applies the production API prefix and its infrastructure-route exclusions. */
 export function configureApiRouteMetadata(
@@ -40,11 +43,7 @@ export function configureHttpApplication(
   requestContext: RequestContext,
   requestTracker?: ActiveRequestTracker,
   accessLogMiddleware?: RequestHandler,
-  jsonBodyLimits: readonly {
-    method: string
-    path: string
-    limitBytes: number
-  }[] = [],
+  protectedJsonBodies: readonly ProtectedJsonBody[] = [],
 ): void {
   app.use(createRequestContextMiddleware(requestContext))
   if (accessLogMiddleware !== undefined) app.use(accessLogMiddleware)
@@ -68,14 +67,18 @@ export function configureHttpApplication(
   app.use(createTrafficGateMiddleware(lifecycle))
   if (requestTracker !== undefined) app.use(requestTracker.middleware())
   app.use(cookieParser())
-  for (const override of jsonBodyLimits) {
+  if (protectedJsonBodies.length > 0)
+    app.useGlobalInterceptors(new ProtectedRequestCompletionInterceptor())
+  for (const override of protectedJsonBodies) {
+    const admitted = new WeakSet<object>()
+    expressApplication.post(
+      override.path,
+      createProtectedJsonAdmission(override, admitted),
+    )
     app.useBodyParser('json', {
       limit: override.limitBytes,
-      type: (request) =>
-        request.method === override.method &&
-        request.url?.split('?')[0] === override.path &&
-        request.headers['content-type']?.split(';')[0]?.trim().toLowerCase() ===
-          'application/json',
+      inflate: false,
+      type: (request) => admitted.has(request),
     })
   }
   app.useBodyParser('json', { limit: config.http.jsonBodyLimitBytes })

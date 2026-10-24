@@ -664,7 +664,18 @@ describe('production deployment contracts', () => {
       .filter((line) => line !== '' && !line.startsWith('#'))
 
     expect(directiveLines).toEqual([
+      '{',
+      'servers {',
+      'timeouts {',
+      'read_header 10s',
+      'read_body 30s',
+      '}',
+      '}',
+      '}',
       '{$FRONTEND_DOMAIN} {',
+      'request_body {',
+      'max_size 41MiB',
+      '}',
       '@backend path /v1 /v1/* /health /health/*',
       'handle @backend {',
       'reverse_proxy {$BACKEND_UPSTREAM}',

@@ -41,6 +41,14 @@ Frontend copies на одной edge network используют разные
 `FRONTEND_EDGE_ALIAS`; Caddy всегда обращается к выбранному alias, а не к
 generic service name `frontend`. Caddy config не копируется в browser image.
 
+Ingress example ограничивает тело запроса 41 MiB и задаёт server timeouts:
+`read_header 10s`, `read_body 30s`. При переносе site block объедините глобальный
+`servers` block с существующими global options Caddy. Не включайте
+`request_buffers`: backend должен иметь возможность отказать в загрузке по
+заголовкам до получения файла. API отдельно применяет 1 MiB к обычным запросам,
+41 MiB к авторизованной загрузке сторис и собственный 30-секундный deadline.
+Настройка example требует host-side validation и reload для применения.
+
 ## Host-side Caddy validation
 
 После копирования example в host-owned config задайте placeholders в host

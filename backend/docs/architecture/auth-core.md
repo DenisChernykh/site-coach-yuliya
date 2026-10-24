@@ -89,6 +89,25 @@ Login is exempt only from the session token/CSRF header and still passes origin
 and content-type checks. Permission metadata is an all-of conjunction; duplicate
 metadata fails closed.
 
+The story-media upload installs a native Express POST admission route before
+body parsing. Its platform-facing auth adapter runs the same four guards against
+the real controller/handler metadata on a separate admission request. Ordinary
+guards authenticate the actual request again after receiving the body, so a
+session or permission revoked during upload remains rejected. Only admitted
+requests can use the 41 MiB JSON parser; all other routes retain the 1 MiB limit.
+Compressed upload bodies are rejected before decompression. Both declared and
+streamed body lengths remain bounded.
+
+Upload admission is limited per API process to two concurrent requests and
+60 attempts per IP per minute, with at most 1024 tracked IP windows. These are
+local resource limits, not distributed quotas; restarting a process resets
+them. The 30-second deadline closes slow connections. Slots are released on
+response finish or incomplete-body disconnect after authorization settles.
+A disconnect or deadline never frees a slot while authorization or a handler
+with a complete body is still running. The completion interceptor and the
+exception filter release those reservations only after the work settles.
+Rate/concurrency denials use the existing 429 problem and Retry-After.
+
 Password change and logout-all increment durable generation before best-effort
 Redis cleanup. Authenticated password change also deletes any outstanding
 password-reset token in that same PostgreSQL transaction. Therefore partial

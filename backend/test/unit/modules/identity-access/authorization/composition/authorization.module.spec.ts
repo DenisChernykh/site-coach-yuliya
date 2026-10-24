@@ -15,6 +15,7 @@ import { PermissionGuard } from '@/modules/identity-access/authorization/present
 import { SessionCsrfGuard } from '@/modules/identity-access/authorization/presentation/session-csrf.guard'
 import { SessionsModule } from '@/modules/identity-access/sessions/composition/sessions.module'
 import { DOCS_ACCESS_POLICY } from '@/platform/http/docs/docs-access.contracts'
+import { PRE_BODY_ACCESS_POLICY } from '@/platform/http/policy/protected-json-body.contracts'
 
 interface RoleSnapshotProvider {
   readonly provide: string | symbol
@@ -92,6 +93,7 @@ describe('AuthorizationModule composition', () => {
       PermissionGuard,
       AuthRequestInterceptor,
       DOCS_ACCESS_POLICY,
+      PRE_BODY_ACCESS_POLICY,
     ])
     expect(
       providers.filter(

@@ -19,6 +19,8 @@ import { BrowserOriginGuard } from '../presentation/browser-origin.guard'
 import { DocsAccessPolicyAdapter } from '../presentation/docs-access-policy.adapter'
 import { PermissionGuard } from '../presentation/permission.guard'
 import { SessionCsrfGuard } from '../presentation/session-csrf.guard'
+import { PreBodyAccessPolicyAdapter } from '../presentation/pre-body-access-policy.adapter'
+import { PRE_BODY_ACCESS_POLICY } from '@/platform/http/policy/protected-json-body.contracts'
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import {
   DOCS_ACCESS_POLICY,
@@ -116,6 +118,11 @@ export class AuthorizationModule {
             new SessionCsrfGuard(reflector, requestContext, csrf),
         },
         PermissionGuard,
+        PreBodyAccessPolicyAdapter,
+        {
+          provide: PRE_BODY_ACCESS_POLICY,
+          useExisting: PreBodyAccessPolicyAdapter,
+        },
         AuthRequestInterceptor,
         {
           provide: DOCS_ACCESS_POLICY,
@@ -147,6 +154,7 @@ export class AuthorizationModule {
         PermissionGuard,
         AuthRequestInterceptor,
         DOCS_ACCESS_POLICY,
+        PRE_BODY_ACCESS_POLICY,
       ],
     }
     return dynamicModule as ConfiguredAuthorizationModule

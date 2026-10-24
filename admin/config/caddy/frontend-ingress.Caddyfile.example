@@ -1,13 +1,27 @@
 # Host-owned Caddy example. Set these environment variables in the host
 # runtime; do not copy them into the frontend image or repository secrets.
+# Merge this block into an existing global options block when importing the site.
+{
+	servers {
+		timeouts {
+			read_header 10s
+			read_body 30s
+		}
+	}
+}
+
 {$FRONTEND_DOMAIN} {
-    @backend path /v1 /v1/* /health /health/*
+	request_body {
+		max_size 41MiB
+	}
 
-    handle @backend {
-        reverse_proxy {$BACKEND_UPSTREAM}
-    }
+	@backend path /v1 /v1/* /health /health/*
 
-    handle {
-        reverse_proxy {$FRONTEND_EDGE_ALIAS}:8080
-    }
+	handle @backend {
+		reverse_proxy {$BACKEND_UPSTREAM}
+	}
+
+	handle {
+		reverse_proxy {$FRONTEND_EDGE_ALIAS}:8080
+	}
 }
