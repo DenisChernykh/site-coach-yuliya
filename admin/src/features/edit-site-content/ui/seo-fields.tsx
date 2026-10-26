@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import type { PageSeoDto, SeoSettingsDto } from '@/shared/api'
 import { SelectField, TextField, TextareaField } from '@/shared/ui'
+import { ContentImageField } from './content-image-field'
 import { firstSeoText } from '../model/seo'
 
 export function SeoFields({
@@ -9,11 +10,15 @@ export function SeoFields({
   onChange,
   fallback,
   url,
+  uploading,
+  onUploadingChange,
 }: {
   value: PageSeoDto
   onChange: (value: PageSeoDto) => void
   fallback?: Partial<PageSeoDto>
   url?: string
+  uploading: boolean
+  onUploadingChange: (busy: boolean) => void
 }) {
   const title = firstSeoText(value.title, fallback?.title, 'Заголовок страницы')
   const description = firstSeoText(
@@ -79,15 +84,13 @@ export function SeoFields({
               onChange({ ...value, ogDescription: event.target.value })
             }
           />
-          <TextField
+          <ContentImageField
             label="Изображение для соцсетей"
-            description="Путь /articles/… или ссылка https://…; пустое поле использует обложку статьи или общее изображение."
-            maxLength={1000}
-            placeholder={fallback?.ogImage}
+            fallback={fallback?.ogImage}
             value={value.ogImage}
-            onChange={(event) =>
-              onChange({ ...value, ogImage: event.target.value })
-            }
+            onChange={(ogImage) => onChange({ ...value, ogImage })}
+            disabled={uploading}
+            onUploadingChange={onUploadingChange}
           />
           <TextField
             label="Описание изображения для соцсетей"
@@ -127,9 +130,13 @@ const pages = {
 export function SeoSettingsFields({
   value,
   onChange,
+  uploading,
+  onUploadingChange,
 }: {
   value: SeoSettingsDto
   onChange: (value: SeoSettingsDto) => void
+  uploading: boolean
+  onUploadingChange: (busy: boolean) => void
 }) {
   const [page, setPage] = useState<keyof typeof pages>('home')
   return (
@@ -154,14 +161,13 @@ export function SeoSettingsFields({
             onChange({ ...value, siteUrl: event.target.value.trim() || null })
           }
         />
-        <TextField
+        <ContentImageField
           label="Общее изображение для соцсетей"
           value={value.defaultImage}
-          maxLength={1000}
-          description="Путь /og/… или ссылка https://…"
-          onChange={(event) =>
-            onChange({ ...value, defaultImage: event.target.value })
-          }
+          clearable={false}
+          disabled={uploading}
+          onUploadingChange={onUploadingChange}
+          onChange={(defaultImage) => onChange({ ...value, defaultImage })}
         />
         <TextField
           label="Описание общего изображения"
@@ -187,6 +193,7 @@ export function SeoSettingsFields({
         <h2 className="text-lg font-semibold">SEO страниц</h2>
         <SelectField
           label="Страница"
+          disabled={uploading}
           value={page}
           options={Object.fromEntries(
             Object.entries(pages).map(([key, item]) => [key, item.label]),
@@ -198,6 +205,8 @@ export function SeoSettingsFields({
         <p className="text-sm text-muted-foreground">{pages[page].path}</p>
         <SeoFields
           key={page}
+          uploading={uploading}
+          onUploadingChange={onUploadingChange}
           value={value.pages[page]}
           fallback={{
             title: value.siteName,

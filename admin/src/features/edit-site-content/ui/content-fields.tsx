@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import { ArrowUp, ArrowDown } from 'lucide-react'
 import { ContentImageField } from './content-image-field'
+import { ArticleCoverField } from './article-cover-field'
 import { reorderStoryItem } from '../model/story-upload'
 import {
   Button,
@@ -224,13 +225,22 @@ export function ContentFields({
         </FieldLabel>
       </Field>
     )
-  if (field === 'image' || field === 'reviewImage')
+  if (field === 'coverImage')
+    return (
+      <ArticleCoverField
+        value={String(value ?? '')}
+        onChange={onChange}
+        onUploadingChange={onUploadingChange ?? (() => undefined)}
+      />
+    )
+  if (['image', 'reviewImage', 'ogImage', 'defaultImage'].includes(field))
     return (
       <ContentImageField
         value={String(value ?? '')}
         label={labelFor(field)}
         onChange={onChange}
         onUploadingChange={onUploadingChange}
+        clearable={field !== 'defaultImage'}
       />
     )
   const help =
@@ -238,9 +248,7 @@ export function ContentFields({
       ? navigationLinkDescription(String(value ?? ''))
       : field === 'slug' || field === 'id'
         ? 'Латинские буквы, цифры и дефисы.'
-        : field === 'coverImage'
-          ? 'Встроенные обложки: art или landscape. Можно указать https:// ссылку или путь /images/…'
-          : undefined
+        : undefined
   return longFields.has(field) ? (
     <TextareaField
       label={labelFor(field)}

@@ -13,6 +13,7 @@ export type ArticleDto = {
   /** @maxLength 50000 */
   bodyMarkdown?: string
   coverAlt: string
+  /** @pattern ^(?:art|landscape|/(?![/\\])[^\s\\]*)$ */
   coverImage: string
   ctaDescription: string
   ctaTitle: string

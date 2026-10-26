@@ -7,6 +7,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type, Transform } from 'class-transformer'
 import { PageSeoDto } from './seo.dto'
+import { localImagePattern, localCoverImagePattern } from './image-reference'
 import {
   IsDefined,
   IsArray,
@@ -188,8 +189,8 @@ export class EducationDto {
   public readonly year!: string
   @IsString()
   @MaxLength(10000)
-  @Matches(/^(?:$|\/(?!\/)|https:\/\/)/u)
-  @ApiProperty({ type: String })
+  @Matches(new RegExp(localImagePattern, 'u'))
+  @ApiProperty({ type: String, pattern: localImagePattern })
   public readonly image!: string
   @IsString()
   @MaxLength(10000)
@@ -223,8 +224,8 @@ export class CaseStudyDto {
   @ValidateIf((_o, value: unknown) => value !== undefined)
   @IsString()
   @MaxLength(10000)
-  @Matches(/^(?:$|\/(?!\/)|https:\/\/)/u)
-  @ApiPropertyOptional({ type: String })
+  @Matches(new RegExp(localImagePattern, 'u'))
+  @ApiPropertyOptional({ type: String, pattern: localImagePattern })
   public readonly reviewImage?: string
   @ValidateIf((_o, value: unknown) => value !== undefined)
   @IsString()
@@ -519,9 +520,9 @@ export class ArticleDto {
   public readonly description!: string
 
   @IsString()
-  @Matches(/^(?:art|landscape|https:\/\/[^\s]+|\/(?!\/)[^\s]*)$/u)
+  @Matches(new RegExp(localCoverImagePattern, 'u'))
   @Length(0, 10000)
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, pattern: localCoverImagePattern })
   public readonly coverImage!: string
 
   @IsString()

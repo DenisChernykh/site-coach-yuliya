@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { http, HttpResponse } from 'msw'
@@ -48,6 +48,97 @@ function show() {
 }
 
 describe('SEO editor', () => {
+  it('uploads social images without URL fields and preserves text edits while waiting', async () => {
+    const editor = show()
+    const id = 'a7b563f2-661d-4c18-a842-82b1c3707530'
+    let finishUpload!: () => void
+    const gate = new Promise<void>((resolve) => {
+      finishUpload = resolve
+    })
+    server.use(
+      http.post(
+        `${window.location.origin}/v1/admin/story-media`,
+        async ({ request }) => {
+          expect(request.headers.get('x-csrf-token')).toBe('test-csrf')
+          await gate
+          return HttpResponse.json({
+            id,
+            mimeType: 'image/png',
+            type: 'image',
+            size: 8,
+          })
+        },
+      ),
+    )
+    try {
+      const user = userEvent.setup()
+      const input = await screen.findByLabelText(
+        'Файл: общее изображение для соцсетей',
+      )
+      expect(
+        screen.queryByRole('textbox', {
+          name: 'Общее изображение для соцсетей',
+        }),
+      ).not.toBeInTheDocument()
+      const file = new File(
+        [new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])],
+        'social.png',
+        { type: 'image/png' },
+      )
+      await user.upload(input, file)
+      expect(
+        screen.getByRole('button', { name: 'Сохранить изменения' }),
+      ).toBeDisabled()
+      expect(screen.getByLabelText('Страница')).toBeDisabled()
+      const title = screen.getByLabelText('Название сайта')
+      await user.clear(title)
+      await user.type(title, 'Название во время загрузки')
+      finishUpload()
+      await waitFor(() =>
+        expect(
+          screen.getByAltText('Превью: общее изображение для соцсетей'),
+        ).toHaveAttribute('src', `/v1/story-media/${id}`),
+      )
+      await user.click(
+        screen.getByText('Превью в социальных сетях', { exact: true }),
+      )
+      expect(
+        screen.queryByRole('textbox', {
+          name: 'Изображение для соцсетей',
+        }),
+      ).not.toBeInTheDocument()
+      await user.upload(
+        screen.getByLabelText('Файл: изображение для соцсетей'),
+        file,
+      )
+      await waitFor(() =>
+        expect(
+          screen.getByAltText('Превью: изображение для соцсетей'),
+        ).toHaveAttribute('src', `/v1/story-media/${id}`),
+      )
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить изменения' }),
+      )
+      await waitFor(() => expect(editor.writes).toHaveLength(1))
+      expect(editor.writes[0]).toMatchObject({
+        siteName: 'Название во время загрузки',
+        defaultImage: `/v1/story-media/${id}`,
+        pages: { home: { ogImage: `/v1/story-media/${id}` } },
+      })
+      await user.click(
+        screen.getByRole('button', { name: 'Использовать общее изображение' }),
+      )
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить изменения' }),
+      )
+      await waitFor(() => expect(editor.writes).toHaveLength(2))
+      expect(editor.writes[1].pages.home.ogImage).toBe('')
+    } finally {
+      finishUpload()
+      editor.dispose()
+    }
+  })
+
   it('preserves edits while switching pages and saves the complete SEO with CSRF', async () => {
     const editor = show()
     try {

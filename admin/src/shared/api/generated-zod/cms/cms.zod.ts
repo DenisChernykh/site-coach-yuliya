@@ -12,6 +12,8 @@ import * as zod from 'zod'
  */
 export const adminGetCms200ResponseContentArticlesItemContentBodyMarkdownMax = 50000
 
+export const adminGetCms200ResponseContentArticlesItemContentCoverImageRegExp =
+  new RegExp('^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$')
 export const adminGetCms200ResponseContentArticlesItemContentListingDescriptionMax = 2000
 
 export const adminGetCms200ResponseContentArticlesItemContentPreviewDescriptionMax = 2000
@@ -25,7 +27,7 @@ export const adminGetCms200ResponseContentArticlesItemContentSeoOgDescriptionMax
 export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageMax = 1000
 
 export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentArticlesItemContentSeoOgTitleMax = 120
@@ -51,9 +53,13 @@ export const adminGetCms200ResponseContentEditorialNotesMax = 100
 
 export const adminGetCms200ResponseContentFaqMax = 100
 
+export const adminGetCms200ResponseContentHomeCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentHomeEducationItemHoursMin = 0
 export const adminGetCms200ResponseContentHomeEducationItemHoursMax = 10000
 
+export const adminGetCms200ResponseContentHomeEducationItemImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentHomeEducationMax = 30
 
 export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
@@ -102,7 +108,7 @@ export const adminGetCms200ResponseContentProgramsItemSortOrderMax = 10000
 export const adminGetCms200ResponseContentSeoDefaultImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoDefaultImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetCms200ResponseContentSeoDefaultImageAltMax = 300
 
@@ -113,7 +119,7 @@ export const adminGetCms200ResponseContentSeoPagesAboutOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesAboutOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesAboutOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesAboutOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesAboutOgTitleMax = 120
@@ -127,7 +133,7 @@ export const adminGetCms200ResponseContentSeoPagesCoachingOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesCoachingOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesCoachingOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesCoachingOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesCoachingOgTitleMax = 120
@@ -141,7 +147,7 @@ export const adminGetCms200ResponseContentSeoPagesContactsOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesContactsOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesContactsOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesContactsOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesContactsOgTitleMax = 120
@@ -155,7 +161,7 @@ export const adminGetCms200ResponseContentSeoPagesHomeOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesHomeOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesHomeOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesHomeOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesHomeOgTitleMax = 120
@@ -169,7 +175,7 @@ export const adminGetCms200ResponseContentSeoPagesJournalOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesJournalOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesJournalOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesJournalOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesJournalOgTitleMax = 120
@@ -183,7 +189,7 @@ export const adminGetCms200ResponseContentSeoPagesPrivacyOgDescriptionMax = 320
 export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageMax = 1000
 
 export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetCms200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
 
 export const adminGetCms200ResponseContentSeoPagesPrivacyOgTitleMax = 120
@@ -211,7 +217,11 @@ export const AdminGetCms200Response = zod.strictObject({
             )
             .optional(),
           coverAlt: zod.string(),
-          coverImage: zod.string(),
+          coverImage: zod
+            .string()
+            .regex(
+              adminGetCms200ResponseContentArticlesItemContentCoverImageRegExp,
+            ),
           ctaDescription: zod.string(),
           ctaTitle: zod.string(),
           description: zod.string(),
@@ -374,7 +384,12 @@ export const AdminGetCms200Response = zod.strictObject({
           request: zod.string(),
           result: zod.string(),
           review: zod.string().optional(),
-          reviewImage: zod.string().optional(),
+          reviewImage: zod
+            .string()
+            .regex(
+              adminGetCms200ResponseContentHomeCaseStudiesItemReviewImageRegExp,
+            )
+            .optional(),
           reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
@@ -396,7 +411,9 @@ export const AdminGetCms200Response = zod.strictObject({
               .min(adminGetCms200ResponseContentHomeEducationItemHoursMin)
               .max(adminGetCms200ResponseContentHomeEducationItemHoursMax),
             id: zod.string(),
-            image: zod.string(),
+            image: zod
+              .string()
+              .regex(adminGetCms200ResponseContentHomeEducationItemImageRegExp),
             imageAlt: zod.string(),
             organization: zod.string(),
             title: zod.string(),
@@ -762,9 +779,13 @@ export const adminSaveCmsDraftBodyContentEditorialNotesMax = 100
 
 export const adminSaveCmsDraftBodyContentFaqMax = 100
 
+export const adminSaveCmsDraftBodyContentHomeCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraftBodyContentHomeEducationItemHoursMin = 0
 export const adminSaveCmsDraftBodyContentHomeEducationItemHoursMax = 10000
 
+export const adminSaveCmsDraftBodyContentHomeEducationItemImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraftBodyContentHomeEducationMax = 30
 
 export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemCaptionMax = 1000
@@ -877,7 +898,12 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
           request: zod.string(),
           result: zod.string(),
           review: zod.string().optional(),
-          reviewImage: zod.string().optional(),
+          reviewImage: zod
+            .string()
+            .regex(
+              adminSaveCmsDraftBodyContentHomeCaseStudiesItemReviewImageRegExp,
+            )
+            .optional(),
           reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
@@ -899,7 +925,9 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
               .min(adminSaveCmsDraftBodyContentHomeEducationItemHoursMin)
               .max(adminSaveCmsDraftBodyContentHomeEducationItemHoursMax),
             id: zod.string(),
-            image: zod.string(),
+            image: zod
+              .string()
+              .regex(adminSaveCmsDraftBodyContentHomeEducationItemImageRegExp),
             imageAlt: zod.string(),
             organization: zod.string(),
             title: zod.string(),
@@ -1064,6 +1092,8 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
 
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentBodyMarkdownMax = 50000
 
+export const adminSaveCmsDraft200ResponseContentArticlesItemContentCoverImageRegExp =
+  new RegExp('^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$')
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentListingDescriptionMax = 2000
 
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentPreviewDescriptionMax = 2000
@@ -1077,7 +1107,7 @@ export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgDescript
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentArticlesItemContentSeoOgTitleMax = 120
@@ -1103,9 +1133,13 @@ export const adminSaveCmsDraft200ResponseContentEditorialNotesMax = 100
 
 export const adminSaveCmsDraft200ResponseContentFaqMax = 100
 
+export const adminSaveCmsDraft200ResponseContentHomeCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMin = 0
 export const adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMax = 10000
 
+export const adminSaveCmsDraft200ResponseContentHomeEducationItemImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentHomeEducationMax = 30
 
 export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
@@ -1154,7 +1188,7 @@ export const adminSaveCmsDraft200ResponseContentProgramsItemSortOrderMax = 10000
 export const adminSaveCmsDraft200ResponseContentSeoDefaultImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoDefaultImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoDefaultImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesAboutDescriptionMax = 320
@@ -1164,7 +1198,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgDescriptionMax = 
 export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesAboutOgTitleMax = 120
@@ -1178,7 +1212,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgDescriptionMax
 export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesCoachingOgTitleMax = 120
@@ -1192,7 +1226,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgDescriptionMax
 export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesContactsOgTitleMax = 120
@@ -1206,7 +1240,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgDescriptionMax = 3
 export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesHomeOgTitleMax = 120
@@ -1220,7 +1254,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgDescriptionMax 
 export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesJournalOgTitleMax = 120
@@ -1234,7 +1268,7 @@ export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgDescriptionMax 
 export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageMax = 1000
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
 
 export const adminSaveCmsDraft200ResponseContentSeoPagesPrivacyOgTitleMax = 120
@@ -1262,7 +1296,11 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
             )
             .optional(),
           coverAlt: zod.string(),
-          coverImage: zod.string(),
+          coverImage: zod
+            .string()
+            .regex(
+              adminSaveCmsDraft200ResponseContentArticlesItemContentCoverImageRegExp,
+            ),
           ctaDescription: zod.string(),
           ctaTitle: zod.string(),
           description: zod.string(),
@@ -1429,7 +1467,12 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
           request: zod.string(),
           result: zod.string(),
           review: zod.string().optional(),
-          reviewImage: zod.string().optional(),
+          reviewImage: zod
+            .string()
+            .regex(
+              adminSaveCmsDraft200ResponseContentHomeCaseStudiesItemReviewImageRegExp,
+            )
+            .optional(),
           reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
@@ -1453,7 +1496,11 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
                 adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMax,
               ),
             id: zod.string(),
-            image: zod.string(),
+            image: zod
+              .string()
+              .regex(
+                adminSaveCmsDraft200ResponseContentHomeEducationItemImageRegExp,
+              ),
             imageAlt: zod.string(),
             organization: zod.string(),
             title: zod.string(),
@@ -1864,6 +1911,8 @@ export const AdminPublishCmsBody = zod.strictObject({
 
 export const adminPublishCms200ResponseContentArticlesItemContentBodyMarkdownMax = 50000
 
+export const adminPublishCms200ResponseContentArticlesItemContentCoverImageRegExp =
+  new RegExp('^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$')
 export const adminPublishCms200ResponseContentArticlesItemContentListingDescriptionMax = 2000
 
 export const adminPublishCms200ResponseContentArticlesItemContentPreviewDescriptionMax = 2000
@@ -1877,7 +1926,7 @@ export const adminPublishCms200ResponseContentArticlesItemContentSeoOgDescriptio
 export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentArticlesItemContentSeoOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentArticlesItemContentSeoOgTitleMax = 120
@@ -1903,9 +1952,13 @@ export const adminPublishCms200ResponseContentEditorialNotesMax = 100
 
 export const adminPublishCms200ResponseContentFaqMax = 100
 
+export const adminPublishCms200ResponseContentHomeCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentHomeEducationItemHoursMin = 0
 export const adminPublishCms200ResponseContentHomeEducationItemHoursMax = 10000
 
+export const adminPublishCms200ResponseContentHomeEducationItemImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentHomeEducationMax = 30
 
 export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
@@ -1954,7 +2007,7 @@ export const adminPublishCms200ResponseContentProgramsItemSortOrderMax = 10000
 export const adminPublishCms200ResponseContentSeoDefaultImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoDefaultImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoDefaultImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesAboutDescriptionMax = 320
@@ -1964,7 +2017,7 @@ export const adminPublishCms200ResponseContentSeoPagesAboutOgDescriptionMax = 32
 export const adminPublishCms200ResponseContentSeoPagesAboutOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesAboutOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesAboutOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesAboutOgTitleMax = 120
@@ -1978,7 +2031,7 @@ export const adminPublishCms200ResponseContentSeoPagesCoachingOgDescriptionMax =
 export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesCoachingOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesCoachingOgTitleMax = 120
@@ -1992,7 +2045,7 @@ export const adminPublishCms200ResponseContentSeoPagesContactsOgDescriptionMax =
 export const adminPublishCms200ResponseContentSeoPagesContactsOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesContactsOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesContactsOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesContactsOgTitleMax = 120
@@ -2006,7 +2059,7 @@ export const adminPublishCms200ResponseContentSeoPagesHomeOgDescriptionMax = 320
 export const adminPublishCms200ResponseContentSeoPagesHomeOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesHomeOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesHomeOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesHomeOgTitleMax = 120
@@ -2020,7 +2073,7 @@ export const adminPublishCms200ResponseContentSeoPagesJournalOgDescriptionMax = 
 export const adminPublishCms200ResponseContentSeoPagesJournalOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesJournalOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesJournalOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesJournalOgTitleMax = 120
@@ -2034,7 +2087,7 @@ export const adminPublishCms200ResponseContentSeoPagesPrivacyOgDescriptionMax = 
 export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageMax = 1000
 
 export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageRegExp =
-  new RegExp('^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$')
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminPublishCms200ResponseContentSeoPagesPrivacyOgImageAltMax = 300
 
 export const adminPublishCms200ResponseContentSeoPagesPrivacyOgTitleMax = 120
@@ -2062,7 +2115,11 @@ export const AdminPublishCms200Response = zod.strictObject({
             )
             .optional(),
           coverAlt: zod.string(),
-          coverImage: zod.string(),
+          coverImage: zod
+            .string()
+            .regex(
+              adminPublishCms200ResponseContentArticlesItemContentCoverImageRegExp,
+            ),
           ctaDescription: zod.string(),
           ctaTitle: zod.string(),
           description: zod.string(),
@@ -2227,7 +2284,12 @@ export const AdminPublishCms200Response = zod.strictObject({
           request: zod.string(),
           result: zod.string(),
           review: zod.string().optional(),
-          reviewImage: zod.string().optional(),
+          reviewImage: zod
+            .string()
+            .regex(
+              adminPublishCms200ResponseContentHomeCaseStudiesItemReviewImageRegExp,
+            )
+            .optional(),
           reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
@@ -2249,7 +2311,11 @@ export const AdminPublishCms200Response = zod.strictObject({
               .min(adminPublishCms200ResponseContentHomeEducationItemHoursMin)
               .max(adminPublishCms200ResponseContentHomeEducationItemHoursMax),
             id: zod.string(),
-            image: zod.string(),
+            image: zod
+              .string()
+              .regex(
+                adminPublishCms200ResponseContentHomeEducationItemImageRegExp,
+              ),
             imageAlt: zod.string(),
             organization: zod.string(),
             title: zod.string(),

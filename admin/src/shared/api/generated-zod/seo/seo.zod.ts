@@ -13,7 +13,7 @@ import * as zod from 'zod'
 export const getSeoSettings200ResponseDefaultImageMax = 1000
 
 export const getSeoSettings200ResponseDefaultImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponseDefaultImageAltMax = 300
 
@@ -24,7 +24,7 @@ export const getSeoSettings200ResponsePagesAboutOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesAboutOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesAboutOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesAboutOgImageAltMax = 300
 
@@ -39,7 +39,7 @@ export const getSeoSettings200ResponsePagesCoachingOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesCoachingOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesCoachingOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesCoachingOgImageAltMax = 300
 
@@ -54,7 +54,7 @@ export const getSeoSettings200ResponsePagesContactsOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesContactsOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesContactsOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesContactsOgImageAltMax = 300
 
@@ -69,7 +69,7 @@ export const getSeoSettings200ResponsePagesHomeOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesHomeOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesHomeOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesHomeOgImageAltMax = 300
 
@@ -84,7 +84,7 @@ export const getSeoSettings200ResponsePagesJournalOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesJournalOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesJournalOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesJournalOgImageAltMax = 300
 
@@ -99,7 +99,7 @@ export const getSeoSettings200ResponsePagesPrivacyOgDescriptionMax = 320
 export const getSeoSettings200ResponsePagesPrivacyOgImageMax = 1000
 
 export const getSeoSettings200ResponsePagesPrivacyOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getSeoSettings200ResponsePagesPrivacyOgImageAltMax = 300
 

@@ -12,6 +12,9 @@ import * as zod from 'zod'
  */
 export const adminListArticles200ResponseContentBodyMarkdownMax = 50000
 
+export const adminListArticles200ResponseContentCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const adminListArticles200ResponseContentListingDescriptionMax = 2000
 
 export const adminListArticles200ResponseContentPreviewDescriptionMax = 2000
@@ -25,7 +28,7 @@ export const adminListArticles200ResponseContentSeoOgDescriptionMax = 320
 export const adminListArticles200ResponseContentSeoOgImageMax = 1000
 
 export const adminListArticles200ResponseContentSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminListArticles200ResponseContentSeoOgImageAltMax = 300
 
@@ -43,7 +46,9 @@ export const AdminListArticles200ResponseItem = zod.strictObject({
       .max(adminListArticles200ResponseContentBodyMarkdownMax)
       .optional(),
     coverAlt: zod.string(),
-    coverImage: zod.string(),
+    coverImage: zod
+      .string()
+      .regex(adminListArticles200ResponseContentCoverImageRegExp),
     ctaDescription: zod.string(),
     ctaTitle: zod.string(),
     description: zod.string(),
@@ -118,6 +123,9 @@ export const AdminListArticles200Response = zod.array(
  */
 export const adminCreateArticleBodyContentBodyMarkdownMax = 50000
 
+export const adminCreateArticleBodyContentCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const adminCreateArticleBodyContentListingDescriptionMax = 2000
 
 export const adminCreateArticleBodyContentPreviewDescriptionMax = 2000
@@ -131,7 +139,7 @@ export const adminCreateArticleBodyContentSeoOgDescriptionMax = 320
 export const adminCreateArticleBodyContentSeoOgImageMax = 1000
 
 export const adminCreateArticleBodyContentSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminCreateArticleBodyContentSeoOgImageAltMax = 300
 
@@ -151,7 +159,9 @@ export const AdminCreateArticleBody = zod.strictObject({
       .max(adminCreateArticleBodyContentBodyMarkdownMax)
       .optional(),
     coverAlt: zod.string(),
-    coverImage: zod.string(),
+    coverImage: zod
+      .string()
+      .regex(adminCreateArticleBodyContentCoverImageRegExp),
     ctaDescription: zod.string(),
     ctaTitle: zod.string(),
     description: zod.string(),
@@ -216,6 +226,9 @@ export const AdminCreateArticleBody = zod.strictObject({
 
 export const adminCreateArticle201ResponseContentBodyMarkdownMax = 50000
 
+export const adminCreateArticle201ResponseContentCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const adminCreateArticle201ResponseContentListingDescriptionMax = 2000
 
 export const adminCreateArticle201ResponseContentPreviewDescriptionMax = 2000
@@ -229,7 +242,7 @@ export const adminCreateArticle201ResponseContentSeoOgDescriptionMax = 320
 export const adminCreateArticle201ResponseContentSeoOgImageMax = 1000
 
 export const adminCreateArticle201ResponseContentSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminCreateArticle201ResponseContentSeoOgImageAltMax = 300
 
@@ -247,7 +260,9 @@ export const AdminCreateArticle201Response = zod.strictObject({
       .max(adminCreateArticle201ResponseContentBodyMarkdownMax)
       .optional(),
     coverAlt: zod.string(),
-    coverImage: zod.string(),
+    coverImage: zod
+      .string()
+      .regex(adminCreateArticle201ResponseContentCoverImageRegExp),
     ctaDescription: zod.string(),
     ctaTitle: zod.string(),
     description: zod.string(),
@@ -334,6 +349,9 @@ export const AdminUpdateArticleParams = zod.strictObject({
 
 export const adminUpdateArticleBodyContentBodyMarkdownMax = 50000
 
+export const adminUpdateArticleBodyContentCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const adminUpdateArticleBodyContentListingDescriptionMax = 2000
 
 export const adminUpdateArticleBodyContentPreviewDescriptionMax = 2000
@@ -347,7 +365,7 @@ export const adminUpdateArticleBodyContentSeoOgDescriptionMax = 320
 export const adminUpdateArticleBodyContentSeoOgImageMax = 1000
 
 export const adminUpdateArticleBodyContentSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateArticleBodyContentSeoOgImageAltMax = 300
 
@@ -367,7 +385,9 @@ export const AdminUpdateArticleBody = zod.strictObject({
       .max(adminUpdateArticleBodyContentBodyMarkdownMax)
       .optional(),
     coverAlt: zod.string(),
-    coverImage: zod.string(),
+    coverImage: zod
+      .string()
+      .regex(adminUpdateArticleBodyContentCoverImageRegExp),
     ctaDescription: zod.string(),
     ctaTitle: zod.string(),
     description: zod.string(),
@@ -432,6 +452,9 @@ export const AdminUpdateArticleBody = zod.strictObject({
 
 export const adminUpdateArticle200ResponseContentBodyMarkdownMax = 50000
 
+export const adminUpdateArticle200ResponseContentCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const adminUpdateArticle200ResponseContentListingDescriptionMax = 2000
 
 export const adminUpdateArticle200ResponseContentPreviewDescriptionMax = 2000
@@ -445,7 +468,7 @@ export const adminUpdateArticle200ResponseContentSeoOgDescriptionMax = 320
 export const adminUpdateArticle200ResponseContentSeoOgImageMax = 1000
 
 export const adminUpdateArticle200ResponseContentSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateArticle200ResponseContentSeoOgImageAltMax = 300
 
@@ -463,7 +486,9 @@ export const AdminUpdateArticle200Response = zod.strictObject({
       .max(adminUpdateArticle200ResponseContentBodyMarkdownMax)
       .optional(),
     coverAlt: zod.string(),
-    coverImage: zod.string(),
+    coverImage: zod
+      .string()
+      .regex(adminUpdateArticle200ResponseContentCoverImageRegExp),
     ctaDescription: zod.string(),
     ctaTitle: zod.string(),
     description: zod.string(),
@@ -661,9 +686,14 @@ export const AdminUpdateFaq200Response = zod.array(
 /**
  * @summary Контент главной страницы
  */
+export const adminGetHome200ResponseCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminGetHome200ResponseEducationItemHoursMin = 0
 export const adminGetHome200ResponseEducationItemHoursMax = 10000
 
+export const adminGetHome200ResponseEducationItemImageRegExp = new RegExp(
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
+)
 export const adminGetHome200ResponseEducationMax = 30
 
 export const adminGetHome200ResponseStoriesItemSlidesItemCaptionMax = 1000
@@ -717,7 +747,10 @@ export const AdminGetHome200Response = zod.strictObject({
       request: zod.string(),
       result: zod.string(),
       review: zod.string().optional(),
-      reviewImage: zod.string().optional(),
+      reviewImage: zod
+        .string()
+        .regex(adminGetHome200ResponseCaseStudiesItemReviewImageRegExp)
+        .optional(),
       reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
@@ -739,7 +772,9 @@ export const AdminGetHome200Response = zod.strictObject({
           .min(adminGetHome200ResponseEducationItemHoursMin)
           .max(adminGetHome200ResponseEducationItemHoursMax),
         id: zod.string(),
-        image: zod.string(),
+        image: zod
+          .string()
+          .regex(adminGetHome200ResponseEducationItemImageRegExp),
         imageAlt: zod.string(),
         organization: zod.string(),
         title: zod.string(),
@@ -818,9 +853,15 @@ export const AdminGetHome200Response = zod.strictObject({
 /**
  * @summary Сохранить главную страницу
  */
+export const adminUpdateHomeBodyCaseStudiesItemReviewImageRegExp = new RegExp(
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
+)
 export const adminUpdateHomeBodyEducationItemHoursMin = 0
 export const adminUpdateHomeBodyEducationItemHoursMax = 10000
 
+export const adminUpdateHomeBodyEducationItemImageRegExp = new RegExp(
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
+)
 export const adminUpdateHomeBodyEducationMax = 30
 
 export const adminUpdateHomeBodyStoriesItemSlidesItemCaptionMax = 1000
@@ -875,7 +916,10 @@ export const AdminUpdateHomeBody = zod.strictObject({
       request: zod.string(),
       result: zod.string(),
       review: zod.string().optional(),
-      reviewImage: zod.string().optional(),
+      reviewImage: zod
+        .string()
+        .regex(adminUpdateHomeBodyCaseStudiesItemReviewImageRegExp)
+        .optional(),
       reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
@@ -897,7 +941,7 @@ export const AdminUpdateHomeBody = zod.strictObject({
           .min(adminUpdateHomeBodyEducationItemHoursMin)
           .max(adminUpdateHomeBodyEducationItemHoursMax),
         id: zod.string(),
-        image: zod.string(),
+        image: zod.string().regex(adminUpdateHomeBodyEducationItemImageRegExp),
         imageAlt: zod.string(),
         organization: zod.string(),
         title: zod.string(),
@@ -966,9 +1010,14 @@ export const AdminUpdateHomeBody = zod.strictObject({
     .optional(),
 })
 
+export const adminUpdateHome200ResponseCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const adminUpdateHome200ResponseEducationItemHoursMin = 0
 export const adminUpdateHome200ResponseEducationItemHoursMax = 10000
 
+export const adminUpdateHome200ResponseEducationItemImageRegExp = new RegExp(
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
+)
 export const adminUpdateHome200ResponseEducationMax = 30
 
 export const adminUpdateHome200ResponseStoriesItemSlidesItemCaptionMax = 1000
@@ -1022,7 +1071,10 @@ export const AdminUpdateHome200Response = zod.strictObject({
       request: zod.string(),
       result: zod.string(),
       review: zod.string().optional(),
-      reviewImage: zod.string().optional(),
+      reviewImage: zod
+        .string()
+        .regex(adminUpdateHome200ResponseCaseStudiesItemReviewImageRegExp)
+        .optional(),
       reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
@@ -1044,7 +1096,9 @@ export const AdminUpdateHome200Response = zod.strictObject({
           .min(adminUpdateHome200ResponseEducationItemHoursMin)
           .max(adminUpdateHome200ResponseEducationItemHoursMax),
         id: zod.string(),
-        image: zod.string(),
+        image: zod
+          .string()
+          .regex(adminUpdateHome200ResponseEducationItemImageRegExp),
         imageAlt: zod.string(),
         organization: zod.string(),
         title: zod.string(),
@@ -1310,7 +1364,7 @@ export const AdminUpdateProgram200Response = zod.strictObject({
 export const adminGetSeo200ResponseDefaultImageMax = 1000
 
 export const adminGetSeo200ResponseDefaultImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponseDefaultImageAltMax = 300
 
@@ -1321,7 +1375,7 @@ export const adminGetSeo200ResponsePagesAboutOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesAboutOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesAboutOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesAboutOgImageAltMax = 300
 
@@ -1336,7 +1390,7 @@ export const adminGetSeo200ResponsePagesCoachingOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesCoachingOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesCoachingOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesCoachingOgImageAltMax = 300
 
@@ -1351,7 +1405,7 @@ export const adminGetSeo200ResponsePagesContactsOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesContactsOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesContactsOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesContactsOgImageAltMax = 300
 
@@ -1366,7 +1420,7 @@ export const adminGetSeo200ResponsePagesHomeOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesHomeOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesHomeOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesHomeOgImageAltMax = 300
 
@@ -1381,7 +1435,7 @@ export const adminGetSeo200ResponsePagesJournalOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesJournalOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesJournalOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesJournalOgImageAltMax = 300
 
@@ -1396,7 +1450,7 @@ export const adminGetSeo200ResponsePagesPrivacyOgDescriptionMax = 320
 export const adminGetSeo200ResponsePagesPrivacyOgImageMax = 1000
 
 export const adminGetSeo200ResponsePagesPrivacyOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminGetSeo200ResponsePagesPrivacyOgImageAltMax = 300
 
@@ -1547,7 +1601,7 @@ export const AdminGetSeo200Response = zod.strictObject({
 export const adminUpdateSeoBodyDefaultImageMax = 1000
 
 export const adminUpdateSeoBodyDefaultImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyDefaultImageAltMax = 300
 
@@ -1558,7 +1612,7 @@ export const adminUpdateSeoBodyPagesAboutOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesAboutOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesAboutOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesAboutOgImageAltMax = 300
 
@@ -1573,7 +1627,7 @@ export const adminUpdateSeoBodyPagesCoachingOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesCoachingOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesCoachingOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesCoachingOgImageAltMax = 300
 
@@ -1588,7 +1642,7 @@ export const adminUpdateSeoBodyPagesContactsOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesContactsOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesContactsOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesContactsOgImageAltMax = 300
 
@@ -1603,7 +1657,7 @@ export const adminUpdateSeoBodyPagesHomeOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesHomeOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesHomeOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesHomeOgImageAltMax = 300
 
@@ -1618,7 +1672,7 @@ export const adminUpdateSeoBodyPagesJournalOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesJournalOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesJournalOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesJournalOgImageAltMax = 300
 
@@ -1633,7 +1687,7 @@ export const adminUpdateSeoBodyPagesPrivacyOgDescriptionMax = 320
 export const adminUpdateSeoBodyPagesPrivacyOgImageMax = 1000
 
 export const adminUpdateSeoBodyPagesPrivacyOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeoBodyPagesPrivacyOgImageAltMax = 300
 
@@ -1769,7 +1823,7 @@ export const AdminUpdateSeoBody = zod.strictObject({
 export const adminUpdateSeo200ResponseDefaultImageMax = 1000
 
 export const adminUpdateSeo200ResponseDefaultImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponseDefaultImageAltMax = 300
 
@@ -1780,7 +1834,7 @@ export const adminUpdateSeo200ResponsePagesAboutOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesAboutOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesAboutOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesAboutOgImageAltMax = 300
 
@@ -1795,7 +1849,7 @@ export const adminUpdateSeo200ResponsePagesCoachingOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesCoachingOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesCoachingOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesCoachingOgImageAltMax = 300
 
@@ -1810,7 +1864,7 @@ export const adminUpdateSeo200ResponsePagesContactsOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesContactsOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesContactsOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesContactsOgImageAltMax = 300
 
@@ -1825,7 +1879,7 @@ export const adminUpdateSeo200ResponsePagesHomeOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesHomeOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesHomeOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesHomeOgImageAltMax = 300
 
@@ -1840,7 +1894,7 @@ export const adminUpdateSeo200ResponsePagesJournalOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesJournalOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesJournalOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesJournalOgImageAltMax = 300
 
@@ -1855,7 +1909,7 @@ export const adminUpdateSeo200ResponsePagesPrivacyOgDescriptionMax = 320
 export const adminUpdateSeo200ResponsePagesPrivacyOgImageMax = 1000
 
 export const adminUpdateSeo200ResponsePagesPrivacyOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const adminUpdateSeo200ResponsePagesPrivacyOgImageAltMax = 300
 

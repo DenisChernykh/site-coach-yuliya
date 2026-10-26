@@ -13,10 +13,12 @@ export function ArticleCoverField({
   value,
   onChange,
   onUploadingChange,
+  disabled = false,
 }: {
   value: string
   onChange: (value: string) => void
   onUploadingChange: (busy: boolean) => void
+  disabled?: boolean
 }) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
@@ -107,7 +109,7 @@ export function ArticleCoverField({
         aria-label="Файл обложки статьи"
         aria-describedby={`${id}-hint`}
         hidden
-        disabled={busy}
+        disabled={busy || disabled}
         onChange={(event) => {
           const file = event.currentTarget.files?.[0]
           event.currentTarget.value = ''
@@ -117,7 +119,7 @@ export function ArticleCoverField({
       <Button
         type="button"
         variant="outline"
-        disabled={busy}
+        disabled={busy || disabled}
         onClick={() => input.current?.click()}
       >
         {value ? 'Заменить обложку' : 'Загрузить обложку'}

@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator'
 
-const imagePattern = '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$'
+import { localImagePattern as imagePattern } from './image-reference'
 
 export class PageSeoDto {
   @IsString()

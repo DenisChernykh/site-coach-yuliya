@@ -15,6 +15,7 @@ export type CaseStudyDto = {
   request: string
   result: string
   review?: string
+  /** @pattern ^(?:/(?![/\\])[^\s\\]*)?$ */
   reviewImage?: string
   reviewImageAlt?: string
   title: string

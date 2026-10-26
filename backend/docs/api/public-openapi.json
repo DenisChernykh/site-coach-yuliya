@@ -752,7 +752,7 @@
           "defaultImage": {
             "maxLength": 1000,
             "minLength": 1,
-            "pattern": "^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$",
+            "pattern": "^(?:/(?![/\\\\])[^\\s\\\\]*)?$",
             "type": "string"
           },
           "defaultImageAlt": {
@@ -831,7 +831,7 @@
           },
           "ogImage": {
             "maxLength": 1000,
-            "pattern": "^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$",
+            "pattern": "^(?:/(?![/\\\\])[^\\s\\\\]*)?$",
             "type": "string"
           },
           "ogImageAlt": {
@@ -1075,6 +1075,7 @@
             "type": "string"
           },
           "reviewImage": {
+            "pattern": "^(?:/(?![/\\\\])[^\\s\\\\]*)?$",
             "type": "string"
           },
           "reviewImageAlt": {
@@ -1130,6 +1131,7 @@
             "type": "string"
           },
           "image": {
+            "pattern": "^(?:/(?![/\\\\])[^\\s\\\\]*)?$",
             "type": "string"
           },
           "imageAlt": {
@@ -1351,6 +1353,7 @@
             "type": "string"
           },
           "coverImage": {
+            "pattern": "^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$",
             "type": "string"
           },
           "ctaDescription": {

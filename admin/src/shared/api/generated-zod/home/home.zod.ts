@@ -10,9 +10,14 @@ import * as zod from 'zod'
 /**
  * @summary Контент главной
  */
+export const getHomePage200ResponseCaseStudiesItemReviewImageRegExp =
+  new RegExp('^(?:/(?![/\\\\])[^\\s\\\\]*)?$')
 export const getHomePage200ResponseEducationItemHoursMin = 0
 export const getHomePage200ResponseEducationItemHoursMax = 10000
 
+export const getHomePage200ResponseEducationItemImageRegExp = new RegExp(
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
+)
 export const getHomePage200ResponseEducationMax = 30
 
 export const getHomePage200ResponseStoriesItemSlidesItemCaptionMax = 1000
@@ -66,7 +71,10 @@ export const GetHomePage200Response = zod.strictObject({
       request: zod.string(),
       result: zod.string(),
       review: zod.string().optional(),
-      reviewImage: zod.string().optional(),
+      reviewImage: zod
+        .string()
+        .regex(getHomePage200ResponseCaseStudiesItemReviewImageRegExp)
+        .optional(),
       reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
@@ -88,7 +96,9 @@ export const GetHomePage200Response = zod.strictObject({
           .min(getHomePage200ResponseEducationItemHoursMin)
           .max(getHomePage200ResponseEducationItemHoursMax),
         id: zod.string(),
-        image: zod.string(),
+        image: zod
+          .string()
+          .regex(getHomePage200ResponseEducationItemImageRegExp),
         imageAlt: zod.string(),
         organization: zod.string(),
         title: zod.string(),

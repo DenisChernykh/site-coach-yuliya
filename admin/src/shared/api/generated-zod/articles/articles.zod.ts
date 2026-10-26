@@ -16,6 +16,9 @@ export const GetArticlesQueryParams = zod.strictObject({
 
 export const getArticles200ResponseBodyMarkdownMax = 50000
 
+export const getArticles200ResponseCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const getArticles200ResponseListingDescriptionMax = 2000
 
 export const getArticles200ResponsePreviewDescriptionMax = 2000
@@ -29,7 +32,7 @@ export const getArticles200ResponseSeoOgDescriptionMax = 320
 export const getArticles200ResponseSeoOgImageMax = 1000
 
 export const getArticles200ResponseSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getArticles200ResponseSeoOgImageAltMax = 300
 
@@ -43,7 +46,7 @@ export const GetArticles200ResponseItem = zod.strictObject({
     .max(getArticles200ResponseBodyMarkdownMax)
     .optional(),
   coverAlt: zod.string(),
-  coverImage: zod.string(),
+  coverImage: zod.string().regex(getArticles200ResponseCoverImageRegExp),
   ctaDescription: zod.string(),
   ctaTitle: zod.string(),
   description: zod.string(),
@@ -106,6 +109,9 @@ export const GetArticleParams = zod.strictObject({
 
 export const getArticle200ResponseBodyMarkdownMax = 50000
 
+export const getArticle200ResponseCoverImageRegExp = new RegExp(
+  '^(?:art|landscape|/(?![/\\\\])[^\\s\\\\]*)$',
+)
 export const getArticle200ResponseListingDescriptionMax = 2000
 
 export const getArticle200ResponsePreviewDescriptionMax = 2000
@@ -119,7 +125,7 @@ export const getArticle200ResponseSeoOgDescriptionMax = 320
 export const getArticle200ResponseSeoOgImageMax = 1000
 
 export const getArticle200ResponseSeoOgImageRegExp = new RegExp(
-  '^(?:https://[^\\s]+|/(?!/)[^\\s]*)?$',
+  '^(?:/(?![/\\\\])[^\\s\\\\]*)?$',
 )
 export const getArticle200ResponseSeoOgImageAltMax = 300
 
@@ -133,7 +139,7 @@ export const GetArticle200Response = zod.strictObject({
     .max(getArticle200ResponseBodyMarkdownMax)
     .optional(),
   coverAlt: zod.string(),
-  coverImage: zod.string(),
+  coverImage: zod.string().regex(getArticle200ResponseCoverImageRegExp),
   ctaDescription: zod.string(),
   ctaTitle: zod.string(),
   description: zod.string(),

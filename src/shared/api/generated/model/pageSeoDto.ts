@@ -14,7 +14,7 @@ export type PageSeoDto = {
   ogDescription: string;
   /**
    * @maxLength 1000
-   * @pattern ^(?:https://[^\s]+|/(?!/)[^\s]*)?$
+   * @pattern ^(?:/(?![/\\])[^\s\\]*)?$
    */
   ogImage: string;
   /** @maxLength 300 */

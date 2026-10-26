@@ -12,7 +12,7 @@ export type SeoSettingsDto = {
   /**
    * @minLength 1
    * @maxLength 1000
-   * @pattern ^(?:https://[^\s]+|/(?!/)[^\s]*)?$
+   * @pattern ^(?:/(?![/\\])[^\s\\]*)?$
    */
   defaultImage: string
   /**

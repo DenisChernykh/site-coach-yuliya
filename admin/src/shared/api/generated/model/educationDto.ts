@@ -15,6 +15,7 @@ export type EducationDto = {
    */
   hours: number
   id: string
+  /** @pattern ^(?:/(?![/\\])[^\s\\]*)?$ */
   image: string
   imageAlt: string
   organization: string

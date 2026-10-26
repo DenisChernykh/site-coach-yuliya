@@ -146,6 +146,7 @@ export function ArticleForm({
                   }
                 />
                 <ArticleCoverField
+                  disabled={uploading}
                   value={field.value.coverImage}
                   onUploadingChange={setUploading}
                   onChange={(coverImage) =>
@@ -186,6 +187,8 @@ export function ArticleForm({
                 <section className="space-y-4 border-t pt-4">
                   <h2 className="text-lg font-semibold">SEO статьи</h2>
                   <SeoFields
+                    uploading={uploading}
+                    onUploadingChange={setUploading}
                     value={field.value.seo ?? emptyPageSeo}
                     fallback={articleSeoFallbacks(
                       field.value,

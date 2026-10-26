@@ -12,12 +12,14 @@ export function SeoForm({ initial }: { initial: SeoSettingsDto }) {
   const [dirty, setDirty] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
-  const { blocker } = useContentNavigationGuard(dirty)
+  const [uploading, setUploading] = useState(false)
+  const { blocker } = useContentNavigationGuard(dirty || uploading)
   return (
     <form
       className="max-w-3xl space-y-6"
       onSubmit={async (event) => {
         event.preventDefault()
+        if (uploading) return
         setError(null)
         setSaved(false)
         const result = seoSchema.safeParse(value)
@@ -60,6 +62,8 @@ export function SeoForm({ initial }: { initial: SeoSettingsDto }) {
       <fieldset disabled={save.isPending}>
         <SeoSettingsFields
           value={value}
+          uploading={uploading}
+          onUploadingChange={setUploading}
           onChange={(next) => {
             setValue(next)
             setDirty(true)
@@ -78,7 +82,12 @@ export function SeoForm({ initial }: { initial: SeoSettingsDto }) {
           чтобы обновить сайт.
         </p>
       )}
-      <Button type="submit" isLoading={save.isPending} loadingLabel="Сохраняем">
+      <Button
+        type="submit"
+        disabled={uploading}
+        isLoading={save.isPending}
+        loadingLabel="Сохраняем"
+      >
         Сохранить изменения
       </Button>
     </form>
