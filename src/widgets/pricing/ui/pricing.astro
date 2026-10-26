@@ -12,17 +12,11 @@ const { services } = Astro.props;
 <section id="formats" class="section-space" aria-labelledby="formats-title">
   <div class="page-container pricing-inner">
     <div class="pricing-heading">
-      <div>
-        <p class="eyebrow" data-cms-copy="eyebrow">Индивидуальный коучинг</p><h2
-          id="formats-title"
-          class="section-heading"
-          data-cms-copy="title"
-        >
-          Место для твоих<br />вопросов и решений.
-        </h2>
-      </div>
-      <p class="format-note">
-        Онлайн · 60 минут<br />От одной встречи к регулярной работе
+      <h2 id="formats-title" class="section-heading" data-cms-copy="title">
+        Форматы работы
+      </h2>
+      <p class="eyebrow format-note" data-cms-copy="eyebrow">
+        Индивидуальный коучинг
       </p>
     </div>
     <div class="pricing-grid" data-cms-react="programs">
@@ -64,14 +58,10 @@ const { services } = Astro.props;
     justify-content: space-between;
     gap: 60px;
   }
-  .pricing-heading h2 {
-    margin-top: 16px;
-  }
   .format-note {
-    color: var(--muted-foreground);
     font-size: 14px;
     line-height: 1.5;
-    min-width: 350px;
+    flex-shrink: 0;
   }
   .pricing-grid {
     display: grid;
@@ -99,9 +89,6 @@ const { services } = Astro.props;
     .pricing-heading {
       gap: 30px;
     }
-    .format-note {
-      min-width: 260px;
-    }
   }
   @media (max-width: 900px) {
     .pricing-grid {
@@ -126,9 +113,6 @@ const { services } = Astro.props;
     }
     .intro-offer a {
       max-width: 100%;
-    }
-    .pricing-heading h2 {
-      margin-top: 14px;
     }
   }
 </style>

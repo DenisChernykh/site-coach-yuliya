@@ -152,8 +152,8 @@ const {
       <div class="page-container">
         <div class="concerns-heading">
           <h2 id="concerns-title" data-cms-copy="title">
-            Не обязательно знать ответ.<br />Достаточно начать с вопроса.
-          </h2><p>На любом этапе можно<br />{' '}найти свой следующий шаг.</p>
+            Как коуч я работаю с запросами
+          </h2>
         </div>
         <div class="concerns-grid" data-cms-list="home.concerns">
           {
@@ -166,7 +166,7 @@ const {
                   <h3 data-cms-field=".title">{concern.title}</h3>
                   <p data-cms-field=".description">{concern.description}</p>
                   <a href="#contact" class="text-link">
-                    Это про меня <span aria-hidden="true">↗</span>
+                    Хочу обсудить <span aria-hidden="true">↗</span>
                   </a>
                 </>
               </article>
@@ -502,21 +502,8 @@ const {
   .concerns {
     padding-block: 56px 80px;
   }
-  .concerns-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 40px;
-  }
   .concerns-heading h2 {
     font-size: 52px;
-  }
-  .concerns-heading > p {
-    width: 300px;
-    max-width: 100%;
-    font-size: 14px;
-    color: var(--muted-foreground);
-    line-height: 1.5;
   }
   .concerns-grid {
     display: grid;
@@ -796,11 +783,6 @@ const {
     .hero-description {
       white-space: normal;
     }
-    .concerns-heading {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 20px;
-    }
     .approach-grid {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 50px;
@@ -862,15 +844,6 @@ const {
     }
     .concerns-heading h2 {
       font-size: 42px;
-    }
-    .concerns-heading {
-      gap: 24px;
-    }
-    .concerns-heading > p br {
-      display: none;
-    }
-    .concerns-heading > p {
-      width: 100%;
     }
     .concerns-grid {
       grid-template-columns: 1fr;

@@ -17,11 +17,6 @@ export function ServiceCard({ service }: { service: ServiceDto }) {
       className={`min-h-0 rounded-md bg-card p-6 ring-0 [--card-spacing:0px] has-data-[slot=card-footer]:pb-6 md:min-h-[480px] md:p-7 md:has-data-[slot=card-footer]:pb-7 ${styles.card}`}
     >
       <CardHeader className="gap-5 px-0">
-        <p
-          className={`eyebrow ${service.id === 'eight' ? 'max-md:text-[10px]' : ''}`}
-        >
-          {service.eyebrow}
-        </p>
         <CardTitle>
           <h3 className="text-[32px] leading-[1.06] md:text-[36px]">
             {service.title}
