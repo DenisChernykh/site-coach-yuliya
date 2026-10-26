@@ -3,7 +3,6 @@ import { PageSections } from '@/entities/cms';
 import type { CmsPageDto } from '@/shared/api';
 import { Image } from 'astro:assets';
 import type { HomePageDto } from '@/entities/site';
-import { WorkBoundaries } from '@/widgets/work-boundaries';
 import { Education } from '@/widgets/education';
 import { portrait } from '@/shared/assets';
 import { routes } from '@/shared/routes';
@@ -132,49 +131,6 @@ const { layouts, preview = false, data } = Astro.props;
       )
     }
   </Fragment>
-  <Fragment slot="approach">
-    <section
-      id="approach"
-      class="about-approach"
-      aria-labelledby="about-approach-title"
-    >
-      <div class="page-container approach-grid">
-        <div class="approach-copy">
-          <h2
-            id="about-approach-title"
-            data-cms-field="home.approach.title"
-            data-cms-copy="title"
-          >
-            {data.approach.title}
-          </h2><p data-cms-field="home.approach.description">
-            {data.approach.description}
-          </p><blockquote data-cms-field="home.approach.quote">
-            {data.approach.quote}
-          </blockquote>
-        </div>
-        <ol class="approach-steps" data-cms-list="home.approach.steps">
-          {
-            data.approach.steps.map((step, index) => (
-              <li>
-                <>
-                  <span class="step-number" data-cms-index>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <>
-                      <h3 data-cms-field=".title">{step.title}</h3>
-                      <p data-cms-field=".description">{step.description}</p>
-                    </>
-                  </div>
-                </>
-              </li>
-            ))
-          }
-        </ol>
-        <WorkBoundaries embedded />
-      </div>
-    </section>
-  </Fragment>
 
   <Fragment slot="cta">
     <section class="about-cta">
@@ -283,61 +239,6 @@ const { layouts, preview = false, data } = Astro.props;
     font-size: 15px;
     line-height: 1.5;
   }
-  .about-approach {
-    padding-block: 80px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-  }
-  .approach-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 626fr) minmax(0, 550fr);
-    gap: 104px;
-  }
-  .approach-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .approach-copy h2 {
-    font-size: 64px;
-    white-space: pre-line;
-  }
-  .approach-copy > p:not(.eyebrow) {
-    font-size: 17px;
-  }
-  .approach-copy blockquote {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-style: italic;
-    font-size: 25px;
-    line-height: 1.3;
-    white-space: pre-line;
-  }
-  .approach-steps {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .approach-steps li {
-    display: grid;
-    grid-template-columns: 28px minmax(0, 1fr);
-    gap: 28px;
-    padding-block: 20px;
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--primary-foreground) 22%, transparent);
-  }
-  .step-number {
-    font-size: 12px;
-    line-height: 1.5;
-  }
-  .approach-steps h3 {
-    font-size: 30px;
-  }
-  .approach-steps p {
-    margin-top: 6px;
-    font-size: 14px;
-    line-height: 1.5;
-  }
   .about-cta {
     padding-block: 56px;
   }
@@ -373,26 +274,20 @@ const { layouts, preview = false, data } = Astro.props;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
       gap: 40px;
     }
-    .approach-grid {
-      gap: 48px;
-    }
   }
   @media (max-width: 767px) {
     .about-hero,
     .history,
-    .about-approach,
     .about-cta {
       padding-block: 44px;
     }
     .hero-grid,
-    .history-grid,
-    .approach-grid {
+    .history-grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 28px;
     }
     h1,
-    .history h2,
-    .approach-copy h2 {
+    .history h2 {
       font-size: 42px;
     }
     .portrait {

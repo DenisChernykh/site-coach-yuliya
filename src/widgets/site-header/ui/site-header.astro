@@ -11,6 +11,9 @@ interface Props {
 }
 const { settings, preview = false } = Astro.props;
 const pathname = Astro.url.pathname;
+const navigation = settings.navigation.filter(
+  (item) => !['/#approach', '/about/#approach'].includes(item.href),
+);
 ---
 
 <header class="site-header">
@@ -29,7 +32,7 @@ const pathname = Astro.url.pathname;
       aria-label="Основная навигация"
     >
       {
-        settings.navigation.map((item) => (
+        navigation.map((item) => (
           <a
             data-cms-item
             data-cms-href=".href"
@@ -56,15 +59,12 @@ const pathname = Astro.url.pathname;
         preview ? (
           <div data-cms-react="navigation">
             {' '}
-            <MobileNavigation
-              navigation={settings.navigation}
-              name={settings.name}
-            />
+            <MobileNavigation navigation={navigation} name={settings.name} />
           </div>
         ) : (
           <MobileNavigation
             client:load
-            navigation={settings.navigation}
+            navigation={navigation}
             name={settings.name}
           />
         )
@@ -73,11 +73,7 @@ const pathname = Astro.url.pathname;
   </div>
   <noscript
     ><nav class="no-js-navigation" aria-label="Навигация">
-      {
-        settings.navigation.map((item) => (
-          <a href={withBase(item.href)}>{item.label}</a>
-        ))
-      }
+      {navigation.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
     </nav></noscript
   >
 </header>

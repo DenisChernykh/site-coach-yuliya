@@ -81,9 +81,6 @@ export function StoryDialog({
             <span className="block">Открыть отзыв в полном размере ↗</span>
           </a>
         )}
-        <p className="fine-print">
-          Опыт индивидуален; одинаковый результат не гарантируется.
-        </p>
       </DialogContent>
     </Dialog>
   );
