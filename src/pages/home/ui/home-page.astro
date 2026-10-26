@@ -81,7 +81,7 @@ const {
           </p>
           <div class="hero-actions">
             <a href="#contact" class:list={[buttonVariants(), 'hero-cta']}
-              >Бесплатно познакомиться <ArrowUpRight
+              >Записаться на встречу <ArrowUpRight
                 size={18}
                 aria-hidden="true"
               /></a
@@ -130,11 +130,12 @@ const {
             aria-labelledby="stories-title"
           >
             <div class="page-container">
-              <p class="eyebrow" data-cms-copy="eyebrow">
-                Чуть ближе
-              </p>
-              <h2 id="stories-title" data-cms-copy="title">
-                Знакомство в историях
+              <h2
+                id="stories-title"
+                class="mb-6 text-[32px] md:text-[40px]"
+                data-cms-copy="title"
+              >
+                Сторис о моей работе
               </h2>
               {preview ? (
                 <div data-cms-react="stories" />
@@ -157,12 +158,9 @@ const {
         </div>
         <div class="concerns-grid" data-cms-list="home.concerns">
           {
-            data.concerns.map((concern, index) => (
+            data.concerns.map((concern) => (
               <article data-cms-item>
                 <>
-                  <span class="small-number" data-cms-index>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
                   <h3 data-cms-field=".title">{concern.title}</h3>
                   <p data-cms-field=".description">{concern.description}</p>
                   <a href="#contact" class="text-link">
@@ -285,14 +283,10 @@ const {
                   class="section-heading"
                   data-cms-copy="title"
                 >
-                  У каждого пути
-                  <br />
-                  свой поворот.
+                  Кейсы клиентов
                 </h2>
                 <p class="fine-print">
-                  Разные запросы. Собственные решения.
-                  <br />
-                  Истории индивидуальной работы.
+                  С чем обратились, что обсудили и какие решения приняли.
                 </p>
               </>
             </div>
@@ -325,13 +319,7 @@ const {
           </figcaption>
         </figure>
         <div class="art-copy">
-          <p
-            class="eyebrow"
-            data-cms-field="home.artPractice.eyebrow"
-            data-cms-copy="eyebrow"
-          >
-            {data.artPractice.eyebrow}
-          </p><h2
+          <h2
             id="art-title"
             class="section-heading"
             data-cms-field="home.artPractice.title"
@@ -358,28 +346,27 @@ const {
               size={18}
               aria-hidden="true"
             /></a
-          ><p class="fine-print">Ближайшая дата и стоимость уточняются.</p>
+          >
         </div>
       </div>
     </section>
   </Fragment>
   <Fragment slot="products">
-    <section class="other-formats" aria-label="Другие способы начать">
+    <section
+      class="other-formats"
+      aria-label="Групповой коучинг и самостоятельные практики"
+    >
       <div class="page-container products-grid" data-cms-list="home.products">
         {
           data.products.map((product) => (
             <article data-cms-item>
               <>
-                <p
-                  class="eyebrow"
-                  data-cms-field=".eyebrow"
-                  data-cms-copy="eyebrow"
-                >
-                  {product.eyebrow}
-                </p>
                 <h2 data-cms-field=".title" data-cms-copy="title">
                   {product.title}
                 </h2>
+                <p class="product-details" data-cms-field=".eyebrow">
+                  {product.eyebrow}
+                </p>
                 <p data-cms-field=".description">{product.description}</p>
                 <a href="#contact" class="text-link">
                   {product.actionLabel} <span aria-hidden="true">↗</span>
@@ -396,15 +383,15 @@ const {
       <div class="page-container">
         <div class="journal-heading">
           <div>
-            <p class="eyebrow" data-cms-copy="eyebrow">Мысли и практики</p><h2
+            <h2
               id="journal-preview-title"
               class="section-heading"
               data-cms-copy="title"
             >
-              Чуть ближе к себе.
+              Статьи
             </h2>
           </div><a href={routes.journal} class="text-link"
-            >Открыть журнал <span aria-hidden="true">↗</span></a
+            >Все статьи <span aria-hidden="true">↗</span></a
           >
         </div>
         <div class="articles-grid" data-cms-react="articles">
@@ -508,32 +495,31 @@ const {
   .concerns-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 40px;
+    gap: 18px 40px;
     margin-top: 40px;
   }
   .concerns-grid article {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
     border-top: 1px solid var(--border);
     padding-top: 24px;
   }
-  .small-number {
-    display: block;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--muted-foreground);
-  }
   .concerns-grid h3 {
     font-size: 32px;
-    margin-top: 18px;
+    margin: 0;
   }
   .concerns-grid p {
-    margin-top: 18px;
+    margin: 0;
     font-size: 15px;
     line-height: 1.7;
     color: var(--muted-foreground);
     white-space: pre-line;
   }
   .concerns-grid a {
-    margin-top: 18px;
+    margin: 0;
+    align-self: end;
+    justify-self: start;
   }
   .about {
     padding-block: 64px;
@@ -685,34 +671,35 @@ const {
     font-size: 13px;
     line-height: 1.5;
   }
-  .art-copy .fine-print {
-    font-size: 12px;
-  }
   .other-formats {
-    padding-block: 24px 64px;
-    background: var(--card);
+    padding-block: 0 64px;
   }
   .products-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 56px;
+    gap: 14px 56px;
   }
   .products-grid article {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
     padding-top: 28px;
     border-top: 1px solid var(--border);
   }
   .products-grid h2 {
-    margin-top: 14px;
     font-size: 34px;
   }
-  .products-grid p:not(.eyebrow) {
-    margin-top: 14px;
+  .products-grid .product-details {
+    font-size: 13px;
+  }
+  .products-grid p:not(.product-details) {
     font-size: 15px;
     color: var(--muted-foreground);
     line-height: 1.5;
   }
   .products-grid a {
-    margin-top: 14px;
+    justify-self: start;
+    align-self: end;
     font-weight: 600;
   }
   .journal-preview {
@@ -726,7 +713,6 @@ const {
     margin-bottom: 36px;
   }
   .journal-heading h2 {
-    margin-top: 14px;
     font-size: 56px;
   }
   .journal-heading > a {
@@ -854,6 +840,9 @@ const {
       font-size: 32px;
     }
     .concerns-grid article {
+      grid-template-rows: auto auto auto;
+      grid-row: auto;
+      gap: 14px;
       padding-block: 24px 0;
     }
     .about-grid {
@@ -922,11 +911,16 @@ const {
       max-width: 100%;
     }
     .other-formats {
-      padding-block: 44px;
+      padding-block: 0 44px;
     }
     .products-grid {
       grid-template-columns: 1fr;
       gap: 28px;
+    }
+    .products-grid article {
+      grid-template-rows: auto auto auto auto;
+      grid-row: auto;
+      gap: 14px;
     }
     .journal-heading {
       align-items: flex-start;

@@ -1,7 +1,6 @@
 ---
 import { ServiceCard, type ServiceDto } from '@/entities/service';
 import { buttonVariants } from '@/shared/ui';
-import { routes } from '@/shared/routes';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
   services: ServiceDto[];
@@ -11,6 +10,24 @@ const { services } = Astro.props;
 
 <section id="formats" class="section-space" aria-labelledby="formats-title">
   <div class="page-container pricing-inner">
+    <aside class="intro-offer" aria-labelledby="intro-offer-title">
+      <div class="intro-copy">
+        <p class="intro-details">30–60 минут · по видеосвязи</p>
+        <h2 id="intro-offer-title">Бесплатная встреча</h2>
+        <p class="intro-description">
+          Расскажи, что сейчас не устраивает. Вместе уточним запрос и наметим
+          темы для дальнейшей работы.
+        </p>
+      </div>
+      <div class="intro-action">
+        <a
+          href="#contact"
+          class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
+          >Записаться бесплатно <ArrowUpRight size={18} aria-hidden="true" /></a
+        >
+        <p>Можно прийти без готового запроса.</p>
+      </div>
+    </aside>
     <div class="pricing-heading">
       <h2 id="formats-title" class="section-heading" data-cms-copy="title">
         Форматы работы
@@ -22,28 +39,6 @@ const { services } = Astro.props;
     <div class="pricing-grid" data-cms-react="programs">
       {services.map((service) => <ServiceCard service={service} />)}
     </div>
-    <div class="intro-offer">
-      <div>
-        <h3>Можно начать с бесплатного знакомства.</h3><p>
-          До 30 минут: обсудим запрос и подберём подходящий формат.
-        </p>
-      </div>
-      <a
-        href="#contact"
-        class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
-        >Бесплатно познакомиться <ArrowUpRight
-          size={18}
-          aria-hidden="true"
-        /></a
-      >
-    </div>
-    <p class="fine-print">
-      Оплата до начала работы. Условия переноса и отмены согласуем заранее. Цены
-      из задания — подтвердить перед публикацией.
-      <a href={routes.terms} class="underline underline-offset-2"
-        >Условия работы, отмены и возврата</a
-      >.
-    </p>
   </div>
 </section>
 <style>
@@ -69,21 +64,39 @@ const { services } = Astro.props;
     gap: 25px;
   }
   .intro-offer {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-    border-top: 1px solid var(--border);
-    padding-top: 28px;
+    gap: 48px;
+    padding: 40px;
+    margin-bottom: 16px;
+    background: var(--accent);
+    color: var(--accent-foreground);
+    border-radius: var(--radius);
   }
-  .intro-offer h3 {
-    font-size: 30px;
-  }
-  .intro-offer p {
-    margin-top: 6px;
+  .intro-details {
     font-size: 14px;
     line-height: 1.5;
-    color: var(--muted-foreground);
+  }
+  .intro-offer h2 {
+    margin-top: 14px;
+    font-size: 48px;
+  }
+  .intro-description {
+    max-width: 520px;
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .intro-action {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .intro-action p {
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
   }
   @media (max-width: 1100px) {
     .pricing-heading {
@@ -94,11 +107,17 @@ const { services } = Astro.props;
     .pricing-grid {
       grid-template-columns: 1fr;
     }
-    .pricing-heading,
-    .intro-offer {
+    .pricing-heading {
       flex-direction: column;
       align-items: flex-start;
       gap: 24px;
+    }
+    .intro-offer {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .intro-action {
+      align-items: flex-start;
     }
   }
   @media (max-width: 767px) {
@@ -108,8 +127,12 @@ const { services } = Astro.props;
     .pricing-grid {
       gap: 24px;
     }
-    .intro-offer h3 {
-      font-size: 30px;
+    .intro-offer {
+      padding: 28px 24px;
+      margin-bottom: 8px;
+    }
+    .intro-offer h2 {
+      font-size: 38px;
     }
     .intro-offer a {
       max-width: 100%;

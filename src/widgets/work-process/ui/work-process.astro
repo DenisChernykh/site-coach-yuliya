@@ -8,8 +8,7 @@ const { steps } = Astro.props;
 
 <section class="process" aria-labelledby="process-title">
   <div class="page-container">
-    <p class="eyebrow" data-cms-copy="eyebrow">Шаг за шагом</p>
-    <h2 id="process-title" data-cms-copy="title">В твоём темпе. В диалоге.</h2>
+    <h2 id="process-title" data-cms-copy="title">Как проходит работа</h2>
     <ol class="process-grid" data-cms-list="home.process">
       {
         steps.map((step, index) => (
@@ -32,7 +31,6 @@ const { steps } = Astro.props;
     padding-block: 64px 72px;
   }
   h2 {
-    margin-top: 36px;
     font-size: 50px;
   }
   .process-grid {
@@ -74,7 +72,6 @@ const { steps } = Astro.props;
     }
     h2 {
       font-size: 42px;
-      margin-top: 28px;
     }
     .process-grid {
       grid-template-columns: 1fr;

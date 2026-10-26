@@ -127,7 +127,11 @@ export function ConsultationForm({
   return (
     <Card className="rounded-md p-5 ring-0 md:p-8">
       <CardContent className="p-0">
-        <form onSubmit={submit} noValidate aria-label="Заявка на знакомство">
+        <form
+          onSubmit={submit}
+          noValidate
+          aria-label="Заявка на бесплатную встречу"
+        >
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -left-[10000px] h-px w-px overflow-hidden"
@@ -143,7 +147,7 @@ export function ConsultationForm({
             />
           </div>
           <h3 className="mb-[18px] font-sans text-lg font-medium leading-[1.5]">
-            Или оставь пару слов о себе
+            Оставь заявку на встречу
           </h3>
           {selectedService ? (
             <p className="mb-5 text-sm text-muted-foreground">
@@ -227,40 +231,37 @@ export function ConsultationForm({
                   aria-describedby={`${id}-privacy-note${errors.consent ? ` ${id}-consent-error` : ''}`}
                   className="size-4"
                 />
-                <FieldLabel
-                  id={`${id}-consent-label`}
-                  htmlFor={`${id}-consent`}
-                  className="block text-[10px] font-normal leading-[1.5]"
-                >
-                  Даю{' '}
-                  <a
-                    href={routes.consent}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Откроется в новой вкладке"
-                    className="underline underline-offset-2"
+                <p className="text-[10px] font-normal leading-[1.5] text-muted-foreground">
+                  <FieldLabel
+                    id={`${id}-consent-label`}
+                    htmlFor={`${id}-consent`}
+                    className="inline text-[10px] font-normal leading-[1.5]"
                   >
-                    согласие на обработку персональных данных
-                  </a>
-                  .
-                </FieldLabel>
+                    Даю{' '}
+                    <a
+                      href={routes.consent}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Откроется в новой вкладке"
+                      className="underline underline-offset-2"
+                    >
+                      согласие на обработку данных
+                    </a>
+                  </FieldLabel>
+                  {' · '}
+                  <span id={`${id}-privacy-note`}>
+                    <a
+                      href={routes.privacy}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Откроется в новой вкладке"
+                      className="underline underline-offset-2"
+                    >
+                      Политика конфиденциальности
+                    </a>
+                  </span>
+                </p>
               </div>
-              <p
-                id={`${id}-privacy-note`}
-                className="text-[10px] leading-[1.5] text-muted-foreground"
-              >
-                Как обрабатываются данные — в{' '}
-                <a
-                  href={routes.privacy}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Откроется в новой вкладке"
-                  className="underline underline-offset-2"
-                >
-                  политике конфиденциальности
-                </a>
-                .
-              </p>
               {errors.consent ? (
                 <FieldError id={`${id}-consent-error`}>
                   {errors.consent}
@@ -290,19 +291,6 @@ export function ConsultationForm({
                 <ArrowUpRight aria-hidden="true" className="size-[18px]" />
               )}
             </Button>
-            <p className="fine-print">
-              Запись не обязывает покупать сессии или пакет.{' '}
-              <a
-                href={routes.terms}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Откроется в новой вкладке"
-                className="underline underline-offset-2"
-              >
-                Условия работы
-              </a>
-              .
-            </p>
           </FieldGroup>
         </form>
       </CardContent>

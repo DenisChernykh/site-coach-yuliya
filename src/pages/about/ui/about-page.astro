@@ -55,9 +55,12 @@ const { layouts, preview = false, data } = Astro.props;
               buttonVariants(),
               'h-14 w-fit gap-[18px] px-6 text-sm',
             ]}
-            >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
+            >Записаться на встречу <ArrowUpRight
+              size={18}
+              aria-hidden="true"
+            /></a
           >
-          <p class="fine-print">Начнём со знакомства до 30 минут. Бесплатно.</p>
+          <p class="fine-print">Бесплатная видеовстреча · 30–60 минут.</p>
           <p class="fine-print">
             Демонстрационный AI-портрет · заменить фото Юли
           </p>
@@ -80,7 +83,7 @@ const { layouts, preview = false, data } = Astro.props;
       <div class="page-container history-grid">
         <div>
           <h2 id="history-title" data-cms-copy="title">
-            Не чужой маршрут.<br />Свой следующий шаг.
+            Как я пришла в коучинг
           </h2><p class="history-intro">
             {data.about.paragraphs[0]}
           </p>
@@ -185,8 +188,8 @@ const { layouts, preview = false, data } = Astro.props;
     <section class="about-cta">
       <div class="page-container cta-inner">
         <div>
-          <h2 data-cms-copy="title">Хочется обсудить<br />свою историю?</h2><p>
-            Начнём с бесплатного знакомства до 30 минут.
+          <h2 data-cms-copy="title">Запишись на бесплатную встречу</h2><p>
+            30–60 минут по видеосвязи: обсудим ситуацию и уточним запрос.
           </p>
         </div><a
           href={routes.contact}

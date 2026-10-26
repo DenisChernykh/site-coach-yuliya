@@ -22,7 +22,7 @@ const toc =
   <header class="article-header page-container">
     <nav class="breadcrumb" aria-label="Хлебные крошки">
       <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><a
-        href={routes.journal}>Журнал</a
+        href={routes.journal}>Статьи</a
       >
     </nav>
     <h1 data-cms-field="article.title">{article.title}</h1>
@@ -59,11 +59,11 @@ const toc =
           }
         </ol>
       </nav>
-      <h2>Хочешь обсудить<br />свой поиск?</h2>
+      <h2>Бесплатная встреча</h2>
       <a
         href={routes.contact}
         class:list={[buttonVariants(), 'h-12 gap-[18px] px-6 text-sm w-fit']}
-        >Давай познакомимся <ArrowUpRight size={18} aria-hidden="true" /></a
+        >Записаться на встречу <ArrowUpRight size={18} aria-hidden="true" /></a
       >
     </aside>
     <div class="article-body">
@@ -133,7 +133,7 @@ const toc =
         </p><a
           href={routes.contact}
           class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
-          >Бесплатно познакомиться <ArrowUpRight
+          >Записаться на встречу <ArrowUpRight
             size={18}
             aria-hidden="true"
           /></a

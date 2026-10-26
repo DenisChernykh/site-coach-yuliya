@@ -10,8 +10,8 @@ const selectStories = (home: HomePageDto) => home.stories ?? [];
 
 export function StoriesFeed({
   demoStories = [],
-  title = 'Знакомство в историях',
-  eyebrow = 'Чуть ближе',
+  title = 'Сторис о моей работе',
+  eyebrow = '',
 }: {
   demoStories?: StoryGroupDto[];
   title?: string;
@@ -40,10 +40,16 @@ export function StoriesFeed({
       aria-labelledby="stories-title"
     >
       <div className="page-container">
-        <p className="eyebrow" style={{ whiteSpace: 'pre-line' }}>
-          {eyebrow}
-        </p>
-        <h2 id="stories-title" style={{ whiteSpace: 'pre-line' }}>
+        {eyebrow ? (
+          <p className="eyebrow" style={{ whiteSpace: 'pre-line' }}>
+            {eyebrow}
+          </p>
+        ) : null}
+        <h2
+          id="stories-title"
+          className="mb-6 text-[32px] md:text-[40px]"
+          style={{ whiteSpace: 'pre-line' }}
+        >
           {title}
         </h2>
         <Stories stories={stories} />

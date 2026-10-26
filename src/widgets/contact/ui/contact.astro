@@ -13,13 +13,12 @@ const telegram = telegramUrl;
 <section id="contact" class="contact" aria-labelledby="contact-title">
   <div class="page-container contact-grid">
     <div class="contact-copy">
-      <p class="eyebrow" data-cms-copy="eyebrow">Первый шаг</p>
       <h2 id="contact-title" data-cms-copy="title">
-        Начнём<br />со знакомства?
+        Запишись на бесплатную встречу
       </h2>
       <p class="contact-note">
-        До 30 минут · онлайн · бесплатно<br />{' '}Поговорим о твоём запросе и
-        поймём,<br />{' '}какой формат тебе подходит.
+        30–60 минут · по видеосвязи<br />{' '}Обсудим твою ситуацию, уточним
+        запрос и наметим темы для дальнейшей работы.
       </p>
       <div data-cms-react="telegram" style="display:contents">
         <TelegramLink url={telegram} />
@@ -52,7 +51,7 @@ const telegram = telegramUrl;
     gap: 24px;
   }
   h2 {
-    font-size: 72px;
+    font-size: 58px;
   }
   .contact-note {
     font-size: 17px;
@@ -64,7 +63,7 @@ const telegram = telegramUrl;
       gap: 40px;
     }
     h2 {
-      font-size: 60px;
+      font-size: 48px;
     }
   }
   @media (max-width: 767px) {
@@ -80,9 +79,6 @@ const telegram = telegramUrl;
     }
     .contact-note {
       font-size: 17px;
-    }
-    .contact-note br {
-      display: none;
     }
   }
 </style>

@@ -11,13 +11,10 @@ const { items, preview = false } = Astro.props;
 <section class="faq" aria-labelledby="faq-title">
   <div class="page-container faq-grid">
     <div>
-      <p class="eyebrow" data-cms-copy="eyebrow">О чём часто спрашивают</p><h2
-        id="faq-title"
-        data-cms-copy="title"
+      <h2 id="faq-title" data-cms-copy="title">Частые вопросы</h2><p
+        class="faq-note"
       >
-        Можно прийти<br />с вопросами.
-      </h2><p class="faq-note">
-        Даже если пока сложно<br />{' '}сформулировать свой запрос.
+        О встречах, выборе формата и подготовке к работе.
       </p>
     </div>
     {
@@ -43,7 +40,6 @@ const { items, preview = false } = Astro.props;
   }
   h2 {
     font-size: 50px;
-    margin-top: 20px;
   }
   .faq-note {
     margin-top: 20px;

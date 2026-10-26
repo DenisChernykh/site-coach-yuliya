@@ -18,14 +18,13 @@ const { layouts, preview = false } = Astro.props;
       <div class="page-container journal-header">
         <nav class="breadcrumb" aria-label="Хлебные крошки">
           <a href={routes.home}>Главная</a><span aria-hidden="true">/</span
-          ><span aria-current="page">Журнал</span>
+          ><span aria-current="page">Статьи</span>
         </nav>
-        <p class="eyebrow" data-cms-copy="eyebrow">Мысли и практики</p>
         <div class="journal-intro">
-          <h1 data-cms-copy="title">Журнал<br />о своём пути.</h1>
+          <h1 data-cms-copy="title">Статьи</h1>
           <p class="journal-description" data-cms-copy="description">
-            О поиске своего дела, опоре на себя и смелости проявляться. Читай в
-            своём темпе и забирай то, что откликается.
+            О выборе профессии, принятии решений и продвижении своих услуг.
+            Вопросы и упражнения для самостоятельной работы.
           </p>
         </div>
       </div>
@@ -36,8 +35,8 @@ const { layouts, preview = false } = Astro.props;
     ><section class="journal-cta">
       <div class="page-container journal-cta-inner">
         <div>
-          <h2 data-cms-copy="title">Хочется обсудить<br />свою историю?</h2><p>
-            Начнём с бесплатного знакомства до 30 минут.
+          <h2 data-cms-copy="title">Запишись на бесплатную встречу</h2><p>
+            30–60 минут по видеосвязи: обсудим ситуацию и уточним запрос.
           </p>
         </div><a
           href={routes.contact}
