@@ -15,10 +15,12 @@ export const seoPagePaths: Record<keyof SeoPagesDto, string> = {
   privacy: '/privacy/',
 };
 
-function clean(value: string | undefined, fallback: string): string {
-  return (
-    value?.replace(/\s+/gu, ' ').trim() || fallback.replace(/\s+/gu, ' ').trim()
-  );
+function clean(...values: (string | undefined)[]): string {
+  for (const value of values) {
+    const text = value?.replace(/\s+/gu, ' ').trim();
+    if (text) return text;
+  }
+  return '';
 }
 
 function siteOrigin(value: string | null): string | undefined {
@@ -65,23 +67,37 @@ export function resolvePageSeo({
 }) {
   const metadata: PageSeoDto | undefined =
     article?.seo ?? (page ? seo.pages[page] : undefined);
+  const articleTitle = clean(article?.title);
+  const articlePageTitle = articleTitle
+    ? [articleTitle, clean(settings.name, seo.siteName)]
+        .filter(Boolean)
+        .join(' — ')
+    : undefined;
   const resolvedTitle = clean(
     metadata?.title,
-    title ?? (article ? `${article.title} — ${settings.name}` : settings.name),
+    title,
+    articlePageTitle,
+    article ? seo.siteName : settings.name,
+    settings.name,
+    seo.siteName,
   );
   const resolvedDescription = clean(
     metadata?.description,
-    description ?? article?.description ?? settings.description,
+    description,
+    article?.description,
+    settings.description,
+    seo.pages.home.description,
   );
   const origin = siteOrigin(seo.siteUrl);
   const canonical = origin ? new URL(pathname, origin).href : undefined;
   const image = imageUrl(
-    clean(metadata?.ogImage, article?.coverImage ?? seo.defaultImage),
+    clean(metadata?.ogImage, article?.coverImage, seo.defaultImage),
     origin,
   );
   const imageAlt = clean(
     metadata?.ogImageAlt,
-    article?.coverAlt || seo.defaultImageAlt,
+    article?.coverAlt,
+    seo.defaultImageAlt,
   );
   const indexing = Boolean(
     origin && seo.allowIndexing && !metadata?.noIndex && !noIndex,
@@ -119,7 +135,7 @@ export function resolvePageSeo({
       : {}),
     ...(article
       ? {
-          headline: article.title,
+          headline: clean(article.title, resolvedTitle),
           author: origin ? { '@id': `${origin}/#person` } : person,
           mainEntityOfPage: canonical,
         }
@@ -153,7 +169,7 @@ export function resolvePageSeo({
             {
               '@type': 'ListItem',
               position: article ? 3 : 2,
-              name: article?.title ?? resolvedTitle,
+              name: clean(article?.title, resolvedTitle),
               item: canonical,
             },
           ],

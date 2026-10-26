@@ -83,6 +83,96 @@ test('article SEO overrides editorial title and blank values inherit content and
   );
 });
 
+test('empty article metadata inherits website defaults, including whitespace-only values', () => {
+  const seo = configured();
+  for (const blank of ['', ' \n\t ']) {
+    const article = {
+      ...articles[0]!,
+      title: blank,
+      description: blank,
+      coverImage: blank,
+      coverAlt: blank,
+      seo: {
+        title: blank,
+        description: blank,
+        ogTitle: blank,
+        ogDescription: blank,
+        ogImage: blank,
+        ogImageAlt: blank,
+        noIndex: false,
+      },
+    };
+    const result = resolvePageSeo({
+      settings: siteSettings,
+      seo,
+      pathname: '/journal/example/',
+      article,
+    });
+    assert.equal(result.title, seo.siteName);
+    assert.equal(result.description, siteSettings.description);
+    assert.equal(result.ogTitle, seo.siteName);
+    assert.equal(result.ogDescription, siteSettings.description);
+    assert.equal(result.image, 'https://coach.example.com/og/coach-yuliya.jpg');
+    assert.equal(result.imageAlt, seo.defaultImageAlt);
+    const posting = result.jsonLd['@graph'].find(
+      (item) => item['@type'] === 'BlogPosting',
+    );
+    assert.ok(posting && 'headline' in posting && 'description' in posting);
+    assert.equal(posting.headline, seo.siteName);
+    assert.equal(posting.description, siteSettings.description);
+    assert.match(result.robots, /^index, follow/u);
+  }
+});
+
+test('article content remains ahead of website defaults and explicit SEO stays first', () => {
+  const seo = configured();
+  const article = {
+    ...articles[0]!,
+    title: 'Название статьи',
+    description: 'Описание статьи',
+    coverImage: '/articles/example.webp',
+    coverAlt: 'Обложка статьи',
+    seo: undefined,
+  };
+  const content = resolvePageSeo({
+    settings: siteSettings,
+    seo,
+    pathname: '/journal/example/',
+    article,
+  });
+  assert.equal(content.title, `Название статьи — ${siteSettings.name}`);
+  assert.equal(content.description, article.description);
+  assert.equal(
+    content.image,
+    'https://coach.example.com/articles/example.webp',
+  );
+  assert.equal(content.imageAlt, article.coverAlt);
+  const explicit = resolvePageSeo({
+    settings: siteSettings,
+    seo,
+    pathname: '/journal/example/',
+    article: {
+      ...article,
+      seo: {
+        title: 'SEO title',
+        description: 'SEO description',
+        ogTitle: 'Social title',
+        ogDescription: 'Social description',
+        ogImage: '/og/custom.webp',
+        ogImageAlt: 'Custom image',
+        noIndex: true,
+      },
+    },
+  });
+  assert.equal(explicit.title, 'SEO title');
+  assert.equal(explicit.description, 'SEO description');
+  assert.equal(explicit.ogTitle, 'Social title');
+  assert.equal(explicit.ogDescription, 'Social description');
+  assert.equal(explicit.image, 'https://coach.example.com/og/custom.webp');
+  assert.equal(explicit.imageAlt, 'Custom image');
+  assert.equal(explicit.robots, 'noindex, follow');
+});
+
 test('indexing respects domain readiness, global switch, page flag, and 404', () => {
   for (const seo of [
     { ...configured(), siteUrl: null },

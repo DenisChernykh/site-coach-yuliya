@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import type { PageSeoDto, SeoSettingsDto } from '@/shared/api'
 import { SelectField, TextField, TextareaField } from '@/shared/ui'
+import { firstSeoText } from '../model/seo'
 
 export function SeoFields({
   value,
@@ -14,14 +15,17 @@ export function SeoFields({
   fallback?: Partial<PageSeoDto>
   url?: string
 }) {
-  const title = value.title || fallback?.title || 'Заголовок страницы'
-  const description =
-    value.description || fallback?.description || 'Описание страницы'
+  const title = firstSeoText(value.title, fallback?.title, 'Заголовок страницы')
+  const description = firstSeoText(
+    value.description,
+    fallback?.description,
+    'Описание страницы',
+  )
   return (
     <div className="space-y-5">
       <TextField
         label="SEO-заголовок"
-        description={`${value.title.length} из 120 символов. Пустое поле использует заголовок страницы.`}
+        description={`${value.title.length} из 120 символов. Пустое поле использует заголовок страницы или название сайта.`}
         maxLength={120}
         placeholder={fallback?.title}
         value={value.title}
@@ -29,7 +33,7 @@ export function SeoFields({
       />
       <TextareaField
         label="SEO-описание"
-        description={`${value.description.length} из 320 символов. Кратко опишите содержание страницы.`}
+        description={`${value.description.length} из 320 символов. Пустое поле использует описание страницы или сайта.`}
         rows={3}
         maxLength={320}
         placeholder={fallback?.description}

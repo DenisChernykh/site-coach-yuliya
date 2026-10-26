@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Controller } from 'react-hook-form'
+import { useCms } from '@/entities/site-content'
 import {
   writeArticleSchema,
   type ManagedArticleDto,
@@ -21,7 +22,7 @@ import { ContentFields } from './content-fields'
 import { ArticleCoverField } from './article-cover-field'
 import { ArticlePreview } from './cms-preview'
 import { SeoFields } from './seo-fields'
-import { emptyPageSeo } from '../model/seo'
+import { articleSeoFallbacks, emptyPageSeo } from '../model/seo'
 import { useContentNavigationGuard } from '../model/use-content-navigation-guard'
 
 const primaryMetadataKeys = ['title', 'description']
@@ -45,6 +46,7 @@ export function ArticleForm({
   onSaved: (id: string) => void
 }) {
   const save = useSaveArticle(article?.id)
+  const cms = useCms()
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -185,16 +187,10 @@ export function ArticleForm({
                   <h2 className="text-lg font-semibold">SEO статьи</h2>
                   <SeoFields
                     value={field.value.seo ?? emptyPageSeo}
-                    fallback={{
-                      title: `${field.value.title} — Юля Валишина`,
-                      description: field.value.description,
-                      ogImage: ['art', 'landscape'].includes(
-                        field.value.coverImage,
-                      )
-                        ? undefined
-                        : field.value.coverImage,
-                      ogImageAlt: field.value.coverAlt,
-                    }}
+                    fallback={articleSeoFallbacks(
+                      field.value,
+                      cms.data?.content,
+                    )}
                     url={
                       field.value.slug
                         ? `/journal/${field.value.slug}/`

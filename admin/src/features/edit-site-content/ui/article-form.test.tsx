@@ -225,3 +225,46 @@ describe('article cover upload', () => {
     }
   })
 })
+
+describe('article SEO defaults', () => {
+  it('previews website metadata for an empty article, then prefers article content and custom SEO', async () => {
+    const editor = show(false)
+    try {
+      const user = userEvent.setup()
+      const preview = screen.getByLabelText('Пример в поиске')
+      await waitFor(() =>
+        expect(preview).toHaveTextContent(initialContent.seo.siteName),
+      )
+      expect(preview).toHaveTextContent(initialContent.settings.description)
+      expect(screen.getByLabelText('SEO-заголовок')).toHaveValue('')
+      expect(screen.getByLabelText('SEO-описание')).toHaveValue('')
+      await user.click(screen.getByText('Превью в социальных сетях'))
+      expect(
+        screen.getByLabelText('Описание изображения для соцсетей'),
+      ).toHaveAttribute('placeholder', initialContent.seo.defaultImageAlt)
+      await user.type(screen.getByLabelText('Описание'), '   ')
+      expect(preview).toHaveTextContent(initialContent.settings.description)
+      await user.clear(screen.getByLabelText('Описание'))
+      await user.type(
+        screen.getByLabelText('Описание'),
+        'Описание самой статьи',
+      )
+      await user.type(screen.getByLabelText('Заголовок'), 'Заголовок статьи')
+      expect(preview).toHaveTextContent(
+        `Заголовок статьи — ${initialContent.settings.name}`,
+      )
+      expect(preview).toHaveTextContent('Описание самой статьи')
+      await user.type(
+        screen.getByLabelText('SEO-описание'),
+        'Индивидуальное SEO',
+      )
+      expect(preview).toHaveTextContent('Индивидуальное SEO')
+      await user.clear(screen.getByLabelText('SEO-описание'))
+      await user.clear(screen.getByLabelText('Описание'))
+      expect(preview).toHaveTextContent(initialContent.settings.description)
+      expect(editor.writes).toHaveLength(0)
+    } finally {
+      editor.dispose()
+    }
+  })
+})
