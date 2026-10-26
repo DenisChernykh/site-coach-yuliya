@@ -121,7 +121,16 @@ export function CmsPreview({
 export function ArticlePreview({ article }: { article: ArticleDto }) {
   const query = useCms()
   return query.data ? (
-    <CmsPreview content={query.data.content} page="article" article={article} />
+    <CmsPreview
+      content={query.data.content}
+      page="article"
+      article={{
+        ...article,
+        coverImage: article.coverImage.startsWith('/v1/story-media/')
+          ? new URL(article.coverImage, window.location.origin).href
+          : article.coverImage,
+      }}
+    />
   ) : (
     <p className="text-sm text-muted-foreground">Загружаем превью…</p>
   )

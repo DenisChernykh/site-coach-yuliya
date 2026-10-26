@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { ArticleDto } from '@/shared/api';
 import { routes } from '@/shared/routes';
+import { articleCoverUrl } from '@/shared/lib/article-cover-url';
 import styles from './article-card.module.css';
 
 export function ArticleCard({
@@ -30,7 +31,7 @@ export function ArticleCard({
           aria-hidden="true"
         >
           <img
-            src={article.coverImage}
+            src={articleCoverUrl(article.coverImage)}
             alt={article.coverAlt}
             width={640}
             height={280}

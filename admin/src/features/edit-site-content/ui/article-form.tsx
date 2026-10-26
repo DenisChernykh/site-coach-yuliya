@@ -18,6 +18,7 @@ import { articleMarkdown } from '../model/article-markdown'
 import { contentError } from '../model/errors'
 import { useSaveArticle } from '../model/mutations'
 import { ContentFields } from './content-fields'
+import { ArticleCoverField } from './article-cover-field'
 import { ArticlePreview } from './cms-preview'
 import { SeoFields } from './seo-fields'
 import { emptyPageSeo } from '../model/seo'
@@ -29,8 +30,6 @@ const metadataKeys = [
   'description',
   'topic',
   'topicLabel',
-  'coverImage',
-  'coverAlt',
   'previewTitle',
   'previewDescription',
   'listingDescription',
@@ -50,7 +49,8 @@ export function ArticleForm({
   const save = useSaveArticle(article?.id)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState(false)
-  const initial = { ...newArticle, ...article?.content }
+  const [uploading, setUploading] = useState(false)
+  const initial = { ...newArticle, coverImage: '', ...article?.content }
   const form = useZodForm(writeArticleSchema, {
     defaultValues: {
       content: {
@@ -63,11 +63,16 @@ export function ArticleForm({
     },
   })
   const { blocker, afterSave } = useContentNavigationGuard(
-    form.formState.isDirty,
+    form.formState.isDirty || uploading,
   )
   const submit = form.handleSubmit(async (input) => {
+    if (uploading) return
     setError(null)
     setNotice(false)
+    if (!input.content.coverImage) {
+      setError('Загрузите обложку статьи.')
+      return
+    }
     try {
       const saved = await save.mutateAsync(input)
       form.reset({
@@ -140,6 +145,28 @@ export function ArticleForm({
                     })
                   }
                 />
+                <ArticleCoverField
+                  value={field.value.coverImage}
+                  onUploadingChange={setUploading}
+                  onChange={(coverImage) =>
+                    form.setValue(
+                      'content',
+                      { ...form.getValues('content'), coverImage },
+                      { shouldDirty: true, shouldValidate: true },
+                    )
+                  }
+                />
+                <TextField
+                  label="Описание обложки"
+                  description="Кратко опишите изображение для людей, использующих экранный диктор."
+                  value={field.value.coverAlt}
+                  onChange={(event) =>
+                    field.onChange({
+                      ...field.value,
+                      coverAlt: event.target.value,
+                    })
+                  }
+                />
                 <div className="grid min-w-0 gap-6 xl:grid-cols-2">
                   <RichTextEditor
                     label="Текст статьи"
@@ -182,7 +209,7 @@ export function ArticleForm({
                 </section>
                 <details className="space-y-4 border-t pt-4">
                   <summary className="cursor-pointer text-sm font-medium">
-                    Карточки, обложка и дополнительные блоки
+                    Карточки и дополнительные блоки
                   </summary>
                   <ContentFields
                     value={secondary}
@@ -232,7 +259,12 @@ export function ArticleForm({
           чтобы обновить сайт.
         </p>
       )}
-      <Button type="submit" isLoading={save.isPending} loadingLabel="Сохраняем">
+      <Button
+        type="submit"
+        disabled={uploading}
+        isLoading={save.isPending}
+        loadingLabel="Сохраняем"
+      >
         Сохранить статью
       </Button>
     </form>
