@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UploadStoryMediaDtoMimeType } from './uploadStoryMediaDtoMimeType'
+import type { UploadStoryMediaDtoPurpose } from './uploadStoryMediaDtoPurpose'
 
 export type UploadStoryMediaDto = {
   /**
@@ -19,4 +20,5 @@ export type UploadStoryMediaDto = {
    * @maxLength 200
    */
   name: string
+  purpose?: UploadStoryMediaDtoPurpose
 }

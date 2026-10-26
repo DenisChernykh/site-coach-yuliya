@@ -1,14 +1,19 @@
 import type { StoryGroup } from '../domain/stories'
 import type { StoryMedia, StoryMediaPort } from './story-media.port'
+import type { ArticleCoverOptimizerPort } from './article-cover-optimizer.port'
 import { InvalidStoryMediaError, SiteRecordNotFoundError } from './site-errors'
 
 export class StoryMediaService {
-  public constructor(private readonly media: StoryMediaPort) {}
+  public constructor(
+    private readonly media: StoryMediaPort,
+    private readonly covers: ArticleCoverOptimizerPort,
+  ) {}
 
   public async upload(input: {
     name: string
     mimeType: string
     base64: string
+    purpose?: 'article-cover'
   }): Promise<StoryMedia & { type: 'image' | 'video' }> {
     const data = Buffer.from(input.base64, 'base64')
     const image = input.mimeType.startsWith('image/')
@@ -19,10 +24,15 @@ export class StoryMediaService {
       !this.matches(data, input.mimeType)
     )
       throw new InvalidStoryMediaError()
+    const cover = input.purpose === 'article-cover'
+    if (cover && !image) throw new InvalidStoryMediaError()
+    const stored = cover ? await this.covers.optimize(data) : data
     const result = await this.media.create({
-      name: input.name,
-      mimeType: input.mimeType,
-      data,
+      name: cover
+        ? input.name.replace(/\.[^.]+$/u, '').slice(0, 195) + '.webp'
+        : input.name,
+      mimeType: cover ? 'image/webp' : input.mimeType,
+      data: stored,
     })
     return { ...result, type: image ? 'image' : 'video' }
   }

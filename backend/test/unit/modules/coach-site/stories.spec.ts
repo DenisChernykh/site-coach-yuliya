@@ -79,7 +79,11 @@ describe('media upload boundaries', () => {
     ),
     read: jest.fn(() => Promise.resolve(new Uint8Array())),
   }
-  const service = new StoryMediaService(media)
+  const service = new StoryMediaService(media, {
+    optimize: jest.fn(() =>
+      Promise.reject(new Error('Unexpected optimization')),
+    ),
+  })
   it('checks actual bytes and canonical base64 before persistence', async () => {
     await expect(
       service.upload({

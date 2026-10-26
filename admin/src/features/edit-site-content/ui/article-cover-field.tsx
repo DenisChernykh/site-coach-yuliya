@@ -52,9 +52,13 @@ export function ArticleCoverField({
     setProgress(0)
     onUploadingChange(true)
     try {
-      const media = await uploadStoryFile(file, (percent) => {
-        if (mounted.current) setProgress(percent)
-      })
+      const media = await uploadStoryFile(
+        file,
+        (percent) => {
+          if (mounted.current) setProgress(percent)
+        },
+        'article-cover',
+      )
       if (mounted.current) {
         setFailedPreview('')
         onChange(`/v1/story-media/${media.id}`)

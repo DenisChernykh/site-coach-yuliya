@@ -28,6 +28,7 @@ export const AdminUploadStoryMediaBody = zod.strictObject({
     'video/webm',
   ]),
   name: zod.string().min(1).max(adminUploadStoryMediaBodyNameMax),
+  purpose: zod.enum(['article-cover']).optional(),
 })
 
 export const AdminUploadStoryMedia201Response = zod.strictObject({

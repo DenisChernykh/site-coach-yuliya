@@ -126,6 +126,7 @@ describe('article cover upload', () => {
           name: 'cover.png',
           mimeType: 'image/png',
           base64: 'iVBORw0KGgo=',
+          purpose: 'article-cover',
         },
       })
       await waitFor(() =>

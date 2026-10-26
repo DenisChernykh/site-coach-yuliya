@@ -7,6 +7,7 @@ export class StoryUploadError extends Error {}
 export async function uploadStoryFile(
   file: File,
   onProgress: (percent: number) => void,
+  purpose?: 'article-cover',
 ) {
   if (!storyMediaTypes.includes(file.type))
     throw new StoryUploadError('Выберите JPG, PNG, WebP, MP4 или WebM.')
@@ -32,6 +33,7 @@ export async function uploadStoryFile(
       mimeType: file.type as
         'image/jpeg' | 'image/png' | 'image/webp' | 'video/mp4' | 'video/webm',
       base64,
+      ...(purpose ? { purpose } : {}),
     },
     {
       onUploadProgress: (event) =>

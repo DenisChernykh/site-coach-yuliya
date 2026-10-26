@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsIn,
   IsInt,
+  IsOptional,
   IsString,
   IsUUID,
   Length,
@@ -88,6 +89,11 @@ export class StoryGroupDto {
 }
 
 export class UploadStoryMediaDto {
+  @ApiProperty({ enum: ['article-cover'], required: false })
+  @IsOptional()
+  @IsIn(['article-cover'])
+  public readonly purpose?: 'article-cover'
+
   @ApiProperty({ type: String, minLength: 1, maxLength: 200 })
   @IsString()
   @Length(1, 200)

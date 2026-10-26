@@ -21,6 +21,7 @@ import { SiteCmsService } from '../application/cms.service'
 import { PrismaCmsAdapter } from '../infrastructure/prisma-cms.adapter'
 import { DraftContentAdapter } from '../infrastructure/draft-content.adapter'
 import { PrismaStoryMediaAdapter } from '../infrastructure/prisma-story-media.adapter'
+import { SharpArticleCoverOptimizer } from '../infrastructure/sharp-article-cover-optimizer'
 import { StoryMediaService } from '../application/story-media.service'
 import {
   AdminStoryMediaController,
@@ -77,10 +78,16 @@ export class CoachSiteModule {
             new PrismaStoryMediaAdapter(database),
         },
         {
+          provide: SharpArticleCoverOptimizer,
+          useFactory: () => new SharpArticleCoverOptimizer(),
+        },
+        {
           provide: StoryMediaService,
-          inject: [PrismaStoryMediaAdapter],
-          useFactory: (media: PrismaStoryMediaAdapter) =>
-            new StoryMediaService(media),
+          inject: [PrismaStoryMediaAdapter, SharpArticleCoverOptimizer],
+          useFactory: (
+            media: PrismaStoryMediaAdapter,
+            covers: SharpArticleCoverOptimizer,
+          ) => new StoryMediaService(media, covers),
         },
         {
           provide: PrismaCmsAdapter,
