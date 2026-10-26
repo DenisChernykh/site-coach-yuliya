@@ -91,14 +91,20 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     publishedRevision: number
     content: unknown
   }): CmsWorkspace {
+    const document = json<CmsDocument>(row.content)
     return {
       revision: row.revision,
       publishedRevision: row.publishedRevision,
       content: {
-        ...json<CmsDocument>(row.content),
-        pages: withEducationBlock(
-          withStoriesBlock(json<CmsDocument>(row.content).pages),
-        ),
+        ...document,
+        ...(document.editorialNotes === undefined
+          ? {}
+          : {
+              editorialNotes: document.editorialNotes.map(
+                ({ materialId, source }) => ({ materialId, source }),
+              ),
+            }),
+        pages: withEducationBlock(withStoriesBlock(document.pages)),
       },
     }
   }

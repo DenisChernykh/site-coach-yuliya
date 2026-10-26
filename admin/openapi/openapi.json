@@ -1064,10 +1064,6 @@
             "maxLength": 100,
             "type": "string"
           },
-          "permissionNote": {
-            "maxLength": 2000,
-            "type": "string"
-          },
           "source": {
             "maxLength": 2000,
             "type": "string"
@@ -1075,8 +1071,7 @@
         },
         "required": [
           "materialId",
-          "source",
-          "permissionNote"
+          "source"
         ],
         "type": "object"
       },

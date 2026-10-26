@@ -93,7 +93,6 @@ export function withEducationBlock(pages: CmsPage[]): CmsPage[] {
 export interface EditorialNote {
   materialId: string
   source: string
-  permissionNote: string
 }
 export function validPages(pages: CmsPage[]): boolean {
   return (

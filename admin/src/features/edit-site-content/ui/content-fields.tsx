@@ -61,7 +61,6 @@ const longFields = new Set([
   'quote',
   'quoteNote',
   'review',
-  'permissionNote',
   'answer',
   'body',
   'text',

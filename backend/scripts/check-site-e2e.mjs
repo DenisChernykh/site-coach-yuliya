@@ -594,7 +594,6 @@ try {
     {
       materialId: 'private-note',
       source: 'Internal source',
-      permissionNote: 'Internal permission record',
     },
   ]
   changed.home.education[0].enabled = false
@@ -626,6 +625,14 @@ try {
   assert.equal(savedPages.content.socials[0].url, 'https://t.me/public_channel')
   assert.deepEqual(savedPages.content.editorialNotes, changed.editorialNotes)
   assert.equal(savedPages.content.home.education.length, 3)
+  await pool.query(
+    "UPDATE site_cms_drafts SET content = jsonb_set(content, '{editorialNotes,0,permissionNote}', $1::jsonb)",
+    [JSON.stringify('Legacy note')],
+  )
+  const migratedNotes = (
+    await http('/v1/admin/cms', 'GET', undefined, 200, true)
+  ).body
+  assert.deepEqual(migratedNotes.content.editorialNotes, changed.editorialNotes)
 
   assert.deepEqual((await http('/v1/home')).body, originalHome)
   assert.equal(
@@ -664,15 +671,16 @@ try {
 
   const publicMaterials = (await http('/v1/home')).body
   assert.equal(publicMaterials.education.length, 2)
-  assert.equal(publicMaterials.caseStudies.length, 2)
+  assert.equal(
+    publicMaterials.caseStudies.length,
+    pageContent.home.caseStudies.length - 1,
+  )
   assert.equal(
     publicMaterials.caseStudies.find((item) => item.id === 'career-or-business')
       .reviewImage,
     '/images/reviews/career-or-business.jpg',
   )
-  assert.ok(
-    !JSON.stringify(publicMaterials).includes('Internal permission record'),
-  )
+  assert.ok(!JSON.stringify(publicMaterials).includes('Internal source'))
   assert.equal(publicMaterials.editorialNotes, undefined)
   assert.equal(
     (await http('/v1/contacts')).body.telegramUrl,

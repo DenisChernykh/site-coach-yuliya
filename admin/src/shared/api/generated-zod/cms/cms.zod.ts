@@ -45,8 +45,6 @@ export const adminGetCms200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminGetCms200ResponseContentEditorialNotesItemMaterialIdMax = 100
 
-export const adminGetCms200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
-
 export const adminGetCms200ResponseContentEditorialNotesItemSourceMax = 2000
 
 export const adminGetCms200ResponseContentEditorialNotesMax = 100
@@ -326,11 +324,6 @@ export const AdminGetCms200Response = zod.strictObject({
           materialId: zod
             .string()
             .max(adminGetCms200ResponseContentEditorialNotesItemMaterialIdMax),
-          permissionNote: zod
-            .string()
-            .max(
-              adminGetCms200ResponseContentEditorialNotesItemPermissionNoteMax,
-            ),
           source: zod
             .string()
             .max(adminGetCms200ResponseContentEditorialNotesItemSourceMax),
@@ -763,8 +756,6 @@ export const adminSaveCmsDraftBodyContentContactsTelegramUrlMax = 500
 
 export const adminSaveCmsDraftBodyContentEditorialNotesItemMaterialIdMax = 100
 
-export const adminSaveCmsDraftBodyContentEditorialNotesItemPermissionNoteMax = 2000
-
 export const adminSaveCmsDraftBodyContentEditorialNotesItemSourceMax = 2000
 
 export const adminSaveCmsDraftBodyContentEditorialNotesMax = 100
@@ -836,11 +827,6 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
           materialId: zod
             .string()
             .max(adminSaveCmsDraftBodyContentEditorialNotesItemMaterialIdMax),
-          permissionNote: zod
-            .string()
-            .max(
-              adminSaveCmsDraftBodyContentEditorialNotesItemPermissionNoteMax,
-            ),
           source: zod
             .string()
             .max(adminSaveCmsDraftBodyContentEditorialNotesItemSourceMax),
@@ -1110,8 +1096,6 @@ export const adminSaveCmsDraft200ResponseContentContactsPhoneMax = 80
 export const adminSaveCmsDraft200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminSaveCmsDraft200ResponseContentEditorialNotesItemMaterialIdMax = 100
-
-export const adminSaveCmsDraft200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
 
 export const adminSaveCmsDraft200ResponseContentEditorialNotesItemSourceMax = 2000
 
@@ -1392,11 +1376,6 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
             .string()
             .max(
               adminSaveCmsDraft200ResponseContentEditorialNotesItemMaterialIdMax,
-            ),
-          permissionNote: zod
-            .string()
-            .max(
-              adminSaveCmsDraft200ResponseContentEditorialNotesItemPermissionNoteMax,
             ),
           source: zod
             .string()
@@ -1918,8 +1897,6 @@ export const adminPublishCms200ResponseContentContactsTelegramUrlMax = 500
 
 export const adminPublishCms200ResponseContentEditorialNotesItemMaterialIdMax = 100
 
-export const adminPublishCms200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
-
 export const adminPublishCms200ResponseContentEditorialNotesItemSourceMax = 2000
 
 export const adminPublishCms200ResponseContentEditorialNotesMax = 100
@@ -2199,11 +2176,6 @@ export const AdminPublishCms200Response = zod.strictObject({
             .string()
             .max(
               adminPublishCms200ResponseContentEditorialNotesItemMaterialIdMax,
-            ),
-          permissionNote: zod
-            .string()
-            .max(
-              adminPublishCms200ResponseContentEditorialNotesItemPermissionNoteMax,
             ),
           source: zod
             .string()

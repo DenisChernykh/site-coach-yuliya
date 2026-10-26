@@ -10,7 +10,5 @@ export type EditorialNoteDto = {
   /** @maxLength 100 */
   materialId: string
   /** @maxLength 2000 */
-  permissionNote: string
-  /** @maxLength 2000 */
   source: string
 }

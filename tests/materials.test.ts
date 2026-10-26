@@ -19,7 +19,8 @@ test('published material has real local images and distinct Telegram destination
     'https://t.me/Mnogogrannajulia',
   );
   assert.equal(home.education?.length, 3);
-  assert.equal(home.caseStudies.length, 3);
+  assert.equal(home.caseStudies.length, 5);
+  assert.ok(home.caseStudies.every((story) => story.enabled !== false));
   for (const image of [
     ...(home.education ?? []).map((item) => item.image),
     ...home.caseStudies

@@ -76,10 +76,6 @@ export class EditorialNoteDto {
   @IsString()
   @MaxLength(2000)
   public readonly source!: string
-  @ApiProperty({ type: String, maxLength: 2000 })
-  @IsString()
-  @MaxLength(2000)
-  public readonly permissionNote!: string
 }
 export class CmsPageContentDto {
   @ApiPropertyOptional({ type: () => [EditorialNoteDto], maxItems: 100 })

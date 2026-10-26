@@ -606,12 +606,11 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                   />
                   <details className="mt-8 rounded-lg border p-4">
                     <summary className="cursor-pointer font-medium">
-                      Источники и разрешения
+                      Источники материалов
                     </summary>
                     <p className="my-3 text-sm text-muted-foreground">
                       Внутренние заметки по материалам. Они сохраняются только в
-                      CMS и не передаются на публичный сайт. Указывайте сведения
-                      о согласии, когда они получены.
+                      CMS и не передаются на публичный сайт.
                     </p>
                     <ContentFields
                       value={

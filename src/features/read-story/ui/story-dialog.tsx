@@ -36,7 +36,7 @@ export function StoryDialog({
             {story.title}
           </DialogTitle>
           <DialogDescription>
-            {story.format || 'Индивидуальная работа'} · без имени клиентки
+            {story.format || 'Индивидуальная работа'}
           </DialogDescription>
         </DialogHeader>
         <p className="leading-relaxed">{story.details}</p>
