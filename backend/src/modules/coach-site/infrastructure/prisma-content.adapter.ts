@@ -112,7 +112,12 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
   }
   public async getHome(): Promise<HomePageDto> {
     const home = json<HomePageDto>((await this.site()).home)
-    return { ...home, stories: visibleStories(home.stories ?? []) }
+    return {
+      ...home,
+      education: (home.education ?? []).filter((item) => item.enabled),
+      caseStudies: home.caseStudies.filter((item) => item.enabled !== false),
+      stories: visibleStories(home.stories ?? []),
+    }
   }
   public async getFaq(): Promise<FaqItemDto[]> {
     return json<FaqItemDto[]>((await this.site()).faq)
@@ -137,34 +142,16 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
     contacts: ContactDetailsDto,
     links?: SocialLinkDto[],
   ): Promise<ContactDetailsDto> {
-    return this.edit(async (client) => {
-      const site = await client.siteContent.findUniqueOrThrow({
-        where: { id: 'site' },
-      })
-      const socials =
-        links ??
-        json<SocialLinkDto[]>(site.socials).map((link) =>
-          link.id === 'telegram'
-            ? { ...link, url: contacts.telegramUrl }
-            : link,
-        )
-      const synchronized =
-        links === undefined
-          ? contacts
-          : {
-              ...contacts,
-              telegramUrl:
-                links.find((link) => link.id === 'telegram')?.url ?? null,
-            }
-      await client.siteContent.update({
+    await this.edit((client) =>
+      client.siteContent.update({
         where: { id: 'site' },
         data: {
-          contacts: inputJson(synchronized),
-          socials: inputJson(socials),
+          contacts: inputJson(contacts),
+          ...(links === undefined ? {} : { socials: inputJson(links) }),
         },
-      })
-      return synchronized
-    })
+      }),
+    )
+    return contacts
   }
 
   public async updateHome(home: HomePageDto): Promise<HomePageDto> {
@@ -190,20 +177,12 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
   public async updateSocials(
     socials: SocialLinkDto[],
   ): Promise<SocialLinkDto[]> {
-    await this.edit(async (client) => {
-      const site = await client.siteContent.findUniqueOrThrow({
+    await this.edit((client) =>
+      client.siteContent.update({
         where: { id: 'site' },
-      })
-      const contacts = {
-        ...json<ContactDetailsDto>(site.contacts),
-        telegramUrl:
-          socials.find((link) => link.id === 'telegram')?.url ?? null,
-      }
-      return client.siteContent.update({
-        where: { id: 'site' },
-        data: { socials: inputJson(socials), contacts: inputJson(contacts) },
-      })
-    })
+        data: { socials: inputJson(socials) },
+      }),
+    )
     return socials
   }
 

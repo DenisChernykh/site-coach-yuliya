@@ -26,7 +26,11 @@ function show(
     telegramUrl: 'https://t.me/coach',
   }
   stored.content.socials = [
-    { id: 'telegram', label: 'Telegram', url: 'https://t.me/coach' },
+    {
+      id: 'telegram',
+      label: 'Telegram-канал',
+      url: 'https://t.me/coach_channel',
+    },
     { id: 'vk', label: 'ВКонтакте', url: 'https://vk.com/coach' },
   ]
   stored.content = { ...stored.content, ...overrides }
@@ -271,7 +275,7 @@ describe('unified CMS editing', () => {
     const editor = show()
     try {
       const user = userEvent.setup()
-      await screen.findByLabelText('Telegram')
+      await screen.findByLabelText('Telegram-канал')
       expect(screen.getByRole('status')).toHaveTextContent(
         'Заполнено ссылок: 2 из 18',
       )
@@ -279,10 +283,10 @@ describe('unified CMS editing', () => {
       await user.click(screen.getByRole('button', { name: 'Очистить Email' }))
       expect(screen.getByLabelText('Email')).toHaveFocus()
       await user.click(
-        screen.getByRole('button', { name: 'Очистить Telegram' }),
+        screen.getByRole('button', { name: 'Очистить Telegram-канал' }),
       )
-      expect(screen.getByLabelText('Telegram')).toHaveFocus()
-      expect(screen.getByLabelText('Telegram')).toHaveValue('')
+      expect(screen.getByLabelText('Telegram-канал')).toHaveFocus()
+      expect(screen.getByLabelText('Telegram-канал')).toHaveValue('')
       expect(screen.getByText('Будет скрыто')).toBeVisible()
       expect(
         screen.queryByRole('link', { name: 'Открыть ссылку Telegram' }),
@@ -299,13 +303,13 @@ describe('unified CMS editing', () => {
       expect(editor.writes).toHaveLength(1)
       expect(editor.writes[0].content.contacts).toMatchObject({
         email: null,
-        telegramUrl: null,
+        telegramUrl: 'https://t.me/coach',
         phone: '+7 999 123-45-67',
         address: 'Екатеринбург',
       })
       expect(editor.writes[0].content.socials).toContainEqual({
         id: 'telegram',
-        label: 'Telegram',
+        label: 'Telegram-канал',
         url: null,
       })
       expect(screen.queryByText('Будет скрыто')).not.toBeInTheDocument()

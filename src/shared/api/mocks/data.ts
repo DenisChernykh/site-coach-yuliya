@@ -8,14 +8,15 @@ import type {
   SocialLinkDto,
 } from '../generated/model';
 import initialContent from '../../../../backend/content/initial.json';
-import { demoStories } from './stories';
+import materialStories from './material-stories.json';
+import type { StoryGroupDto } from '../generated/model';
 
 export const seoSettings = initialContent.seo satisfies SeoSettingsDto;
 
 export const siteSettings = initialContent.settings satisfies SiteSettingsDto;
 
 export const homePage = {
-  stories: demoStories,
+  stories: materialStories as StoryGroupDto[],
   hero: {
     eyebrow: 'От поиска себя к проявленности',
     headingLines: ['Создай', 'инструкцию', 'к себе.'],
@@ -94,30 +95,8 @@ export const homePage = {
       description: 'Небольшие действия\nи сверка того, что получилось.',
     },
   ],
-  caseStudies: [
-    {
-      id: 'career',
-      title: 'Когда работа перестала радовать',
-      request:
-        'Усталость и сомнения в карьере. Несколько возможных сценариев, но трудно выбрать.',
-      exploration: 'Исследовали приоритеты, нагрузку и варианты изменений.',
-      result:
-        'Клиентка увидела ещё один вариант и решила пересмотреть свой рабочий график.',
-      details:
-        'Во время работы мы обращали внимание на то, что забирает силы, и на то, что даёт интерес. Оказалось, что перемены можно начать с рабочего ритма, не принимая сразу решение о смене профессии.',
-    },
-    {
-      id: 'voice',
-      title: 'Проявляться своим голосом',
-      request:
-        'Есть опыт, но привычный способ продаж и продвижения больше не вдохновляет.',
-      exploration: 'Исследовали, какие темы и форматы вызывают интерес.',
-      result:
-        'Клиентка выбрала более близкий формат контента и наметила следующие действия.',
-      details:
-        'Мы исследовали, о чём хочется рассказывать, с кем вести диалог и какие форматы соответствуют её характеру. Следующим шагом стала небольшая серия материалов, которую хотелось создавать.',
-    },
-  ],
+  education: initialContent.home.education,
+  caseStudies: initialContent.home.caseStudies,
   artPractice: {
     eyebrow: 'Арт-практики',
     title: 'Когда проще\nсказать цветом.',
@@ -209,12 +188,11 @@ export const faq = [
   },
 ] satisfies FaqItemDto[];
 
-export const socialLinks = [
-  { id: 'telegram', label: 'Telegram', url: null },
-  { id: 'vk', label: 'ВКонтакте', url: null },
-  { id: 'rutube', label: 'Rutube', url: null },
-  { id: 'ok', label: 'Одноклассники', url: null },
-] satisfies SocialLinkDto[];
+export const socialLinks = initialContent.socials.map((link) => ({
+  ...link,
+  id: link.id as SocialLinkDto['id'],
+}));
+export const contacts = initialContent.contacts;
 
 export const articles = [
   {

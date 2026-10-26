@@ -17,7 +17,7 @@ const blocks = {
     'faq',
     'contact',
   ],
-  about: ['hero', 'history', 'approach', 'boundaries', 'cta'],
+  about: ['hero', 'history', 'education', 'approach', 'boundaries', 'cta'],
   coaching: [
     'hero',
     'requests',

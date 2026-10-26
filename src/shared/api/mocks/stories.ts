@@ -27,7 +27,7 @@ export const demoStories = [
         durationSeconds: 6,
       },
     ],
-    enabled: true,
+    enabled: false,
     coverMediaId: 'eb2393c2-be85-40af-8253-fd3edf82d615',
   },
   {
@@ -57,7 +57,7 @@ export const demoStories = [
         durationSeconds: 6,
       },
     ],
-    enabled: true,
+    enabled: false,
     coverMediaId: '9c56917e-debe-4916-ad6c-2ea702cf7770',
   },
 ] satisfies StoryGroupDto[];

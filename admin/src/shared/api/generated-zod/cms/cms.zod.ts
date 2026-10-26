@@ -43,7 +43,20 @@ export const adminGetCms200ResponseContentContactsPhoneMax = 80
 
 export const adminGetCms200ResponseContentContactsTelegramUrlMax = 500
 
+export const adminGetCms200ResponseContentEditorialNotesItemMaterialIdMax = 100
+
+export const adminGetCms200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
+
+export const adminGetCms200ResponseContentEditorialNotesItemSourceMax = 2000
+
+export const adminGetCms200ResponseContentEditorialNotesMax = 100
+
 export const adminGetCms200ResponseContentFaqMax = 100
+
+export const adminGetCms200ResponseContentHomeEducationItemHoursMin = 0
+export const adminGetCms200ResponseContentHomeEducationItemHoursMax = 10000
+
+export const adminGetCms200ResponseContentHomeEducationMax = 30
 
 export const adminGetCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
 
@@ -307,6 +320,24 @@ export const AdminGetCms200Response = zod.strictObject({
         .max(adminGetCms200ResponseContentContactsTelegramUrlMax)
         .nullable(),
     }),
+    editorialNotes: zod
+      .array(
+        zod.strictObject({
+          materialId: zod
+            .string()
+            .max(adminGetCms200ResponseContentEditorialNotesItemMaterialIdMax),
+          permissionNote: zod
+            .string()
+            .max(
+              adminGetCms200ResponseContentEditorialNotesItemPermissionNoteMax,
+            ),
+          source: zod
+            .string()
+            .max(adminGetCms200ResponseContentEditorialNotesItemSourceMax),
+        }),
+      )
+      .max(adminGetCms200ResponseContentEditorialNotesMax)
+      .optional(),
     faq: zod
       .array(
         zod.strictObject({
@@ -343,10 +374,15 @@ export const AdminGetCms200Response = zod.strictObject({
       caseStudies: zod.array(
         zod.strictObject({
           details: zod.string(),
+          enabled: zod.boolean().optional(),
           exploration: zod.string(),
+          format: zod.string().optional(),
           id: zod.string(),
           request: zod.string(),
           result: zod.string(),
+          review: zod.string().optional(),
+          reviewImage: zod.string().optional(),
+          reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
       ),
@@ -357,6 +393,25 @@ export const AdminGetCms200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      education: zod
+        .array(
+          zod.strictObject({
+            documentType: zod.string(),
+            enabled: zod.boolean(),
+            hours: zod
+              .number()
+              .min(adminGetCms200ResponseContentHomeEducationItemHoursMin)
+              .max(adminGetCms200ResponseContentHomeEducationItemHoursMax),
+            id: zod.string(),
+            image: zod.string(),
+            imageAlt: zod.string(),
+            organization: zod.string(),
+            title: zod.string(),
+            year: zod.string(),
+          }),
+        )
+        .max(adminGetCms200ResponseContentHomeEducationMax)
+        .optional(),
       hero: zod.strictObject({
         description: zod.string(),
         eyebrow: zod.string(),
@@ -706,7 +761,20 @@ export const adminSaveCmsDraftBodyContentContactsPhoneMax = 80
 
 export const adminSaveCmsDraftBodyContentContactsTelegramUrlMax = 500
 
+export const adminSaveCmsDraftBodyContentEditorialNotesItemMaterialIdMax = 100
+
+export const adminSaveCmsDraftBodyContentEditorialNotesItemPermissionNoteMax = 2000
+
+export const adminSaveCmsDraftBodyContentEditorialNotesItemSourceMax = 2000
+
+export const adminSaveCmsDraftBodyContentEditorialNotesMax = 100
+
 export const adminSaveCmsDraftBodyContentFaqMax = 100
+
+export const adminSaveCmsDraftBodyContentHomeEducationItemHoursMin = 0
+export const adminSaveCmsDraftBodyContentHomeEducationItemHoursMax = 10000
+
+export const adminSaveCmsDraftBodyContentHomeEducationMax = 30
 
 export const adminSaveCmsDraftBodyContentHomeStoriesItemSlidesItemCaptionMax = 1000
 
@@ -762,6 +830,24 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
         .max(adminSaveCmsDraftBodyContentContactsTelegramUrlMax)
         .nullable(),
     }),
+    editorialNotes: zod
+      .array(
+        zod.strictObject({
+          materialId: zod
+            .string()
+            .max(adminSaveCmsDraftBodyContentEditorialNotesItemMaterialIdMax),
+          permissionNote: zod
+            .string()
+            .max(
+              adminSaveCmsDraftBodyContentEditorialNotesItemPermissionNoteMax,
+            ),
+          source: zod
+            .string()
+            .max(adminSaveCmsDraftBodyContentEditorialNotesItemSourceMax),
+        }),
+      )
+      .max(adminSaveCmsDraftBodyContentEditorialNotesMax)
+      .optional(),
     faq: zod
       .array(
         zod.strictObject({
@@ -798,10 +884,15 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
       caseStudies: zod.array(
         zod.strictObject({
           details: zod.string(),
+          enabled: zod.boolean().optional(),
           exploration: zod.string(),
+          format: zod.string().optional(),
           id: zod.string(),
           request: zod.string(),
           result: zod.string(),
+          review: zod.string().optional(),
+          reviewImage: zod.string().optional(),
+          reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
       ),
@@ -812,6 +903,25 @@ export const AdminSaveCmsDraftBody = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      education: zod
+        .array(
+          zod.strictObject({
+            documentType: zod.string(),
+            enabled: zod.boolean(),
+            hours: zod
+              .number()
+              .min(adminSaveCmsDraftBodyContentHomeEducationItemHoursMin)
+              .max(adminSaveCmsDraftBodyContentHomeEducationItemHoursMax),
+            id: zod.string(),
+            image: zod.string(),
+            imageAlt: zod.string(),
+            organization: zod.string(),
+            title: zod.string(),
+            year: zod.string(),
+          }),
+        )
+        .max(adminSaveCmsDraftBodyContentHomeEducationMax)
+        .optional(),
       hero: zod.strictObject({
         description: zod.string(),
         eyebrow: zod.string(),
@@ -999,7 +1109,20 @@ export const adminSaveCmsDraft200ResponseContentContactsPhoneMax = 80
 
 export const adminSaveCmsDraft200ResponseContentContactsTelegramUrlMax = 500
 
+export const adminSaveCmsDraft200ResponseContentEditorialNotesItemMaterialIdMax = 100
+
+export const adminSaveCmsDraft200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
+
+export const adminSaveCmsDraft200ResponseContentEditorialNotesItemSourceMax = 2000
+
+export const adminSaveCmsDraft200ResponseContentEditorialNotesMax = 100
+
 export const adminSaveCmsDraft200ResponseContentFaqMax = 100
+
+export const adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMin = 0
+export const adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMax = 10000
+
+export const adminSaveCmsDraft200ResponseContentHomeEducationMax = 30
 
 export const adminSaveCmsDraft200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
 
@@ -1262,6 +1385,28 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
         .max(adminSaveCmsDraft200ResponseContentContactsTelegramUrlMax)
         .nullable(),
     }),
+    editorialNotes: zod
+      .array(
+        zod.strictObject({
+          materialId: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentEditorialNotesItemMaterialIdMax,
+            ),
+          permissionNote: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentEditorialNotesItemPermissionNoteMax,
+            ),
+          source: zod
+            .string()
+            .max(
+              adminSaveCmsDraft200ResponseContentEditorialNotesItemSourceMax,
+            ),
+        }),
+      )
+      .max(adminSaveCmsDraft200ResponseContentEditorialNotesMax)
+      .optional(),
     faq: zod
       .array(
         zod.strictObject({
@@ -1298,10 +1443,15 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
       caseStudies: zod.array(
         zod.strictObject({
           details: zod.string(),
+          enabled: zod.boolean().optional(),
           exploration: zod.string(),
+          format: zod.string().optional(),
           id: zod.string(),
           request: zod.string(),
           result: zod.string(),
+          review: zod.string().optional(),
+          reviewImage: zod.string().optional(),
+          reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
       ),
@@ -1312,6 +1462,27 @@ export const AdminSaveCmsDraft200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      education: zod
+        .array(
+          zod.strictObject({
+            documentType: zod.string(),
+            enabled: zod.boolean(),
+            hours: zod
+              .number()
+              .min(adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMin)
+              .max(
+                adminSaveCmsDraft200ResponseContentHomeEducationItemHoursMax,
+              ),
+            id: zod.string(),
+            image: zod.string(),
+            imageAlt: zod.string(),
+            organization: zod.string(),
+            title: zod.string(),
+            year: zod.string(),
+          }),
+        )
+        .max(adminSaveCmsDraft200ResponseContentHomeEducationMax)
+        .optional(),
       hero: zod.strictObject({
         description: zod.string(),
         eyebrow: zod.string(),
@@ -1745,7 +1916,20 @@ export const adminPublishCms200ResponseContentContactsPhoneMax = 80
 
 export const adminPublishCms200ResponseContentContactsTelegramUrlMax = 500
 
+export const adminPublishCms200ResponseContentEditorialNotesItemMaterialIdMax = 100
+
+export const adminPublishCms200ResponseContentEditorialNotesItemPermissionNoteMax = 2000
+
+export const adminPublishCms200ResponseContentEditorialNotesItemSourceMax = 2000
+
+export const adminPublishCms200ResponseContentEditorialNotesMax = 100
+
 export const adminPublishCms200ResponseContentFaqMax = 100
+
+export const adminPublishCms200ResponseContentHomeEducationItemHoursMin = 0
+export const adminPublishCms200ResponseContentHomeEducationItemHoursMax = 10000
+
+export const adminPublishCms200ResponseContentHomeEducationMax = 30
 
 export const adminPublishCms200ResponseContentHomeStoriesItemSlidesItemCaptionMax = 1000
 
@@ -2008,6 +2192,26 @@ export const AdminPublishCms200Response = zod.strictObject({
         .max(adminPublishCms200ResponseContentContactsTelegramUrlMax)
         .nullable(),
     }),
+    editorialNotes: zod
+      .array(
+        zod.strictObject({
+          materialId: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentEditorialNotesItemMaterialIdMax,
+            ),
+          permissionNote: zod
+            .string()
+            .max(
+              adminPublishCms200ResponseContentEditorialNotesItemPermissionNoteMax,
+            ),
+          source: zod
+            .string()
+            .max(adminPublishCms200ResponseContentEditorialNotesItemSourceMax),
+        }),
+      )
+      .max(adminPublishCms200ResponseContentEditorialNotesMax)
+      .optional(),
     faq: zod
       .array(
         zod.strictObject({
@@ -2044,10 +2248,15 @@ export const AdminPublishCms200Response = zod.strictObject({
       caseStudies: zod.array(
         zod.strictObject({
           details: zod.string(),
+          enabled: zod.boolean().optional(),
           exploration: zod.string(),
+          format: zod.string().optional(),
           id: zod.string(),
           request: zod.string(),
           result: zod.string(),
+          review: zod.string().optional(),
+          reviewImage: zod.string().optional(),
+          reviewImageAlt: zod.string().optional(),
           title: zod.string(),
         }),
       ),
@@ -2058,6 +2267,25 @@ export const AdminPublishCms200Response = zod.strictObject({
           title: zod.string(),
         }),
       ),
+      education: zod
+        .array(
+          zod.strictObject({
+            documentType: zod.string(),
+            enabled: zod.boolean(),
+            hours: zod
+              .number()
+              .min(adminPublishCms200ResponseContentHomeEducationItemHoursMin)
+              .max(adminPublishCms200ResponseContentHomeEducationItemHoursMax),
+            id: zod.string(),
+            image: zod.string(),
+            imageAlt: zod.string(),
+            organization: zod.string(),
+            title: zod.string(),
+            year: zod.string(),
+          }),
+        )
+        .max(adminPublishCms200ResponseContentHomeEducationMax)
+        .optional(),
       hero: zod.strictObject({
         description: zod.string(),
         eyebrow: zod.string(),

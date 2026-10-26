@@ -69,33 +69,16 @@ export class DraftContentAdapter implements SiteContentPort {
     return this.replace('faq', value)
   }
   public updateSocials(value: SocialLinkDto[]): Promise<SocialLinkDto[]> {
-    return this.cms.mutate((document) => {
-      document.socials = value
-      document.contacts = {
-        ...document.contacts,
-        telegramUrl: value.find((s) => s.id === 'telegram')?.url ?? null,
-      }
-      return value
-    })
+    return this.replace('socials', value)
   }
   public updateContacts(
     value: ContactDetailsDto,
     links?: SocialLinkDto[],
   ): Promise<ContactDetailsDto> {
     return this.cms.mutate((document) => {
-      const synchronized = links
-        ? {
-            ...value,
-            telegramUrl: links.find((s) => s.id === 'telegram')?.url ?? null,
-          }
-        : value
-      document.contacts = synchronized
-      if (links) document.socials = links
-      else
-        document.socials = document.socials.map((s) =>
-          s.id === 'telegram' ? { ...s, url: value.telegramUrl } : s,
-        )
-      return synchronized
+      document.contacts = value
+      if (links !== undefined) document.socials = links
+      return value
     })
   }
   public async listArticles(

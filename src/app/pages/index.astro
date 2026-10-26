@@ -7,21 +7,21 @@ import { StoriesIsland } from '../islands/stories-island';
 import { isMockMode } from '@/shared/api';
 import { resolveArticleImages } from '../data/article-images';
 import { HomePage } from '@/pages/home';
-import { loadHomePage, loadSiteSettings } from '@/entities/site';
+import { loadHomePage, loadSiteSettings, loadContacts } from '@/entities/site';
 import { loadServices } from '@/entities/service';
 import { loadFaq } from '@/entities/faq';
 import { loadSocialLinks } from '@/entities/social-link';
 import { loadArticles } from '@/entities/article';
-const [settings, home, services, faq, socials, rawArticles] = await Promise.all(
-  [
+const [settings, home, services, faq, contacts, socials, rawArticles] =
+  await Promise.all([
     loadSiteSettings(),
     loadHomePage(),
     loadServices(),
     loadFaq(),
+    loadContacts(),
     loadSocialLinks(),
     loadArticles(),
-  ],
-);
+  ]);
 const articles = await resolveArticleImages(rawArticles, 960);
 const storiesBlock = layouts
   .find((page) => page.key === 'home')
@@ -32,6 +32,7 @@ const storiesBlock = layouts
   <HomePage
     layouts={layouts}
     data={home}
+    telegramUrl={contacts.telegramUrl}
     services={services}
     faq={faq}
     socials={socials}

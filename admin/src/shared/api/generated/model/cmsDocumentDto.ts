@@ -7,6 +7,7 @@
  */
 import type { CmsPageDto } from './cmsPageDto'
 import type { ContactDetailsDto } from './contactDetailsDto'
+import type { EditorialNoteDto } from './editorialNoteDto'
 import type { FaqItemDto } from './faqItemDto'
 import type { HomePageDto } from './homePageDto'
 import type { ManagedArticleDto } from './managedArticleDto'
@@ -18,6 +19,8 @@ import type { SocialLinkDto } from './socialLinkDto'
 export type CmsDocumentDto = {
   articles: ManagedArticleDto[]
   contacts: ContactDetailsDto
+  /** @maxItems 100 */
+  editorialNotes?: EditorialNoteDto[]
   /** @maxItems 100 */
   faq: FaqItemDto[]
   home: HomePageDto

@@ -165,7 +165,73 @@ export class ApproachDto {
   public readonly steps!: StepDto[]
 }
 
+export class EducationDto {
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly id!: string
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly title!: string
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly organization!: string
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly documentType!: string
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly year!: string
+  @IsString()
+  @MaxLength(10000)
+  @Matches(/^(?:$|\/(?!\/)|https:\/\/)/u)
+  @ApiProperty({ type: String })
+  public readonly image!: string
+  @IsString()
+  @MaxLength(10000)
+  @ApiProperty({ type: String })
+  public readonly imageAlt!: string
+  @IsInt()
+  @Min(0)
+  @Max(10000)
+  @ApiProperty({ type: Number, minimum: 0, maximum: 10000 })
+  public readonly hours!: number
+  @IsBoolean()
+  @ApiProperty({ type: Boolean })
+  public readonly enabled!: boolean
+}
+
 export class CaseStudyDto {
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsBoolean()
+  @ApiPropertyOptional({ type: Boolean })
+  public readonly enabled?: boolean
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsString()
+  @MaxLength(10000)
+  @ApiPropertyOptional({ type: String })
+  public readonly format?: string
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsString()
+  @MaxLength(10000)
+  @ApiPropertyOptional({ type: String })
+  public readonly review?: string
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsString()
+  @MaxLength(10000)
+  @Matches(/^(?:$|\/(?!\/)|https:\/\/)/u)
+  @ApiPropertyOptional({ type: String })
+  public readonly reviewImage?: string
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsString()
+  @MaxLength(10000)
+  @ApiPropertyOptional({ type: String })
+  public readonly reviewImageAlt?: string
+
   @IsString()
   @Length(0, 100)
   @ApiProperty({ type: String })
@@ -249,6 +315,15 @@ export class ProductDto {
 }
 
 export class HomePageDto {
+  @ApiPropertyOptional({ type: () => [EducationDto], maxItems: 30 })
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsArray()
+  @ArrayMaxSize(30)
+  @ArrayUnique((item: EducationDto) => item.id)
+  @ValidateNested({ each: true })
+  @Type(() => EducationDto)
+  public readonly education?: EducationDto[]
+
   @ApiPropertyOptional({
     type: () => [StoryGroupDto],
     maxItems: 20,

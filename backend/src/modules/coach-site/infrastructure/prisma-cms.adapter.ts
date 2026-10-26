@@ -11,6 +11,7 @@ import {
   initialPages,
   validPages,
   withStoriesBlock,
+  withEducationBlock,
   type CmsDocument,
   type CmsPage,
   type CmsPageContent,
@@ -95,7 +96,9 @@ export class PrismaCmsAdapter implements SiteCmsPort {
       publishedRevision: row.publishedRevision,
       content: {
         ...json<CmsDocument>(row.content),
-        pages: withStoriesBlock(json<CmsDocument>(row.content).pages),
+        pages: withEducationBlock(
+          withStoriesBlock(json<CmsDocument>(row.content).pages),
+        ),
       },
     }
   }
@@ -115,7 +118,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     )
     if (!site) throw new SiteRecordNotFoundError()
     return site.pageLayout
-      ? withStoriesBlock(json<CmsPage[]>(site.pageLayout))
+      ? withEducationBlock(withStoriesBlock(json<CmsPage[]>(site.pageLayout)))
       : initialPages()
   }
   public mutate<T>(change: (document: CmsDocument) => T): Promise<T> {
@@ -144,12 +147,6 @@ export class PrismaCmsAdapter implements SiteCmsPort {
         const document = {
           ...json<CmsDocument>(row.content),
           ...content,
-          contacts: {
-            ...content.contacts,
-            telegramUrl:
-              content.socials.find((link) => link.id === 'telegram')?.url ??
-              null,
-          },
         }
         return this.workspace(
           await client.siteCmsDraft.update({

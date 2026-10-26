@@ -14,6 +14,7 @@ export const blockLabels: Record<string, string> = {
   faq: 'Частые вопросы',
   contact: 'Форма знакомства',
   history: 'Моя история',
+  education: 'Образование',
   cta: 'Приглашение',
   requests: 'С чем можно прийти',
   details: 'Способы связи',

@@ -8,8 +8,7 @@ import type { ServiceDto } from '@/entities/service';
 import type { FaqItemDto } from '@/entities/faq';
 import type { SocialLinkDto } from '@/entities/social-link';
 import { ArticleCard, type ArticleDto } from '@/entities/article';
-import { VideoIntroduction } from '@/features/video-introduction';
-import { StoryDialog } from '@/features/read-story';
+import { CaseStudies } from '@/widgets/case-studies';
 import { Pricing } from '@/widgets/pricing';
 import { WorkProcess } from '@/widgets/work-process';
 import { WorkBoundaries } from '@/widgets/work-boundaries';
@@ -23,6 +22,7 @@ interface Props {
   layouts?: CmsPageDto[];
   preview?: boolean;
   data: HomePageDto;
+  telegramUrl?: string | null;
   services: ServiceDto[];
   faq: FaqItemDto[];
   socials: SocialLinkDto[];
@@ -30,6 +30,7 @@ interface Props {
 }
 const {
   layouts,
+  telegramUrl,
   preview = false,
   data,
   services,
@@ -105,7 +106,6 @@ const {
               loading="eager"
               fetchpriority="high"
             />
-            <div class="video-trigger"><VideoIntroduction client:load /></div>
           </div>
           <figcaption>
             Демонстрационный AI-портрет · заменить фото Юли
@@ -209,6 +209,9 @@ const {
           }<a href={routes.about} class="text-link"
             >Моя история и подход <span aria-hidden="true">↗</span></a
           >
+          <a href={`${routes.about}#education`} class="text-link"
+            >Образование и обучение <span aria-hidden="true">↗</span></a
+          >
         </div>
       </div>
     </section>
@@ -267,64 +270,45 @@ const {
     <WorkBoundaries />
   </Fragment>
   <Fragment slot="cases">
-    <section class="section-space cases" aria-labelledby="cases-title">
-      <div class="page-container cases-inner">
-        <div class="cases-heading">
-          <h2 id="cases-title" class="section-heading" data-cms-copy="title">
-            У каждого пути<br />свой поворот.
-          </h2><p class="fine-print">
-            Истории из материалов Юли.<br />{' '}Публикация — после согласия
-            клиенток.
-          </p>
-        </div>
-        <div class="cases-grid" data-cms-list="home.caseStudies">
-          {
-            data.caseStudies.map((story, index) => (
-              <article
-                data-cms-item
-                class:list={[
-                  'case-card',
-                  index % 2 === 0 ? 'bg-accent' : 'bg-secondary',
-                ]}
-              >
-                <>
-                  <h3 data-cms-field=".title">{story.title}</h3>
-                  <dl>
-                    <>
-                      <div>
-                        <>
-                          <dt>С чем пришла</dt>
-                          <dd data-cms-field=".request">{story.request}</dd>
-                        </>
-                      </div>
-                      <div>
-                        <>
-                          <dt>Что исследовали</dt>
-                          <dd data-cms-field=".exploration">
-                            {story.exploration}
-                          </dd>
-                        </>
-                      </div>
-                      <div>
-                        <>
-                          <dt>Следующий шаг</dt>
-                          <dd data-cms-field=".result">{story.result}</dd>
-                        </>
-                      </div>
-                    </>
-                  </dl>
-                  <StoryDialog client:visible story={story} />
-                </>
-              </article>
-            ))
-          }
-        </div>
-        <p class="fine-print">
-          Пересказ исходных кейсов без имён. Опыт индивидуален; одинаковый
-          результат не гарантируется.
-        </p>
-      </div>
-    </section>
+    {
+      (preview || data.caseStudies.some((item) => item.enabled !== false)) && (
+        <section
+          id="cases"
+          class="section-space cases"
+          aria-labelledby="cases-title"
+        >
+          <div class="page-container cases-inner">
+            <div class="cases-heading">
+              <>
+                <h2
+                  id="cases-title"
+                  class="section-heading"
+                  data-cms-copy="title"
+                >
+                  У каждого пути
+                  <br />
+                  свой поворот.
+                </h2>
+                <p class="fine-print">
+                  Разные запросы. Собственные решения.
+                  <br />
+                  Истории индивидуальной работы.
+                </p>
+              </>
+            </div>
+            {preview ? (
+              <div data-cms-react="cases" />
+            ) : (
+              <CaseStudies items={data.caseStudies} client:visible />
+            )}
+            <p class="fine-print">
+              Истории приведены без имён. Опыт индивидуален; одинаковый
+              результат не гарантируется.
+            </p>
+          </div>
+        </section>
+      )
+    }
   </Fragment>
   <Fragment slot="art">
     <section class="art-practice" aria-labelledby="art-title">
@@ -438,7 +422,7 @@ const {
     <Faq preview={preview} items={faq} />
   </Fragment>
   <Fragment slot="contact">
-    <Contact preview={preview} socials={socials}
+    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl}
       ><slot name="contact-form" /></Contact
     >
   </Fragment>
@@ -509,12 +493,6 @@ const {
     height: 100%;
     width: 100%;
     object-fit: cover;
-  }
-  .video-trigger {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    right: 24px;
   }
   figcaption {
     font-size: 10px;
@@ -687,40 +665,6 @@ const {
   }
   .cases-heading h2 {
     font-size: 56px;
-  }
-  .cases-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-  .case-card {
-    border-radius: var(--radius);
-    padding: 36px;
-  }
-  .case-card h3 {
-    font-size: 38px;
-  }
-  .case-card dl {
-    margin: 18px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  .case-card dl > div {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  .case-card dt {
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .case-card dd {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.5;
   }
   .art-practice {
     padding-block: 72px;
@@ -917,17 +861,6 @@ const {
     .hero-media img {
       height: 100%;
     }
-    .video-trigger {
-      bottom: 14px;
-      left: 12px;
-      right: 12px;
-    }
-    .video-trigger :global(button) {
-      font-size: 11px;
-      height: 54px;
-      padding-inline: 12px;
-      gap: 8px;
-    }
     .concerns-heading h2 {
       font-size: 42px;
     }
@@ -998,16 +931,6 @@ const {
     }
     .cases-inner {
       gap: 28px;
-    }
-    .cases-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    .case-card {
-      padding: 36px;
-    }
-    .case-card h3 {
-      font-size: 32px;
     }
     .art-grid {
       grid-template-columns: minmax(0, 1fr);

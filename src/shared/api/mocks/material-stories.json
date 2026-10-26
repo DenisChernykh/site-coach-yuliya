@@ -1,0 +1,58 @@
+[
+  {
+    "id": "bfd284f0-6841-4b5f-a2fe-97358d467411",
+    "title": "Образование",
+    "coverMediaId": "93868665-03f3-4814-871f-096c3614a85f",
+    "enabled": true,
+    "slides": [
+      {
+        "id": "bcacd747-3138-44c2-966a-a791f9548224",
+        "mediaId": "93868665-03f3-4814-871f-096c3614a85f",
+        "type": "image",
+        "caption": "Международный коучинг · Level 1 · 76 часов\nАкадемия 5 Prism · 2024",
+        "durationSeconds": 10,
+        "linkLabel": "Посмотреть документы",
+        "linkUrl": "/about/#education",
+        "enabled": true
+      },
+      {
+        "id": "d1fc6c51-c704-4160-b974-5a8d74d8d16a",
+        "mediaId": "fcbe3990-c1b9-4bc0-b84e-408a09da563d",
+        "type": "image",
+        "caption": "Коучинг международного уровня · 110 часов\nАкадемия «Пять призм» · 2024",
+        "durationSeconds": 10,
+        "linkLabel": "Посмотреть документы",
+        "linkUrl": "/about/#education",
+        "enabled": true
+      },
+      {
+        "id": "883c9d77-0672-474f-92f2-c3574878fc9f",
+        "mediaId": "7a1d9a11-b5e8-4da0-8824-6ee5225994d1",
+        "type": "image",
+        "caption": "Деньги в коучинге · 18 часов\nАкадемия «Пять призм» · 2024",
+        "durationSeconds": 10,
+        "linkLabel": "Посмотреть документы",
+        "linkUrl": "/about/#education",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "id": "84b9f7f3-5dbb-4da7-a2da-4875de9241b5",
+    "title": "Кейс и отзыв",
+    "coverMediaId": "e6b7673a-5a63-4b96-afc7-162424095f0c",
+    "enabled": true,
+    "slides": [
+      {
+        "id": "37f6ef3e-f0e5-4f4a-a797-a559757dec4c",
+        "mediaId": "e6b7673a-5a63-4b96-afc7-162424095f0c",
+        "type": "image",
+        "caption": "Карьера или свой бизнес?\nОдна сессия — чтобы прояснить выбор и следующий шаг.",
+        "durationSeconds": 10,
+        "linkLabel": "Прочитать кейсы",
+        "linkUrl": "/#cases",
+        "enabled": true
+      }
+    ]
+  }
+]

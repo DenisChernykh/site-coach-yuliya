@@ -912,6 +912,13 @@
             },
             "type": "array"
           },
+          "education": {
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            },
+            "maxItems": 30,
+            "type": "array"
+          },
           "hero": {
             "$ref": "#/components/schemas/HeroDto"
           },
@@ -1046,7 +1053,13 @@
           "details": {
             "type": "string"
           },
+          "enabled": {
+            "type": "boolean"
+          },
           "exploration": {
+            "type": "string"
+          },
+          "format": {
             "type": "string"
           },
           "id": {
@@ -1056,6 +1069,15 @@
             "type": "string"
           },
           "result": {
+            "type": "string"
+          },
+          "review": {
+            "type": "string"
+          },
+          "reviewImage": {
+            "type": "string"
+          },
+          "reviewImageAlt": {
             "type": "string"
           },
           "title": {
@@ -1088,6 +1110,51 @@
           "id",
           "title",
           "description"
+        ],
+        "type": "object"
+      },
+      "EducationDto": {
+        "properties": {
+          "documentType": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "hours": {
+            "maximum": 10000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "imageAlt": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "organization",
+          "documentType",
+          "year",
+          "image",
+          "imageAlt",
+          "hours",
+          "enabled"
         ],
         "type": "object"
       },

@@ -26,7 +26,7 @@ export const pageBlocks = {
     'faq',
     'contact',
   ],
-  about: ['hero', 'history', 'approach', 'boundaries', 'cta'],
+  about: ['hero', 'history', 'education', 'approach', 'boundaries', 'cta'],
   coaching: [
     'hero',
     'requests',
@@ -71,6 +71,30 @@ export function withStoriesBlock(pages: CmsPage[]): CmsPage[] {
       : page,
   )
 }
+export function withEducationBlock(pages: CmsPage[]): CmsPage[] {
+  return pages.map((page) => {
+    if (
+      page.key !== 'about' ||
+      page.blocks.some((block) => block.id === 'education')
+    )
+      return page
+    const index = page.blocks.findIndex((block) => block.id === 'history')
+    const after = index < 0 ? 1 : index + 1
+    return {
+      ...page,
+      blocks: [
+        ...page.blocks.slice(0, after),
+        { id: 'education', enabled: true },
+        ...page.blocks.slice(after),
+      ],
+    }
+  })
+}
+export interface EditorialNote {
+  materialId: string
+  source: string
+  permissionNote: string
+}
 export function validPages(pages: CmsPage[]): boolean {
   return (
     pages.length === Object.keys(pageBlocks).length &&
@@ -89,6 +113,7 @@ export function validPages(pages: CmsPage[]): boolean {
   )
 }
 export interface CmsPageContent {
+  editorialNotes?: EditorialNote[]
   site: SiteSettingsDto
   contacts: ContactDetailsDto
   home: HomePageDto

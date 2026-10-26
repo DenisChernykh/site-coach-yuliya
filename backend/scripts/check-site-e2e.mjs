@@ -582,6 +582,24 @@ try {
   delete pageContent.seo
   const changed = structuredClone(pageContent)
   changed.home.hero.description = 'Только в черновике'
+  changed.contacts.telegramUrl = 'https://t.me/personal_contact'
+  changed.socials = [
+    {
+      id: 'telegram',
+      label: 'Telegram-канал',
+      url: 'https://t.me/public_channel',
+    },
+  ]
+  changed.editorialNotes = [
+    {
+      materialId: 'private-note',
+      source: 'Internal source',
+      permissionNote: 'Internal permission record',
+    },
+  ]
+  changed.home.education[0].enabled = false
+  changed.home.caseStudies[0].enabled = false
+
   const section = changed.pages[0].blocks.splice(
     changed.pages[0].blocks.findIndex((block) => block.id === 'about'),
     1,
@@ -601,6 +619,14 @@ try {
     )
   ).body
   assert.equal(savedPages.revision, workspace.revision + 1)
+  assert.equal(
+    savedPages.content.contacts.telegramUrl,
+    'https://t.me/personal_contact',
+  )
+  assert.equal(savedPages.content.socials[0].url, 'https://t.me/public_channel')
+  assert.deepEqual(savedPages.content.editorialNotes, changed.editorialNotes)
+  assert.equal(savedPages.content.home.education.length, 3)
+
   assert.deepEqual((await http('/v1/home')).body, originalHome)
   assert.equal(
     (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
@@ -634,6 +660,27 @@ try {
   assert.equal(
     (await http('/v1/home')).body.hero.description,
     'Только в черновике',
+  )
+
+  const publicMaterials = (await http('/v1/home')).body
+  assert.equal(publicMaterials.education.length, 2)
+  assert.equal(publicMaterials.caseStudies.length, 2)
+  assert.equal(
+    publicMaterials.caseStudies.find((item) => item.id === 'career-or-business')
+      .reviewImage,
+    '/images/reviews/career-or-business.jpg',
+  )
+  assert.ok(
+    !JSON.stringify(publicMaterials).includes('Internal permission record'),
+  )
+  assert.equal(publicMaterials.editorialNotes, undefined)
+  assert.equal(
+    (await http('/v1/contacts')).body.telegramUrl,
+    'https://t.me/personal_contact',
+  )
+  assert.equal(
+    (await http('/v1/social-links')).body[0].url,
+    'https://t.me/public_channel',
   )
   const publishedLayout = (await http('/v1/page-layouts')).body
   assert.equal(publishedLayout[0].blocks[1].id, 'about')
@@ -1018,7 +1065,7 @@ try {
     email: 'coach@example.com',
     phone: '+79000000000',
     address: 'Онлайн',
-    telegramUrl: null,
+    telegramUrl: 'https://t.me/private_coach',
     links: [
       { id: 'telegram', label: 'Telegram', url: 'https://t.me/unified_coach' },
       {
@@ -1038,7 +1085,7 @@ try {
   const contacts = (
     await http('/v1/admin/contacts', 'PUT', combinedContacts, 200, true)
   ).body
-  assert.equal(contacts.telegramUrl, combinedContacts.links[0].url)
+  assert.equal(contacts.telegramUrl, combinedContacts.telegramUrl)
   assert.equal(
     (await http('/v1/admin/publication', 'GET', undefined, 200, true)).body
       .requestedRevision,
@@ -1047,7 +1094,7 @@ try {
   await publishDraft()
   assert.equal(
     (await http('/v1/contacts')).body.telegramUrl,
-    combinedContacts.links[0].url,
+    combinedContacts.telegramUrl,
   )
   assert.deepEqual(
     (await http('/v1/social-links')).body,

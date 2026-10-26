@@ -8,9 +8,14 @@
 
 export type CaseStudyDto = {
   details: string
+  enabled?: boolean
   exploration: string
+  format?: string
   id: string
   request: string
   result: string
+  review?: string
+  reviewImage?: string
+  reviewImageAlt?: string
   title: string
 }

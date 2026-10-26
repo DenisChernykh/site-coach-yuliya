@@ -1,4 +1,7 @@
 import { useId } from 'react'
+import { ArrowUp, ArrowDown } from 'lucide-react'
+import { ContentImageField } from './content-image-field'
+import { reorderStoryItem } from '../model/story-upload'
 import {
   Button,
   Field,
@@ -18,6 +21,7 @@ type Props = {
   value: ContentValue
   onChange: (value: ContentValue) => void
   field?: string
+  onUploadingChange?: (busy: boolean) => void
 }
 const orderedFields = [
   'id',
@@ -56,6 +60,8 @@ const longFields = new Set([
   'summary',
   'quote',
   'quoteNote',
+  'review',
+  'permissionNote',
   'answer',
   'body',
   'text',
@@ -77,7 +83,12 @@ function newItem(template: ContentValue): ContentValue {
   return item
 }
 
-export function ContentFields({ value, onChange, field = '' }: Props) {
+export function ContentFields({
+  value,
+  onChange,
+  field = '',
+  onUploadingChange,
+}: Props) {
   const id = useId()
   if (field === 'id') return null
   if (Array.isArray(value)) {
@@ -116,21 +127,57 @@ export function ContentFields({ value, onChange, field = '' }: Props) {
                 : `${labelFor(field)} ${index + 1}`}
             </summary>
             <ContentFields
-              value={item}
+              value={
+                item &&
+                typeof item === 'object' &&
+                !Array.isArray(item) &&
+                itemTemplates[field]
+                  ? {
+                      ...(itemTemplates[field] as Record<string, ContentValue>),
+                      ...item,
+                      ...(field === 'caseStudies'
+                        ? { enabled: item.enabled ?? true }
+                        : {}),
+                    }
+                  : item
+              }
+              onUploadingChange={onUploadingChange}
               onChange={(next) =>
                 onChange(
                   value.map((current, i) => (i === index ? next : current)),
                 )
               }
             />
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => onChange(value.filter((_, i) => i !== index))}
-            >
-              Удалить пункт
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                aria-label={`Поднять пункт ${index + 1}`}
+                disabled={index === 0}
+                onClick={() => onChange(reorderStoryItem(value, index, -1))}
+              >
+                <ArrowUp aria-hidden="true" />
+              </Button>
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                aria-label={`Опустить пункт ${index + 1}`}
+                disabled={index === value.length - 1}
+                onClick={() => onChange(reorderStoryItem(value, index, 1))}
+              >
+                <ArrowDown aria-hidden="true" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onChange(value.filter((_, i) => i !== index))}
+              >
+                Удалить пункт
+              </Button>
+            </div>
           </details>
         ))}
         <Button
@@ -158,6 +205,7 @@ export function ContentFields({ value, onChange, field = '' }: Props) {
             <ContentFields
               key={key}
               field={key}
+              onUploadingChange={onUploadingChange}
               value={child}
               onChange={(next) => onChange({ ...value, [key]: next })}
             />
@@ -178,6 +226,15 @@ export function ContentFields({ value, onChange, field = '' }: Props) {
           {labelFor(field)}
         </FieldLabel>
       </Field>
+    )
+  if (field === 'image' || field === 'reviewImage')
+    return (
+      <ContentImageField
+        value={String(value ?? '')}
+        label={labelFor(field)}
+        onChange={onChange}
+        onUploadingChange={onUploadingChange}
+      />
     )
   if (field === 'topic')
     return (

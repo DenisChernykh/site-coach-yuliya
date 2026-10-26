@@ -10,6 +10,7 @@ import type { ApproachDto } from './approachDto'
 import type { ArtPracticeDto } from './artPracticeDto'
 import type { CaseStudyDto } from './caseStudyDto'
 import type { ConcernDto } from './concernDto'
+import type { EducationDto } from './educationDto'
 import type { HeroDto } from './heroDto'
 import type { ProductDto } from './productDto'
 import type { StepDto } from './stepDto'
@@ -21,6 +22,8 @@ export type HomePageDto = {
   artPractice: ArtPracticeDto
   caseStudies: CaseStudyDto[]
   concerns: ConcernDto[]
+  /** @maxItems 30 */
+  education?: EducationDto[]
   hero: HeroDto
   process: StepDto[]
   products: ProductDto[]

@@ -2,6 +2,8 @@ import { MobileNavigation } from '@/features/mobile-navigation';
 import { TelegramLink } from '@/widgets/contact';
 import { SocialLinks } from '@/widgets/social-links';
 import { Stories } from '@/widgets/stories';
+import { Education } from '@/widgets/education';
+import { CaseStudies } from '@/widgets/case-studies';
 import { createRoot, type Root } from 'react-dom/client';
 import {
   ArticleCard,
@@ -196,10 +198,7 @@ export function startPreview() {
         container
           .querySelectorAll<HTMLElement>('[data-cms-no-telegram]')
           .forEach((node) => {
-            node.hidden = Boolean(
-              content.contacts.telegramUrl ??
-              content.socials.find((s) => s.id === 'telegram')?.url,
-            );
+            node.hidden = Boolean(content.contacts.telegramUrl);
           });
         const details =
           container.querySelector<HTMLElement>('.contact-details');
@@ -218,21 +217,6 @@ export function startPreview() {
               if (field) group.hidden = !read(context, field.dataset.cmsField!);
             });
         }
-        container
-          .querySelectorAll<HTMLAnchorElement>(
-            'a[data-cms-field="contacts.email"]',
-          )
-          .forEach((node) => {
-            node.href = 'mailto:' + (content.contacts.email ?? '');
-          });
-        container
-          .querySelectorAll<HTMLAnchorElement>(
-            'a[data-cms-field="contacts.phone"]',
-          )
-          .forEach((node) => {
-            node.href =
-              'tel:' + (content.contacts.phone ?? '').replace(/[^+\d]/g, '');
-          });
         lists(container, context);
         const page = content.pages.find(
           (p) => p.key === container.dataset.previewPage,
@@ -266,6 +250,30 @@ export function startPreview() {
           .querySelectorAll<HTMLElement>('[data-cms-react]')
           .forEach((node) => {
             const type = node.dataset.cmsReact;
+            if (type === 'education')
+              node.closest('section')!.hidden = !(
+                content.home.education ?? []
+              ).some((item) => item.enabled);
+            if (type === 'cases')
+              node.closest('section')!.hidden = !content.home.caseStudies.some(
+                (item) => item.enabled !== false,
+              );
+            if (type === 'education')
+              render(
+                node,
+                <Education
+                  items={content.home.education ?? []}
+                  mediaBaseUrl={parentOrigin}
+                />,
+              );
+            if (type === 'cases')
+              render(
+                node,
+                <CaseStudies
+                  items={content.home.caseStudies}
+                  mediaBaseUrl={parentOrigin}
+                />,
+              );
             if (type === 'stories')
               render(
                 node,
@@ -286,15 +294,7 @@ export function startPreview() {
                   )),
               );
             if (type === 'telegram')
-              render(
-                node,
-                <TelegramLink
-                  url={
-                    content.contacts.telegramUrl ??
-                    content.socials.find((s) => s.id === 'telegram')?.url
-                  }
-                />,
-              );
+              render(node, <TelegramLink url={content.contacts.telegramUrl} />);
             if (type === 'socials')
               render(
                 node,
@@ -364,6 +364,19 @@ export function startPreview() {
         fields(node, context);
         lists(node, context);
       });
+    for (const field of ['email', 'phone', 'address'] as const) {
+      window.document
+        .querySelectorAll<HTMLElement>(`[data-cms-field="contacts.${field}"]`)
+        .forEach((node) => {
+          const value = content.contacts[field] ?? '';
+          node.hidden = !value;
+          if (node instanceof HTMLAnchorElement) {
+            if (field === 'email') node.href = `mailto:${value}`;
+            if (field === 'phone')
+              node.href = `tel:${value.replace(/[^+\d]/g, '')}`;
+          }
+        });
+    }
     window.document
       .querySelectorAll<HTMLElement>('[data-cms-react="socials"]')
       .forEach((node) =>

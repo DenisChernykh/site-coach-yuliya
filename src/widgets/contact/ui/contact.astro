@@ -6,9 +6,8 @@ interface Props {
   socials: SocialLinkDto[];
   telegramUrl?: string | null;
 }
-const { socials, telegramUrl } = Astro.props;
-const telegram =
-  telegramUrl ?? socials.find((item) => item.id === 'telegram')?.url;
+const { telegramUrl } = Astro.props;
+const telegram = telegramUrl;
 ---
 
 <section id="contact" class="contact" aria-labelledby="contact-title">

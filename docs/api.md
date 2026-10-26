@@ -121,6 +121,7 @@
 | `artPractice` | ArtPracticeDto  | да          |
 | `caseStudies` | CaseStudyDto[]  | да          |
 | `concerns`    | ConcernDto[]    | да          |
+| `education`   | EducationDto[]  | нет         |
 | `hero`        | HeroDto         | да          |
 | `process`     | StepDto[]       | да          |
 | `products`    | ProductDto[]    | да          |
@@ -162,14 +163,19 @@
 
 ### CaseStudyDto
 
-| Поле          | Тип    | Обязательно |
-| ------------- | ------ | ----------- |
-| `details`     | string | да          |
-| `exploration` | string | да          |
-| `id`          | string | да          |
-| `request`     | string | да          |
-| `result`      | string | да          |
-| `title`       | string | да          |
+| Поле             | Тип     | Обязательно |
+| ---------------- | ------- | ----------- |
+| `details`        | string  | да          |
+| `enabled`        | boolean | нет         |
+| `exploration`    | string  | да          |
+| `format`         | string  | нет         |
+| `id`             | string  | да          |
+| `request`        | string  | да          |
+| `result`         | string  | да          |
+| `review`         | string  | нет         |
+| `reviewImage`    | string  | нет         |
+| `reviewImageAlt` | string  | нет         |
+| `title`          | string  | да          |
 
 ### ConcernDto
 
@@ -178,6 +184,20 @@
 | `description` | string | да          |
 | `id`          | string | да          |
 | `title`       | string | да          |
+
+### EducationDto
+
+| Поле           | Тип     | Обязательно |
+| -------------- | ------- | ----------- |
+| `documentType` | string  | да          |
+| `enabled`      | boolean | да          |
+| `hours`        | number  | да          |
+| `id`           | string  | да          |
+| `image`        | string  | да          |
+| `imageAlt`     | string  | да          |
+| `organization` | string  | да          |
+| `title`        | string  | да          |
+| `year`         | string  | да          |
 
 ### HeroDto
 

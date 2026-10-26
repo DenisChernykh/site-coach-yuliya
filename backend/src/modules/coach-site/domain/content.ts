@@ -73,7 +73,24 @@ export interface ApproachDto {
   readonly steps: StepDto[]
 }
 
+export interface EducationDto {
+  readonly id: string
+  readonly title: string
+  readonly organization: string
+  readonly documentType: string
+  readonly year: string
+  readonly hours: number
+  readonly image: string
+  readonly imageAlt: string
+  readonly enabled: boolean
+}
+
 export interface CaseStudyDto {
+  readonly enabled?: boolean
+  readonly format?: string
+  readonly review?: string
+  readonly reviewImage?: string
+  readonly reviewImageAlt?: string
   readonly id: string
   readonly title: string
   readonly request: string
@@ -98,6 +115,7 @@ export interface ProductDto {
 }
 
 export interface HomePageDto {
+  readonly education?: EducationDto[]
   readonly stories?: StoryGroup[]
   readonly hero: HeroDto
   readonly concerns: ConcernDto[]

@@ -2,6 +2,7 @@ import { defaultPageLayouts } from '@/shared/lib/page-layouts';
 import { ApiProblemError } from '../client/api-errors';
 import {
   articles,
+  contacts,
   faq,
   homePage,
   services,
@@ -35,7 +36,7 @@ export async function handleMockRequest<T>(
         result = seoSettings;
         break;
       case '/v1/contacts':
-        result = { email: null, phone: null, telegramUrl: null, address: null };
+        result = contacts;
         break;
       case '/v1/home':
         result = homePage;

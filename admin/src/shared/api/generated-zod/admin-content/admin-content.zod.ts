@@ -661,6 +661,11 @@ export const AdminUpdateFaq200Response = zod.array(
 /**
  * @summary Контент главной страницы
  */
+export const adminGetHome200ResponseEducationItemHoursMin = 0
+export const adminGetHome200ResponseEducationItemHoursMax = 10000
+
+export const adminGetHome200ResponseEducationMax = 30
+
 export const adminGetHome200ResponseStoriesItemSlidesItemCaptionMax = 1000
 
 export const adminGetHome200ResponseStoriesItemSlidesItemDurationSecondsMin = 2
@@ -705,10 +710,15 @@ export const AdminGetHome200Response = zod.strictObject({
   caseStudies: zod.array(
     zod.strictObject({
       details: zod.string(),
+      enabled: zod.boolean().optional(),
       exploration: zod.string(),
+      format: zod.string().optional(),
       id: zod.string(),
       request: zod.string(),
       result: zod.string(),
+      review: zod.string().optional(),
+      reviewImage: zod.string().optional(),
+      reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
   ),
@@ -719,6 +729,25 @@ export const AdminGetHome200Response = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  education: zod
+    .array(
+      zod.strictObject({
+        documentType: zod.string(),
+        enabled: zod.boolean(),
+        hours: zod
+          .number()
+          .min(adminGetHome200ResponseEducationItemHoursMin)
+          .max(adminGetHome200ResponseEducationItemHoursMax),
+        id: zod.string(),
+        image: zod.string(),
+        imageAlt: zod.string(),
+        organization: zod.string(),
+        title: zod.string(),
+        year: zod.string(),
+      }),
+    )
+    .max(adminGetHome200ResponseEducationMax)
+    .optional(),
   hero: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
@@ -789,6 +818,11 @@ export const AdminGetHome200Response = zod.strictObject({
 /**
  * @summary Сохранить главную страницу
  */
+export const adminUpdateHomeBodyEducationItemHoursMin = 0
+export const adminUpdateHomeBodyEducationItemHoursMax = 10000
+
+export const adminUpdateHomeBodyEducationMax = 30
+
 export const adminUpdateHomeBodyStoriesItemSlidesItemCaptionMax = 1000
 
 export const adminUpdateHomeBodyStoriesItemSlidesItemDurationSecondsMin = 2
@@ -834,10 +868,15 @@ export const AdminUpdateHomeBody = zod.strictObject({
   caseStudies: zod.array(
     zod.strictObject({
       details: zod.string(),
+      enabled: zod.boolean().optional(),
       exploration: zod.string(),
+      format: zod.string().optional(),
       id: zod.string(),
       request: zod.string(),
       result: zod.string(),
+      review: zod.string().optional(),
+      reviewImage: zod.string().optional(),
+      reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
   ),
@@ -848,6 +887,25 @@ export const AdminUpdateHomeBody = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  education: zod
+    .array(
+      zod.strictObject({
+        documentType: zod.string(),
+        enabled: zod.boolean(),
+        hours: zod
+          .number()
+          .min(adminUpdateHomeBodyEducationItemHoursMin)
+          .max(adminUpdateHomeBodyEducationItemHoursMax),
+        id: zod.string(),
+        image: zod.string(),
+        imageAlt: zod.string(),
+        organization: zod.string(),
+        title: zod.string(),
+        year: zod.string(),
+      }),
+    )
+    .max(adminUpdateHomeBodyEducationMax)
+    .optional(),
   hero: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),
@@ -908,6 +966,11 @@ export const AdminUpdateHomeBody = zod.strictObject({
     .optional(),
 })
 
+export const adminUpdateHome200ResponseEducationItemHoursMin = 0
+export const adminUpdateHome200ResponseEducationItemHoursMax = 10000
+
+export const adminUpdateHome200ResponseEducationMax = 30
+
 export const adminUpdateHome200ResponseStoriesItemSlidesItemCaptionMax = 1000
 
 export const adminUpdateHome200ResponseStoriesItemSlidesItemDurationSecondsMin = 2
@@ -952,10 +1015,15 @@ export const AdminUpdateHome200Response = zod.strictObject({
   caseStudies: zod.array(
     zod.strictObject({
       details: zod.string(),
+      enabled: zod.boolean().optional(),
       exploration: zod.string(),
+      format: zod.string().optional(),
       id: zod.string(),
       request: zod.string(),
       result: zod.string(),
+      review: zod.string().optional(),
+      reviewImage: zod.string().optional(),
+      reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
   ),
@@ -966,6 +1034,25 @@ export const AdminUpdateHome200Response = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  education: zod
+    .array(
+      zod.strictObject({
+        documentType: zod.string(),
+        enabled: zod.boolean(),
+        hours: zod
+          .number()
+          .min(adminUpdateHome200ResponseEducationItemHoursMin)
+          .max(adminUpdateHome200ResponseEducationItemHoursMax),
+        id: zod.string(),
+        image: zod.string(),
+        imageAlt: zod.string(),
+        organization: zod.string(),
+        title: zod.string(),
+        year: zod.string(),
+      }),
+    )
+    .max(adminUpdateHome200ResponseEducationMax)
+    .optional(),
   hero: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),

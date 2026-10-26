@@ -67,7 +67,28 @@ export class CmsPageDto {
   @Type(() => CmsBlockDto)
   public readonly blocks!: CmsBlockDto[]
 }
+export class EditorialNoteDto {
+  @ApiProperty({ type: String, maxLength: 100 })
+  @IsString()
+  @MaxLength(100)
+  public readonly materialId!: string
+  @ApiProperty({ type: String, maxLength: 2000 })
+  @IsString()
+  @MaxLength(2000)
+  public readonly source!: string
+  @ApiProperty({ type: String, maxLength: 2000 })
+  @IsString()
+  @MaxLength(2000)
+  public readonly permissionNote!: string
+}
 export class CmsPageContentDto {
+  @ApiPropertyOptional({ type: () => [EditorialNoteDto], maxItems: 100 })
+  @ValidateIf((_o, value: unknown) => value !== undefined)
+  @IsArray()
+  @ArrayMaxSize(100)
+  @ValidateNested({ each: true })
+  @Type(() => EditorialNoteDto)
+  public readonly editorialNotes?: EditorialNoteDto[]
   @ApiProperty({ type: () => SiteSettingsDto })
   @IsDefined()
   @ValidateNested()

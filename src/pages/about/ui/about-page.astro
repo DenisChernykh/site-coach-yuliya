@@ -4,6 +4,7 @@ import type { CmsPageDto } from '@/shared/api';
 import { Image } from 'astro:assets';
 import type { HomePageDto } from '@/entities/site';
 import { WorkBoundaries } from '@/widgets/work-boundaries';
+import { Education } from '@/widgets/education';
 import { portrait } from '@/shared/assets';
 import { routes } from '@/shared/routes';
 import { buttonVariants } from '@/shared/ui';
@@ -99,6 +100,36 @@ const { layouts, preview = false, data } = Astro.props;
       </div>
     </section>
   </Fragment>
+  <Fragment slot="education">
+    {
+      (preview || data.education?.some((item) => item.enabled)) && (
+        <section
+          id="education"
+          class="education section-space"
+          aria-labelledby="education-title"
+        >
+          <div class="page-container">
+            <div class="education-heading">
+              <p class="eyebrow">Профессиональная основа</p>
+              <h2 id="education-title">
+                Образование
+                <br />и обучение.
+              </h2>
+              <p>
+                Обучение в Академии 5 Prism и программы повышения квалификации.
+                Здесь можно посмотреть документы.
+              </p>
+            </div>
+            {preview ? (
+              <div data-cms-react="education" />
+            ) : (
+              <Education items={data.education ?? []} client:visible />
+            )}
+          </div>
+        </section>
+      )
+    }
+  </Fragment>
   <Fragment slot="approach">
     <section
       id="approach"
@@ -167,6 +198,26 @@ const { layouts, preview = false, data } = Astro.props;
   </Fragment>
 </PageSections>
 <style>
+  .education {
+    background: var(--secondary);
+    scroll-margin-top: 100px;
+  }
+  .education-heading {
+    max-width: 720px;
+    display: grid;
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+  .education-heading h2 {
+    font-size: clamp(40px, 4vw, 58px);
+    line-height: 1.05;
+  }
+  .education-heading > p:last-child {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
   .about-hero {
     padding-block: 56px 64px;
   }

@@ -42,6 +42,20 @@ export function ContactFields({
           />
         ))}
       </div>
+      <ContactInput
+        label="Личный Telegram для записи"
+        type="url"
+        placeholder="https://t.me/username"
+        pattern="https://.+"
+        maxLength={500}
+        value={value.telegramUrl}
+        aria-invalid={
+          Boolean(value.telegramUrl && !isSocialUrl(value.telegramUrl)) ||
+          undefined
+        }
+        description="Кнопки «Написать» открывают эту переписку. Ссылка на канал ниже сохраняется отдельно."
+        onChange={(telegramUrl) => onChange({ ...value, telegramUrl })}
+      />
       <fieldset className="space-y-4 border-t pt-5">
         <legend className="pr-2 text-base font-medium">
           Социальные сети и мессенджеры
@@ -92,7 +106,9 @@ export function ContactFields({
             return (
               <ContactInput
                 key={link.id}
-                label={networks[link.id]}
+                label={
+                  link.id === 'telegram' ? 'Telegram-канал' : networks[link.id]
+                }
                 type="url"
                 placeholder={networkExamples[link.id]}
                 maxLength={link.id === 'telegram' ? 500 : 10000}
@@ -148,7 +164,7 @@ export function ContactFields({
                 onChange={(url) => {
                   onChange({
                     ...value,
-                    ...(link.id === 'telegram' ? { telegramUrl: url } : {}),
+
                     links: links.map((item) =>
                       item.id === link.id ? { ...item, url } : item,
                     ),

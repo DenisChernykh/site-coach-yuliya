@@ -22,6 +22,7 @@ export * from './consultationRequestDtoSource.ts';
 export * from './consultationResultDto.ts';
 export * from './consultationResultDtoStatus.ts';
 export * from './contactDetailsDto.ts';
+export * from './educationDto.ts';
 export * from './faqItemDto.ts';
 export * from './getArticlesParams.ts';
 export * from './getArticlesTopic.ts';

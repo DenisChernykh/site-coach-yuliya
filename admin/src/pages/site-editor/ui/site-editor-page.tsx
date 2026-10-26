@@ -46,6 +46,7 @@ const homeFields: Record<string, keyof CmsPageContentDto['home']> = {
   approach: 'approach',
   process: 'process',
   cases: 'caseStudies',
+  education: 'education',
   art: 'artPractice',
   products: 'products',
 }
@@ -97,11 +98,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         const { links: socials, ...contacts } = next
         change({
           ...content,
-          contacts: {
-            ...contacts,
-            telegramUrl:
-              socials.find((link) => link.id === 'telegram')?.url ?? null,
-          },
+          contacts,
           socials,
         })
       }}
@@ -141,6 +138,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         faq: content.faq,
         socials: content.socials,
         pages: content.pages,
+        editorialNotes: content.editorialNotes,
       },
     })
     if (
@@ -175,11 +173,13 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
       ? homeFields[block.id]
       : page === 'about' && ['hero', 'history'].includes(block.id)
         ? 'about'
-        : block.id === 'approach'
-          ? 'approach'
-          : block.id === 'process'
-            ? 'process'
-            : undefined)
+        : block.id === 'education'
+          ? 'education'
+          : block.id === 'approach'
+            ? 'approach'
+            : block.id === 'process'
+              ? 'process'
+              : undefined)
   const heading = global
     ? {
         site: 'Настройки сайта',
@@ -430,7 +430,10 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                       Секция скрыта. Её содержимое сохранится.
                     </p>
                   )}
-                  <fieldset disabled={pending} className="min-w-0 space-y-5">
+                  <fieldset
+                    disabled={pending || uploading}
+                    className="min-w-0 space-y-5"
+                  >
                     {field ? (
                       <>
                         <p className="text-xs text-muted-foreground">
@@ -439,7 +442,11 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                         </p>
                         <ContentFields
                           key={page + '-' + field}
-                          value={content.home[field] as unknown as ContentValue}
+                          onUploadingChange={setUploading}
+                          value={
+                            (content.home[field] ??
+                              []) as unknown as ContentValue
+                          }
                           field={field}
                           onChange={(next) =>
                             change({
@@ -597,6 +604,30 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                       })
                     }
                   />
+                  <details className="mt-8 rounded-lg border p-4">
+                    <summary className="cursor-pointer font-medium">
+                      Источники и разрешения
+                    </summary>
+                    <p className="my-3 text-sm text-muted-foreground">
+                      Внутренние заметки по материалам. Они сохраняются только в
+                      CMS и не передаются на публичный сайт. Указывайте сведения
+                      о согласии, когда они получены.
+                    </p>
+                    <ContentFields
+                      value={
+                        (content.editorialNotes ??
+                          []) as unknown as ContentValue
+                      }
+                      field="editorialNotes"
+                      onChange={(next) =>
+                        change({
+                          ...content,
+                          editorialNotes:
+                            next as unknown as CmsDocumentDto['editorialNotes'],
+                        })
+                      }
+                    />
+                  </details>
                 </fieldset>
               </div>
             </Tabs.Panel>

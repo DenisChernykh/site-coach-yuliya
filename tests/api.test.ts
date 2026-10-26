@@ -33,7 +33,10 @@ test('generated client provides all content without a backend or network', async
     assert.equal(services.length, 3);
     assert.equal(articles.length, 2);
     assert.ok(faq.length > 0);
-    assert.equal(socials.length, 4);
+    assert.deepEqual(
+      socials.map((link) => link.id),
+      ['telegram', 'vk', 'instagram'],
+    );
     assert.equal(network.mock.callCount(), 0);
   } finally {
     network.mock.restore();

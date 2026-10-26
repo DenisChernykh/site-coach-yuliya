@@ -10,6 +10,11 @@ import * as zod from 'zod'
 /**
  * @summary Контент главной
  */
+export const getHomePage200ResponseEducationItemHoursMin = 0
+export const getHomePage200ResponseEducationItemHoursMax = 10000
+
+export const getHomePage200ResponseEducationMax = 30
+
 export const getHomePage200ResponseStoriesItemSlidesItemCaptionMax = 1000
 
 export const getHomePage200ResponseStoriesItemSlidesItemDurationSecondsMin = 2
@@ -54,10 +59,15 @@ export const GetHomePage200Response = zod.strictObject({
   caseStudies: zod.array(
     zod.strictObject({
       details: zod.string(),
+      enabled: zod.boolean().optional(),
       exploration: zod.string(),
+      format: zod.string().optional(),
       id: zod.string(),
       request: zod.string(),
       result: zod.string(),
+      review: zod.string().optional(),
+      reviewImage: zod.string().optional(),
+      reviewImageAlt: zod.string().optional(),
       title: zod.string(),
     }),
   ),
@@ -68,6 +78,25 @@ export const GetHomePage200Response = zod.strictObject({
       title: zod.string(),
     }),
   ),
+  education: zod
+    .array(
+      zod.strictObject({
+        documentType: zod.string(),
+        enabled: zod.boolean(),
+        hours: zod
+          .number()
+          .min(getHomePage200ResponseEducationItemHoursMin)
+          .max(getHomePage200ResponseEducationItemHoursMax),
+        id: zod.string(),
+        image: zod.string(),
+        imageAlt: zod.string(),
+        organization: zod.string(),
+        title: zod.string(),
+        year: zod.string(),
+      }),
+    )
+    .max(getHomePage200ResponseEducationMax)
+    .optional(),
   hero: zod.strictObject({
     description: zod.string(),
     eyebrow: zod.string(),

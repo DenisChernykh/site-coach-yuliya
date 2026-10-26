@@ -19,11 +19,20 @@ interface Props {
   layouts?: CmsPageDto[];
   preview?: boolean;
   data: HomePageDto;
+  telegramUrl?: string | null;
   services: ServiceDto[];
   faq: FaqItemDto[];
   socials: SocialLinkDto[];
 }
-const { layouts, preview = false, data, services, faq, socials } = Astro.props;
+const {
+  telegramUrl,
+  layouts,
+  preview = false,
+  data,
+  services,
+  faq,
+  socials,
+} = Astro.props;
 ---
 
 <PageSections pageKey="coaching" layouts={layouts} preview={preview}>
@@ -118,7 +127,7 @@ const { layouts, preview = false, data, services, faq, socials } = Astro.props;
     <Faq preview={preview} items={faq} />
   </Fragment>
   <Fragment slot="contact">
-    <Contact preview={preview} socials={socials}
+    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl}
       ><slot name="contact-form" /></Contact
     >
   </Fragment>

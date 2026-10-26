@@ -10,6 +10,7 @@ import type { ApproachDto } from './approachDto.ts';
 import type { ArtPracticeDto } from './artPracticeDto.ts';
 import type { CaseStudyDto } from './caseStudyDto.ts';
 import type { ConcernDto } from './concernDto.ts';
+import type { EducationDto } from './educationDto.ts';
 import type { HeroDto } from './heroDto.ts';
 import type { ProductDto } from './productDto.ts';
 import type { StepDto } from './stepDto.ts';
@@ -21,6 +22,8 @@ export type HomePageDto = {
   artPractice: ArtPracticeDto;
   caseStudies: CaseStudyDto[];
   concerns: ConcernDto[];
+  /** @maxItems 30 */
+  education?: EducationDto[];
   hero: HeroDto;
   process: StepDto[];
   products: ProductDto[];

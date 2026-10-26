@@ -513,7 +513,13 @@
           "details": {
             "type": "string"
           },
+          "enabled": {
+            "type": "boolean"
+          },
           "exploration": {
+            "type": "string"
+          },
+          "format": {
             "type": "string"
           },
           "id": {
@@ -523,6 +529,15 @@
             "type": "string"
           },
           "result": {
+            "type": "string"
+          },
+          "review": {
+            "type": "string"
+          },
+          "reviewImage": {
+            "type": "string"
+          },
+          "reviewImageAlt": {
             "type": "string"
           },
           "title": {
@@ -605,6 +620,13 @@
           "contacts": {
             "$ref": "#/components/schemas/ContactDetailsDto"
           },
+          "editorialNotes": {
+            "items": {
+              "$ref": "#/components/schemas/EditorialNoteDto"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
           "faq": {
             "items": {
               "$ref": "#/components/schemas/FaqItemDto"
@@ -660,6 +682,13 @@
         "properties": {
           "contacts": {
             "$ref": "#/components/schemas/ContactDetailsDto"
+          },
+          "editorialNotes": {
+            "items": {
+              "$ref": "#/components/schemas/EditorialNoteDto"
+            },
+            "maxItems": 100,
+            "type": "array"
           },
           "faq": {
             "items": {
@@ -1029,6 +1058,73 @@
         ],
         "type": "object"
       },
+      "EditorialNoteDto": {
+        "properties": {
+          "materialId": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "permissionNote": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "source": {
+            "maxLength": 2000,
+            "type": "string"
+          }
+        },
+        "required": [
+          "materialId",
+          "source",
+          "permissionNote"
+        ],
+        "type": "object"
+      },
+      "EducationDto": {
+        "properties": {
+          "documentType": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "hours": {
+            "maximum": 10000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "imageAlt": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "organization",
+          "documentType",
+          "year",
+          "image",
+          "imageAlt",
+          "hours",
+          "enabled"
+        ],
+        "type": "object"
+      },
       "FaqItemDto": {
         "properties": {
           "answer": {
@@ -1095,6 +1191,13 @@
             "items": {
               "$ref": "#/components/schemas/ConcernDto"
             },
+            "type": "array"
+          },
+          "education": {
+            "items": {
+              "$ref": "#/components/schemas/EducationDto"
+            },
+            "maxItems": 30,
             "type": "array"
           },
           "hero": {
