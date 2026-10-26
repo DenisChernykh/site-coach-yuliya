@@ -15,18 +15,17 @@ export const pageBlocks = {
     'stories',
     'concerns',
     'about',
-    'approach',
     'pricing',
-    'products',
+    'group',
+    'practices',
     'process',
-    'boundaries',
     'cases',
     'art',
     'articles',
     'faq',
     'contact',
   ],
-  about: ['hero', 'history', 'education', 'approach', 'boundaries', 'cta'],
+  about: ['hero', 'history', 'education', 'cta'],
   coaching: [
     'hero',
     'requests',
@@ -90,6 +89,34 @@ export function withEducationBlock(pages: CmsPage[]): CmsPage[] {
     }
   })
 }
+export function currentPageLayouts(pages: CmsPage[]): CmsPage[] {
+  return withEducationBlock(withStoriesBlock(pages)).map((page) => ({
+    ...page,
+    blocks: page.blocks.flatMap((block) => {
+      if (
+        ['home', 'about'].includes(page.key) &&
+        ['approach', 'boundaries'].includes(block.id)
+      )
+        return []
+      if (page.key === 'home' && block.id === 'products') {
+        return ['group', 'practices']
+          .filter((id) => !page.blocks.some((item) => item.id === id))
+          .map((id) => ({ id, enabled: block.enabled }))
+      }
+      return [block]
+    }),
+  }))
+}
+
+export function currentSiteSettings(site: SiteSettingsDto): SiteSettingsDto {
+  return {
+    ...site,
+    navigation: site.navigation.filter(
+      (item) => !['/#approach', '/about/#approach'].includes(item.href),
+    ),
+  }
+}
+
 export interface EditorialNote {
   materialId: string
   source: string

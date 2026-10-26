@@ -6,18 +6,17 @@ const blocks = {
     'stories',
     'concerns',
     'about',
-    'approach',
     'pricing',
-    'products',
+    'group',
+    'practices',
     'process',
-    'boundaries',
     'cases',
     'art',
     'articles',
     'faq',
     'contact',
   ],
-  about: ['hero', 'history', 'education', 'approach', 'boundaries', 'cta'],
+  about: ['hero', 'history', 'education', 'cta'],
   coaching: [
     'hero',
     'requests',
@@ -36,3 +35,22 @@ export const defaultPageLayouts = (): CmsPageDto[] =>
     key: key as CmsPageKey,
     blocks: ids.map((id) => ({ id, enabled: true })),
   }));
+
+export function currentPageLayouts(pages: CmsPageDto[]): CmsPageDto[] {
+  return pages.map((page) => ({
+    ...page,
+    blocks: page.blocks.flatMap((block) => {
+      if (
+        ['home', 'about'].includes(page.key) &&
+        ['approach', 'boundaries'].includes(block.id)
+      )
+        return [];
+      if (page.key === 'home' && block.id === 'products') {
+        return ['group', 'practices']
+          .filter((id) => !page.blocks.some((item) => item.id === id))
+          .map((id) => ({ id, enabled: block.enabled }));
+      }
+      return [block];
+    }),
+  }));
+}

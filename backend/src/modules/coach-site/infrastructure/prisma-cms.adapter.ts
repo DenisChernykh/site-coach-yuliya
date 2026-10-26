@@ -10,8 +10,8 @@ import {
 import {
   initialPages,
   validPages,
-  withStoriesBlock,
-  withEducationBlock,
+  currentPageLayouts,
+  currentSiteSettings,
   type CmsDocument,
   type CmsPage,
   type CmsPageContent,
@@ -21,6 +21,14 @@ import {
 const json = <T>(value: unknown): T => JSON.parse(JSON.stringify(value)) as T
 const input = (value: unknown): Prisma.InputJsonValue =>
   json<Prisma.InputJsonValue>(value)
+const currentDocument = (value: unknown): CmsDocument => {
+  const document = json<CmsDocument>(value)
+  return {
+    ...document,
+    pages: currentPageLayouts(document.pages),
+    site: currentSiteSettings(document.site),
+  }
+}
 type Client = Prisma.TransactionClient
 
 export class PrismaCmsAdapter implements SiteCmsPort {
@@ -91,7 +99,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     publishedRevision: number
     content: unknown
   }): CmsWorkspace {
-    const document = json<CmsDocument>(row.content)
+    const document = currentDocument(row.content)
     return {
       revision: row.revision,
       publishedRevision: row.publishedRevision,
@@ -104,7 +112,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
                 ({ materialId, source }) => ({ materialId, source }),
               ),
             }),
-        pages: withEducationBlock(withStoriesBlock(document.pages)),
+        pages: currentPageLayouts(document.pages),
       },
     }
   }
@@ -124,14 +132,14 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     )
     if (!site) throw new SiteRecordNotFoundError()
     return site.pageLayout
-      ? withEducationBlock(withStoriesBlock(json<CmsPage[]>(site.pageLayout)))
+      ? currentPageLayouts(json<CmsPage[]>(site.pageLayout))
       : initialPages()
   }
   public mutate<T>(change: (document: CmsDocument) => T): Promise<T> {
     return this.transaction.run(() =>
       this.database.withClient(async (client) => {
         const row = await this.lock(client)
-        const document = json<CmsDocument>(row.content)
+        const document = currentDocument(row.content)
         const result = change(document)
         await client.siteCmsDraft.update({
           where: { id: 'site' },
@@ -148,11 +156,16 @@ export class PrismaCmsAdapter implements SiteCmsPort {
     return this.transaction.run(() =>
       this.database.withClient(async (client) => {
         const row = await this.lock(client)
-        if (row.revision !== revision || !validPages(content.pages))
+        const updated = {
+          ...content,
+          pages: currentPageLayouts(content.pages),
+          site: currentSiteSettings(content.site),
+        }
+        if (row.revision !== revision || !validPages(updated.pages))
           throw new SiteContentConflictError()
         const document = {
-          ...json<CmsDocument>(row.content),
-          ...content,
+          ...currentDocument(row.content),
+          ...updated,
         }
         return this.workspace(
           await client.siteCmsDraft.update({
@@ -169,7 +182,7 @@ export class PrismaCmsAdapter implements SiteCmsPort {
         const row = await this.lock(client)
         if (row.revision !== revision) throw new SiteContentConflictError()
         if (row.publishedRevision === revision) return this.workspace(row)
-        const document = json<CmsDocument>(row.content)
+        const document = currentDocument(row.content)
         await client.siteContent.update({
           where: { id: 'site' },
           data: {

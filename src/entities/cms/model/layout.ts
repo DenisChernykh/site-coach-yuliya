@@ -2,6 +2,7 @@ import type { CmsBlockDto } from '@/shared/api';
 
 import { defaultPageLayouts } from '@/shared/lib/page-layouts';
 export { defaultPageLayouts };
+export { currentPageLayouts } from '@/shared/lib/page-layouts';
 export type { CmsPageKey } from '@/shared/lib/page-layouts';
 export const escapeHtml = (text: string) =>
   text

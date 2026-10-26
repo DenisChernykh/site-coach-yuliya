@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { articleSlug } from '../domain/content-identifiers'
 import { visibleStories } from '../domain/stories'
+import { currentSiteSettings } from '../domain/cms'
 import { Prisma, type PrismaClient } from '@/generated/prisma/client'
 import type { TransactionPort } from '@/shared/application/transaction.port'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
@@ -92,7 +93,9 @@ export class PrismaSiteContentAdapter implements SiteContentPort {
   }
 
   public async getSettings(): Promise<SiteSettingsDto> {
-    return json<SiteSettingsDto>((await this.site()).settings)
+    return currentSiteSettings(
+      json<SiteSettingsDto>((await this.site()).settings),
+    )
   }
   public async getSeo(): Promise<SeoSettingsDto> {
     return json<SeoSettingsDto>((await this.site()).seo)

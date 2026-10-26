@@ -74,6 +74,82 @@ function show(
 }
 
 describe('unified CMS editing', () => {
+  it('edits group coaching separately and preserves the independent practice content', async () => {
+    const editor = show('?page=home&section=group')
+    try {
+      const user = userEvent.setup()
+      const title = await screen.findByRole('textbox', {
+        name: 'Заголовок',
+      })
+      expect(title).toHaveValue('Групповой коучинг')
+      expect(
+        screen.queryByRole('button', { name: 'Подход' }),
+      ).not.toBeInTheDocument()
+      const original = createCmsFixture().content.home.products.find(
+        (item) => item.id === 'practice',
+      )
+      await user.clear(title)
+      await user.type(title, 'Работа в группе')
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      expect(
+        editor.writes[0].content.home.products.find(
+          (item) => item.id === 'group',
+        )?.title,
+      ).toBe('Работа в группе')
+      expect(
+        editor.writes[0].content.home.products.find(
+          (item) => item.id === 'practice',
+        ),
+      ).toEqual(original)
+    } finally {
+      editor.dispose()
+    }
+  })
+  it('hides removed hero captions while preserving the legacy data on save', async () => {
+    const editor = show('?page=home&section=hero')
+    try {
+      const user = userEvent.setup()
+      const description = await screen.findByRole('textbox', {
+        name: 'Описание',
+      })
+      expect(
+        screen.queryByRole('textbox', { name: 'Надзаголовок' }),
+      ).not.toBeInTheDocument()
+      await user.type(description, ' Проверка')
+      await user.click(
+        screen.getByRole('button', { name: 'Сохранить черновик' }),
+      )
+      await screen.findByText(
+        'Черновик сохранён. На сайте пока прежняя версия.',
+      )
+      expect(editor.writes[0].content.home.hero.eyebrow).toBe(
+        createCmsFixture().content.home.hero.eyebrow,
+      )
+    } finally {
+      editor.dispose()
+    }
+  })
+  it('offers only the uniform case description fields', async () => {
+    const editor = show('?page=home&section=cases')
+    try {
+      await screen.findAllByRole('textbox', {
+        name: 'Запрос клиента',
+      })
+      expect(
+        screen.getAllByRole('textbox', { name: 'Что разбирали' }),
+      ).not.toHaveLength(0)
+      expect(
+        screen.queryByRole('textbox', { name: 'Подробности' }),
+      ).not.toBeInTheDocument()
+    } finally {
+      editor.dispose()
+    }
+  })
   it('keeps story order and hidden slides in the saved draft', async () => {
     const id = 'b66d592e-b32e-4ea0-9876-74cacd4f5a25'
     const fixture = createCmsFixture()
@@ -150,15 +226,14 @@ describe('unified CMS editing', () => {
         name: 'Ссылка',
       }) as HTMLInputElement[]
       const about = links.find((input) => input.value === '/about/')!
-      const approach = links.find((input) => input.value === '/#approach')!
-      expect(about).toHaveAccessibleDescription('Отдельная страница «Обо мне».')
-      expect(approach).toHaveAccessibleDescription(
-        'Секция «Подход» на главной странице.',
+      expect(links.some((input) => input.value.includes('#approach'))).toBe(
+        false,
       )
+      expect(about).toHaveAccessibleDescription('Отдельная страница «Обо мне».')
       await user.clear(about)
-      await user.type(about, '/about/#approach')
+      await user.type(about, '/about/#education')
       expect(about).toHaveAccessibleDescription(
-        /Якорь ведёт к секции страницы/u,
+        'Секция «Образование» на странице «Обо мне».',
       )
       await user.click(
         screen.getByRole('button', { name: 'Сохранить черновик' }),
@@ -168,7 +243,7 @@ describe('unified CMS editing', () => {
       )
       expect(editor.writes[0].content.site.navigation).toContainEqual({
         label: 'Обо мне',
-        href: '/about/#approach',
+        href: '/about/#education',
       })
     } finally {
       editor.dispose()

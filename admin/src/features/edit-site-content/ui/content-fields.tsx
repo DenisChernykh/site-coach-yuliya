@@ -22,6 +22,7 @@ type Props = {
   onChange: (value: ContentValue) => void
   field?: string
   onUploadingChange?: (busy: boolean) => void
+  hiddenFields?: readonly string[]
 }
 const orderedFields = [
   'id',
@@ -64,6 +65,9 @@ const longFields = new Set([
   'body',
   'text',
   'ctaDescription',
+  'request',
+  'exploration',
+  'result',
   'previewDescription',
   'listingDescription',
 ])
@@ -86,6 +90,7 @@ export function ContentFields({
   onChange,
   field = '',
   onUploadingChange,
+  hiddenFields = [],
 }: Props) {
   const id = useId()
   if (field === 'id') return null
@@ -139,6 +144,7 @@ export function ContentFields({
                     }
                   : item
               }
+              hiddenFields={hiddenFields}
               onUploadingChange={onUploadingChange}
               onChange={(next) =>
                 onChange(
@@ -198,11 +204,13 @@ export function ContentFields({
     return (
       <div className="space-y-4">
         {Object.entries(value)
+          .filter(([key]) => !hiddenFields.includes(key))
           .sort(([a], [b]) => fieldOrder(a) - fieldOrder(b))
           .map(([key, child]) => (
             <ContentFields
               key={key}
               field={key}
+              hiddenFields={hiddenFields}
               onUploadingChange={onUploadingChange}
               value={child}
               onChange={(next) => onChange({ ...value, [key]: next })}

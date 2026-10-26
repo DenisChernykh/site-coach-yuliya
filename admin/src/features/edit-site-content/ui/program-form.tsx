@@ -76,6 +76,7 @@ export function ProgramForm({
           control={form.control}
           render={({ field }) => (
             <ContentFields
+              hiddenFields={['eyebrow']}
               value={field.value as ContentValue}
               onChange={field.onChange}
             />

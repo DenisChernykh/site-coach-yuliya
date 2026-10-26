@@ -43,12 +43,10 @@ const homeFields: Record<string, keyof CmsPageContentDto['home']> = {
   hero: 'hero',
   concerns: 'concerns',
   about: 'about',
-  approach: 'approach',
   process: 'process',
   cases: 'caseStudies',
   education: 'education',
   art: 'artPractice',
-  products: 'products',
 }
 function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
   const source = useCms()
@@ -175,11 +173,24 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
         ? 'about'
         : block.id === 'education'
           ? 'education'
-          : block.id === 'approach'
-            ? 'approach'
-            : block.id === 'process'
-              ? 'process'
-              : undefined)
+          : block.id === 'process'
+            ? 'process'
+            : undefined)
+  const productId =
+    page === 'home'
+      ? { group: 'group', practices: 'practice' }[block.id]
+      : undefined
+  const product = productId
+    ? content.home.products.find((item) => item.id === productId)
+    : undefined
+  const hiddenFields =
+    field === 'hero' || field === 'artPractice'
+      ? ['eyebrow']
+      : field === 'caseStudies'
+        ? ['details']
+        : []
+  const editableEyebrow =
+    block.id === 'pricing' || (page === 'coaching' && block.id === 'hero')
   const heading = global
     ? {
         site: 'Настройки сайта',
@@ -434,7 +445,36 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                     disabled={pending || uploading}
                     className="min-w-0 space-y-5"
                   >
-                    {field ? (
+                    {productId ? (
+                      <ContentFields
+                        key={productId}
+                        field="products"
+                        value={
+                          (product ?? {
+                            id: productId,
+                            title: '',
+                            eyebrow: '',
+                            description: '',
+                            actionLabel: '',
+                          }) as unknown as ContentValue
+                        }
+                        onChange={(next) => {
+                          const value =
+                            next as unknown as CmsDocumentDto['home']['products'][number]
+                          change({
+                            ...content,
+                            home: {
+                              ...content.home,
+                              products: product
+                                ? content.home.products.map((item) =>
+                                    item.id === productId ? value : item,
+                                  )
+                                : [...content.home.products, value],
+                            },
+                          })
+                        }}
+                      />
+                    ) : field ? (
                       <>
                         <p className="text-xs text-muted-foreground">
                           Общие тексты обновятся на всех страницах, где
@@ -442,6 +482,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                         </p>
                         <ContentFields
                           key={page + '-' + field}
+                          hiddenFields={hiddenFields}
                           onUploadingChange={setUploading}
                           value={
                             (content.home[field] ??
@@ -473,7 +514,7 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                         <TextField
                           label="Заголовок секции"
                           value={block.title ?? ''}
-                          placeholder="Знакомство в историях"
+                          placeholder="Подробнее"
                           onChange={(event) =>
                             blocks(
                               current.blocks.map((item) =>
@@ -524,19 +565,25 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                             )
                           }
                         />
-                        <TextField
-                          label="Подпись над заголовком"
-                          value={block.eyebrow ?? ''}
-                          onChange={(e) =>
-                            blocks(
-                              current.blocks.map((b) =>
-                                b.id === block.id
-                                  ? { ...b, eyebrow: e.target.value }
-                                  : b,
-                              ),
-                            )
-                          }
-                        />
+                        {editableEyebrow && (
+                          <TextField
+                            label={
+                              block.id === 'pricing'
+                                ? 'Подпись формата'
+                                : 'Подпись над заголовком'
+                            }
+                            value={block.eyebrow ?? ''}
+                            onChange={(e) =>
+                              blocks(
+                                current.blocks.map((b) =>
+                                  b.id === block.id
+                                    ? { ...b, eyebrow: e.target.value }
+                                    : b,
+                                ),
+                              )
+                            }
+                          />
+                        )}
                         {block.id === 'hero' && (
                           <TextareaField
                             label="Описание"
@@ -556,6 +603,13 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                           <p className="text-sm text-muted-foreground">
                             Форматы и стоимость редактируются в разделе
                             «Программы».
+                          </p>
+                        )}
+                        {block.id === 'contact' && (
+                          <p className="text-sm text-muted-foreground">
+                            Кнопки записи на сайте открывают общую форму во
+                            всплывающем окне. Значки соцсетей настраиваются во
+                            вкладке «Контакты и соцсети».
                           </p>
                         )}
                         {block.id === 'articles' && (

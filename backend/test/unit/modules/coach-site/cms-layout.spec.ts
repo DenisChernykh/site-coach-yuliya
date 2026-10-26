@@ -2,7 +2,12 @@ import type { CmsPageContent } from '@/modules/coach-site/domain/cms'
 import 'reflect-metadata'
 import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
-import { initialPages, validPages } from '@/modules/coach-site/domain/cms'
+import {
+  initialPages,
+  validPages,
+  currentPageLayouts,
+  currentSiteSettings,
+} from '@/modules/coach-site/domain/cms'
 import { CmsPageContentDto } from '@/modules/coach-site/presentation/cms.dto'
 import { readFileSync } from 'node:fs'
 
@@ -40,6 +45,53 @@ describe('CMS layout boundaries', () => {
       expect(validPages(pages)).toBe(false)
     },
   )
+  it('upgrades stored layouts without changing other section order or visibility', () => {
+    const pages = initialPages()
+    const home = pages.find((page) => page.key === 'home')!
+    home.blocks = home.blocks.filter(
+      (block) => !['group', 'practices'].includes(block.id),
+    )
+    home.blocks.splice(
+      2,
+      0,
+      { id: 'products', enabled: false },
+      { id: 'approach', enabled: true },
+      { id: 'boundaries', enabled: false },
+    )
+    home.blocks.find((block) => block.id === 'stories')!.title =
+      'Подробнее о работе'
+    const about = pages.find((page) => page.key === 'about')!
+    about.blocks.push(
+      { id: 'approach', enabled: true },
+      { id: 'boundaries', enabled: true },
+    )
+    const upgraded = currentPageLayouts(pages)
+    expect(upgraded[0]!.blocks.slice(1, 4)).toEqual([
+      { id: 'stories', enabled: true, title: 'Подробнее о работе' },
+      { id: 'group', enabled: false },
+      { id: 'practices', enabled: false },
+    ])
+    expect(validPages(upgraded)).toBe(true)
+    expect(currentPageLayouts(upgraded)).toEqual(upgraded)
+    expect(upgraded.find((page) => page.key === 'coaching')).toEqual(
+      pages.find((page) => page.key === 'coaching'),
+    )
+  })
+  it('removes only navigation to retired approach sections', () => {
+    const site = {
+      ...initial.settings,
+      navigation: [
+        { label: 'Старый подход', href: '/#approach' },
+        { label: 'Подход', href: '/about/#approach' },
+        { label: 'Документы', href: '/about/#education' },
+        { label: 'Моя ссылка', href: 'https://example.com/#approach' },
+      ],
+    }
+    expect(currentSiteSettings(site).navigation).toEqual(
+      site.navigation.slice(2),
+    )
+    expect(site.navigation).toHaveLength(4)
+  })
   it('validates nested content and rejects unsupported properties', async () => {
     const input = content()
     expect(

@@ -3,6 +3,7 @@ import type { CmsPageDto } from '@/shared/api';
 import {
   applyBlockCopy,
   defaultPageLayouts,
+  currentPageLayouts,
   type CmsPageKey,
 } from '../model/layout';
 interface Props {
@@ -16,7 +17,7 @@ const {
   preview = false,
 } = Astro.props;
 const page =
-  layouts.find((p) => p.key === pageKey) ??
+  currentPageLayouts(layouts).find((p) => p.key === pageKey) ??
   defaultPageLayouts().find((p) => p.key === pageKey)!;
 const sections = await Promise.all(
   page.blocks

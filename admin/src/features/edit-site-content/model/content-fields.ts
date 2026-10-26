@@ -15,14 +15,15 @@ const destinations: Record<string, string> = {
   '/journal/': 'Отдельная страница «Журнал».',
   '/contacts/': 'Отдельная страница «Контакты».',
   '/privacy/': 'Страница «Политика конфиденциальности».',
-  '/#approach': 'Секция «Подход» на главной странице.',
+  '/#formats': 'Секция «Форматы работы» на главной странице.',
+  '/about/#education': 'Секция «Образование» на странице «Обо мне».',
 }
 
 export function navigationLinkDescription(href: string): string {
   return (
     destinations[href] ??
     (href.includes('#')
-      ? 'Якорь ведёт к секции страницы. Например, /#approach — «Подход» на главной.'
+      ? 'Якорь ведёт к секции страницы. Например, /#formats — «Форматы работы» на главной.'
       : 'Адрес страницы сайта, например /about/, или полная ссылка на другой сайт.')
   )
 }
@@ -70,10 +71,9 @@ export const fieldLabels: Record<string, string> = {
   meetingNote: 'Подпись о встрече',
   concerns: 'Запросы клиентов',
   about: 'О специалисте',
-  approach: 'Подход',
   artPractice: 'Арт-практика',
   process: 'Этапы работы',
-  caseStudies: 'Истории клиентов',
+  caseStudies: 'Кейсы клиентов',
   education: 'Образование',
   organization: 'Организация',
   documentType: 'Документ и программа',
@@ -104,7 +104,7 @@ export const fieldLabels: Record<string, string> = {
   benefits: 'Преимущества',
   steps: 'Этапы',
   request: 'Запрос клиента',
-  exploration: 'Что исследовали',
+  exploration: 'Что разбирали',
   details: 'Подробности',
   actionLabel: 'Текст кнопки',
 }

@@ -91,27 +91,32 @@ function lists(scope: Element, document: unknown) {
     parent
       .querySelectorAll(':scope > [data-cms-item]')
       .forEach((node) => node.remove());
-    value.forEach((item, index) => {
-      const node = template!.node.cloneNode(true) as HTMLElement;
-      if (node.hasAttribute('data-cms-value'))
-        node.textContent =
-          (node.dataset.cmsValuePrefix ?? '') + String(item ?? '');
-      fields(node, item, true);
-      const href = node.dataset.cmsHref
-        ? read(item, node.dataset.cmsHref)
-        : undefined;
-      if (typeof href === 'string' && /^(?:https:\/\/|\/(?!\/)|#)/.test(href))
-        node.setAttribute('href', href);
-      node.querySelectorAll<HTMLElement>('[data-cms-index]').forEach((n) => {
-        n.textContent = String(index + 1).padStart(2, '0');
+    value
+      .filter(
+        (item) =>
+          !parent.dataset.cmsFilterId || item.id === parent.dataset.cmsFilterId,
+      )
+      .forEach((item, index) => {
+        const node = template!.node.cloneNode(true) as HTMLElement;
+        if (node.hasAttribute('data-cms-value'))
+          node.textContent =
+            (node.dataset.cmsValuePrefix ?? '') + String(item ?? '');
+        fields(node, item, true);
+        const href = node.dataset.cmsHref
+          ? read(item, node.dataset.cmsHref)
+          : undefined;
+        if (typeof href === 'string' && /^(?:https:\/\/|\/(?!\/)|#)/.test(href))
+          node.setAttribute('href', href);
+        node.querySelectorAll<HTMLElement>('[data-cms-index]').forEach((n) => {
+          n.textContent = String(index + 1).padStart(2, '0');
+        });
+        if (parent.dataset.cmsLastClass)
+          node.classList.toggle(
+            parent.dataset.cmsLastClass,
+            index === value.length - 1,
+          );
+        template!.anchor.parentNode!.insertBefore(node, template!.anchor);
       });
-      if (parent.dataset.cmsLastClass)
-        node.classList.toggle(
-          parent.dataset.cmsLastClass,
-          index === value.length - 1,
-        );
-      template!.anchor.parentNode!.insertBefore(node, template!.anchor);
-    });
   });
 }
 const legacyMarkdown = (a: ArticleDto) =>

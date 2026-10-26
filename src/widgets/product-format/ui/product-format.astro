@@ -1,0 +1,112 @@
+---
+import type { HomePageDto } from '@/entities/site';
+import { buttonVariants } from '@/shared/ui';
+import { ArrowUpRight } from 'lucide-react';
+interface Props {
+  items: HomePageDto['products'];
+  productId: 'group' | 'practice';
+}
+const { items, productId } = Astro.props;
+---
+
+<div data-cms-list="home.products" data-cms-filter-id={productId}>
+  {
+    items
+      .filter((product) => product.id === productId)
+      .map((product) => (
+        <section
+          class:list={[
+            'product-format',
+            { practice: productId === 'practice' },
+          ]}
+          data-cms-item
+          aria-label={product.title}
+        >
+          <div class="page-container product-format-grid">
+            <div class="product-format-copy">
+              <h2 data-cms-field=".title">{product.title}</h2>
+              <p data-cms-field=".description">{product.description}</p>
+              <button
+                type="button"
+                data-consultation
+                data-consultation-topic={product.title}
+                aria-haspopup="dialog"
+                class:list={[
+                  buttonVariants(),
+                  'h-14 w-fit gap-[18px] px-6 text-sm',
+                ]}
+              >
+                <>
+                  <span data-cms-field=".actionLabel">
+                    {product.actionLabel}
+                  </span>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </>
+              </button>
+            </div>
+            <div class="product-format-detail">
+              <p data-cms-field=".eyebrow">{product.eyebrow}</p>
+            </div>
+          </div>
+        </section>
+      ))
+  }
+</div>
+<style>
+  .product-format {
+    padding-block: 72px;
+    background: var(--secondary);
+  }
+  .practice {
+    background: var(--card);
+  }
+  .product-format-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 96px;
+    align-items: center;
+  }
+  .product-format-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .product-format h2 {
+    font-size: 56px;
+  }
+  .product-format-copy p {
+    max-width: 620px;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  .product-format-detail {
+    border-left: 1px solid #a4bac9;
+    padding: 32px 0 32px 40px;
+  }
+  .product-format-detail p {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    line-height: 1.15;
+  }
+  @media (max-width: 767px) {
+    .product-format {
+      padding-block: 44px;
+    }
+    .product-format-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .product-format h2 {
+      font-size: 42px;
+    }
+    .product-format-detail {
+      padding: 24px 0 0;
+      border-left: 0;
+      border-top: 1px solid #a4bac9;
+    }
+    .product-format-detail p {
+      font-size: 32px;
+    }
+  }
+</style>
