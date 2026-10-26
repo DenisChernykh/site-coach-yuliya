@@ -50,14 +50,13 @@ jobs:
       NETANGELS_WWW_DIR: ${{ vars.NETANGELS_WWW_DIR }}
       PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
       PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
-      PUBLIC_SENTRY_DSN: ${{ vars.SENTRY_DSN }}
-      VITE_SENTRY_DSN: ${{ vars.SENTRY_DSN }}
-      PUBLIC_SENTRY_RELEASE: ${{ github.sha }}
-      VITE_SENTRY_RELEASE: ${{ github.sha }}
-      SENTRY_RELEASE: ${{ github.sha }}
-      SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
-      SENTRY_UPLOAD_SOURCEMAPS: 'true'
+      PUBLIC_MONITOR_URL: ${{ vars.MONITOR_BROWSER_URL }}
+      PUBLIC_MONITOR_KEY: ${{ vars.MONITOR_BROWSER_KEY }}
+      VITE_MONITOR_URL: ${{ vars.MONITOR_BROWSER_URL }}
+      VITE_MONITOR_KEY: ${{ vars.MONITOR_BROWSER_KEY }}
+      PUBLIC_MONITOR_RELEASE: ${{ github.sha }}
+      VITE_MONITOR_RELEASE: ${{ github.sha }}
+      MONITOR_ARCHIVE_SOURCEMAPS: 'true'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -72,10 +71,8 @@ jobs:
           node --version
           pnpm --version
       - name: Require production error monitoring
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          for name in PUBLIC_SENTRY_DSN SENTRY_ORG SENTRY_PROJECT SENTRY_AUTH_TOKEN; do
+          for name in PUBLIC_MONITOR_URL PUBLIC_MONITOR_KEY; do
             if [ -z "${!name}" ]; then
               echo "Missing production monitoring setting: $name"
               exit 1
@@ -103,9 +100,9 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           node scripts/monitoring/sourcemaps.mjs backend/dist backend/admin-ui
+          node scripts/monitoring/upload-sourcemaps.mjs
           node backend/scripts/netangels/deploy.mjs
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           NETANGELS_SSH_PRIVATE_KEY: ${{ secrets.NETANGELS_SSH_PRIVATE_KEY }}
           NETANGELS_SSH_KNOWN_HOSTS: ${{ secrets.NETANGELS_SSH_KNOWN_HOSTS }}
           NETANGELS_API_KEY: ${{ secrets.NETANGELS_API_KEY }}
@@ -126,9 +123,9 @@ jobs:
         if: inputs.target != 'backend'
         run: |
           node scripts/monitoring/sourcemaps.mjs dist
+          node scripts/monitoring/upload-sourcemaps.mjs
           node backend/scripts/netangels/deploy.mjs
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           NETANGELS_SSH_PRIVATE_KEY: ${{ secrets.NETANGELS_SSH_PRIVATE_KEY }}
           NETANGELS_SSH_KNOWN_HOSTS: ${{ secrets.NETANGELS_SSH_KNOWN_HOSTS }}
           NETANGELS_API_KEY: ${{ secrets.NETANGELS_API_KEY }}

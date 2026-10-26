@@ -1,26 +1,45 @@
+import { monitorTransport } from './transport'
+import {
+  startHttpMetrics,
+  recordHttpMetrics,
+  flushHttpMetrics,
+} from './http-metrics'
 import * as Sentry from '@sentry/node'
 import type { StructuredLogRecord } from '@/platform/logging/logging.contracts'
 import { sanitizeErrorEvent } from './privacy'
 import type { ErrorReportingConfig } from '@/platform/config/error-reporting-config'
 
 let initialized = false
+let collectorOrigin: string | undefined
 let events = 0
 let windowStart = 0
 const reportedErrors = new WeakSet<object>()
 
 export function startErrorReporting(input: ErrorReportingConfig): void {
-  if (initialized || input.environment !== 'production' || !input.dsn) return
-  // Validate without printing the DSN. Monitoring failure must not expose configuration.
-  const dsn = new URL(input.dsn)
   if (
-    dsn.protocol !== 'https:' ||
-    !dsn.username ||
-    !/^\/[0-9]+$/.test(dsn.pathname)
+    initialized ||
+    input.environment !== 'production' ||
+    !input.endpoint ||
+    !input.key
+  )
+    return
+  // Validate without printing the DSN. Monitoring failure must not expose configuration.
+  const endpoint = new URL(input.endpoint)
+  if (
+    endpoint.protocol !== 'https:' ||
+    endpoint.username ||
+    endpoint.password ||
+    endpoint.search ||
+    endpoint.hash
   ) {
-    throw new Error('Invalid SENTRY_DSN')
+    throw new Error('Invalid MONITOR_URL')
   }
+  collectorOrigin = endpoint.origin
+  startHttpMetrics(input.endpoint, input.key)
   Sentry.init({
-    dsn: input.dsn,
+    dsn: 'https://public@collector.invalid/1',
+    transport: () => monitorTransport(input.endpoint!, input.key!, true),
+    sendClientReports: false,
     environment: 'production',
     ...(input.release ? { release: input.release } : {}),
     defaultIntegrations: false,
@@ -57,10 +76,23 @@ export function startErrorReporting(input: ErrorReportingConfig): void {
     },
   })
   initialized = true
+  Sentry.captureMessage('backend_started', {
+    level: 'info',
+    tags: {
+      component: 'backend',
+      event: 'backend_started',
+      module: 'Bootstrap',
+    },
+  })
 }
 
 export function reportBackendRecord(record: StructuredLogRecord): void {
-  if (!initialized || !['error', 'fatal', 'warn'].includes(record.level)) return
+  if (!initialized) return
+  if (record.event === 'http_request_completed') {
+    recordHttpMetrics(record.attributes)
+    return
+  }
+  if (!['error', 'fatal', 'warn'].includes(record.level)) return
   // A 5xx access record and its exception are the same failure. Security denials
   // are expected outcomes and must not exhaust the error quota.
   if (
@@ -109,10 +141,13 @@ export function reportBackendRecord(record: StructuredLogRecord): void {
 }
 
 export async function flushErrorReporting(): Promise<void> {
-  if (initialized) await Sentry.flush(2000).catch(() => false)
+  if (initialized)
+    await Promise.all([
+      Sentry.flush(2000).catch(() => false),
+      flushHttpMetrics(true),
+    ])
 }
 
 export function errorReportingOrigin(): string | undefined {
-  const dsn = Sentry.getClient()?.getOptions().dsn
-  return typeof dsn === 'string' ? new URL(dsn).origin : undefined
+  return collectorOrigin
 }

@@ -1,3 +1,4 @@
+import { monitorTransport } from './transport'
 import {
   captureException,
   dedupeIntegration,
@@ -11,13 +12,24 @@ let events = 0
 let windowStart = 0
 
 export function initializeMonitoring(): void {
-  if (initialized || !import.meta.env.PROD || !import.meta.env.VITE_SENTRY_DSN)
+  if (
+    initialized ||
+    !import.meta.env.PROD ||
+    !import.meta.env.VITE_MONITOR_URL ||
+    !import.meta.env.VITE_MONITOR_KEY
+  )
     return
   initialized = true
   init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
+    dsn: 'https://public@collector.invalid/1',
+    transport: () =>
+      monitorTransport(
+        import.meta.env.VITE_MONITOR_URL,
+        import.meta.env.VITE_MONITOR_KEY,
+      ),
+    sendClientReports: false,
     environment: 'production',
-    release: import.meta.env.VITE_SENTRY_RELEASE,
+    release: import.meta.env.VITE_MONITOR_RELEASE,
     defaultIntegrations: false,
     integrations: [globalHandlersIntegration(), dedupeIntegration()],
     dataCollection: {

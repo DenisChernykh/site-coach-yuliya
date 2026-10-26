@@ -60,7 +60,7 @@ export function sanitizeErrorEvent(event: ErrorEvent): ErrorEvent {
   )
   if (event.exception?.values) {
     result.exception = {
-      values: event.exception.values.slice(0, 3).map((exception) => {
+      values: event.exception.values.slice(0, 2).map((exception) => {
         const type = safeName.test(exception.type ?? '')
           ? exception.type!
           : 'Error'
@@ -71,7 +71,7 @@ export function sanitizeErrorEvent(event: ErrorEvent): ErrorEvent {
             ? {
                 stacktrace: {
                   frames: (exception.stacktrace.frames ?? [])
-                    .slice(-30)
+                    .slice(-12)
                     .map((frame) => ({
                       ...(sourceFilename(frame.filename)
                         ? { filename: sourceFilename(frame.filename)! }

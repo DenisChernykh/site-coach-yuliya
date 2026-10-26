@@ -13,18 +13,28 @@ const { PinoLogSink } = require('../dist/platform/logging/pino-log.sink.js')
 
 test('compiled backend delivers sanitized correlated errors and skips expected failures', async () => {
   const events = []
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (url, options) => {
+    assert.equal(String(url), 'https://monitor.example/v1/ingest/test')
+    assert.equal(
+      new Headers(options.headers).get('Authorization'),
+      'Bearer test-server-key',
+    )
+    events.push(
+      ...(JSON.parse(options.body).events ?? []).filter(
+        (event) => event.level !== 'info',
+      ),
+    )
+    return new Response('{}', { status: 202 })
+  }
   startErrorReporting({
     environment: 'production',
-    dsn: 'https://public@127.0.0.1:9/1',
+    endpoint: 'https://monitor.example/v1/ingest/test',
+    key: 'test-server-key',
     release: 'test-release',
   })
   const client = Sentry.getClient()
   assert.ok(client)
-  client.getTransport().send = async (envelope) => {
-    for (const [header, payload] of envelope[1])
-      if (header.type === 'event') events.push(payload)
-    return { statusCode: 200 }
-  }
   const logger = new PinoLogSink(
     {
       environment: 'production',
@@ -74,4 +84,5 @@ test('compiled backend delivers sanitized correlated errors and skips expected f
   assert.equal(events[1].tags.reasonCode, 'TELEGRAM_HTTP_403')
   assert.ok(!JSON.stringify(events).includes('private'))
   await Sentry.close()
+  globalThis.fetch = originalFetch
 })

@@ -13,7 +13,7 @@ export default defineConfig({
   vite: {
     build: {
       sourcemap:
-        process.env.SENTRY_UPLOAD_SOURCEMAPS === 'true' ? 'hidden' : false,
+        process.env.MONITOR_ARCHIVE_SOURCEMAPS === 'true' ? 'hidden' : false,
     },
     plugins: [tailwindcss()],
   },

@@ -1,3 +1,4 @@
+import { monitorTransport } from './transport';
 import {
   captureException,
   dedupeIntegration,
@@ -15,14 +16,21 @@ export function initializeMonitoring(): void {
   if (
     !import.meta.env.PROD ||
     import.meta.env.PUBLIC_DATA_SOURCE !== 'api' ||
-    !import.meta.env.PUBLIC_SENTRY_DSN
+    !import.meta.env.PUBLIC_MONITOR_URL ||
+    !import.meta.env.PUBLIC_MONITOR_KEY
   )
     return;
   initialized = true;
   init({
-    dsn: import.meta.env.PUBLIC_SENTRY_DSN,
+    dsn: 'https://public@collector.invalid/1',
+    transport: () =>
+      monitorTransport(
+        import.meta.env.PUBLIC_MONITOR_URL,
+        import.meta.env.PUBLIC_MONITOR_KEY,
+      ),
+    sendClientReports: false,
     environment: 'production',
-    release: import.meta.env.PUBLIC_SENTRY_RELEASE,
+    release: import.meta.env.PUBLIC_MONITOR_RELEASE,
     defaultIntegrations: false,
     integrations: [globalHandlersIntegration(), dedupeIntegration()],
     dataCollection: {

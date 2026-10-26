@@ -52,7 +52,7 @@ export default defineConfig(({ command, mode }) => {
     base: '/admin/',
     build: {
       sourcemap:
-        process.env.SENTRY_UPLOAD_SOURCEMAPS === 'true' ? 'hidden' : false,
+        process.env.MONITOR_ARCHIVE_SOURCEMAPS === 'true' ? 'hidden' : false,
     },
     plugins: [react(), tailwindcss()],
     resolve: {

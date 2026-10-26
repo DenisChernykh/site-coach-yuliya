@@ -28,3 +28,7 @@ dist-pages/
 
 # Persistent uploaded media (never release artifacts)
 backend/var/
+
+# Private monitoring credentials and source-map archives
+.monitoring/
+.monitoring-artifacts/

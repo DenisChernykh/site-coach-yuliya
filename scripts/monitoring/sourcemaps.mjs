@@ -1,6 +1,5 @@
-import { readdir, rm } from 'node:fs/promises';
+import { readdir, rm, mkdir, copyFile } from 'node:fs/promises';
 import { resolve, join, relative } from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
 async function sourceMaps(directory) {
@@ -13,69 +12,49 @@ async function sourceMaps(directory) {
   return result;
 }
 
-export async function prepareSourceMaps(
-  directories,
-  env = process.env,
-  execute = spawnSync,
-) {
+export async function prepareSourceMaps(directories, env = process.env) {
   const allowed = new Set([
     'dist',
     'backend/dist',
     'backend/admin-ui',
     'admin/dist',
   ]);
-  if (
-    directories.length === 0 ||
-    directories.some((path) => !allowed.has(path))
-  ) {
+  if (!directories.length || directories.some((path) => !allowed.has(path)))
     throw new Error('Specify only application build directories');
-  }
-  const upload = env.SENTRY_UPLOAD_SOURCEMAPS === 'true';
-  if (
-    upload &&
-    [
-      'SENTRY_AUTH_TOKEN',
-      'SENTRY_ORG',
-      'SENTRY_PROJECT',
-      'SENTRY_RELEASE',
-    ].some((key) => !env[key])
-  ) {
-    throw new Error(
-      'Source map upload requires SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT and SENTRY_RELEASE',
-    );
-  }
+  const archive = env.MONITOR_ARCHIVE_SOURCEMAPS === 'true';
+  if (archive && !/^[a-f0-9]{40}$/.test(env.GITHUB_SHA ?? ''))
+    throw new Error('Private source maps require GITHUB_SHA');
   for (const directory of directories) {
     const maps = await sourceMaps(resolve(directory));
-    if (upload) {
-      if (maps.length === 0)
-        throw new Error('Source maps missing in ' + directory);
-      for (const args of [
-        ['sourcemaps', 'inject', directory],
-        ['sourcemaps', 'upload', '--release', env.SENTRY_RELEASE, directory],
-      ]) {
-        const result = execute(resolve('node_modules/.bin/sentry-cli'), args, {
-          env,
-          stdio: ['ignore', 'pipe', 'pipe'],
-          timeout: 120_000,
-        });
-        // CLI output may include credentials or source excerpts. Keep CI output bounded.
-        if (result.status !== 0)
-          throw new Error('Sentry source map operation failed in ' + directory);
-      }
-    }
+    if (archive && !maps.length)
+      throw new Error('Source maps missing in ' + directory);
     for (const path of maps) {
-      if (relative(resolve(directory), path).startsWith('..'))
-        throw new Error('Invalid map path');
+      const local = relative(resolve(directory), path);
+      if (local.startsWith('..')) throw new Error('Invalid map path');
+      if (archive) {
+        const destination = resolve(
+          '.monitoring-artifacts',
+          env.GITHUB_SHA,
+          directory,
+          local,
+        );
+        await mkdir(resolve(destination, '..'), {
+          recursive: true,
+          mode: 0o700,
+        });
+        await copyFile(path, destination);
+      }
       await rm(path);
     }
     console.log(
       directory +
         ': source maps ' +
-        (upload ? 'uploaded and removed' : 'removed'),
+        (archive
+          ? 'archived privately and removed from public build'
+          : 'removed'),
     );
   }
 }
-
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href

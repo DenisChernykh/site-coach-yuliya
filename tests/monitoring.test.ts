@@ -1,21 +1,22 @@
-import assert from 'node:assert/strict';
-import test from 'node:test';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+  mkdtemp,
+  mkdir,
+  readFile,
+  writeFile,
+  rm,
+  access,
+} from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { prepareSourceMaps } from '../scripts/monitoring/sourcemaps.mjs';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { sanitizeErrorEvent as sitePrivacy } from '../src/shared/monitoring/privacy.ts';
 import { sanitizeErrorEvent as adminPrivacy } from '../admin/src/shared/monitoring/privacy.ts';
 import { sanitizeErrorEvent as backendPrivacy } from '../backend/src/platform/monitoring/privacy.ts';
-import {
-  auditMonitors,
-  monitoringPlan,
-  verifyUptime,
-} from '../scripts/monitoring/verify-uptime.mjs';
-import {
-  notificationCycle,
-  readIssues,
-  runMonitor,
-} from '../backend/scripts/netangels/notify-errors.mjs';
+import { monitorTransport } from '../src/shared/monitoring/transport.ts';
+import { HttpMetricBuffer } from '../backend/src/platform/monitoring/http-metrics.ts';
+import { privateMapDestination } from '../scripts/monitoring/upload-sourcemaps.mjs';
 
 for (const [name, sanitize] of Object.entries({
   sitePrivacy,
@@ -92,226 +93,110 @@ for (const [name, sanitize] of Object.entries({
   );
 }
 
-const env = {
-  PUBLIC_SITE_URL: 'https://coach.example',
-  PUBLIC_API_URL: 'https://api.coach.example',
-};
-const plan = monitoringPlan(env);
-const now = 1_800_000_000_000;
-function fixtures() {
-  return plan.map((item) => ({
-    ...item,
-    locations: [{ london: [] }, { frankfurt: [] }, { new_york: [] }],
-    monitor_status: 'active',
-    uptime_status: 'up',
-    last_check: now / 1000 - 30,
-    contact_lists: ['contact'],
-  }));
-}
-const contacts = [{ id: 'contact', telegram: ['123'], dnd: [] }];
-
-test('external monitor audit rejects silent failure paths', () => {
-  assert.deepEqual(auditMonitors(plan, fixtures(), contacts, now), []);
-  for (const change of [
-    { contact_lists: [] },
-    { monitor_status: 'maint_dnd' },
-    { uptime_status: 'down' },
-    { last_check: now / 1000 - 600 },
-    { accepted_http_codes: [200, 500] },
-    { keyword: '' },
-    { verify_ssl_certificate: false },
-    { max_redirects: 5 },
-    { locations: [{ london: [] }], triggering_locations: 1 },
-  ]) {
-    const monitors = fixtures();
-    monitors[0] = { ...monitors[0], ...change };
-    assert.ok(auditMonitors(plan, monitors, contacts, now).length > 0);
-  }
-  assert.ok(
-    auditMonitors(
-      plan,
-      fixtures(),
-      [{ ...contacts[0], dnd: [{ day: 'all' }] }],
-      now,
-    ).length,
+test('custom transport retries only the collector, omits credentials and uses stable event ID', async () => {
+  const calls: { url: string; body: string }[] = [];
+  const transport = monitorTransport(
+    'https://collector.example/v1/browser/site',
+    'public-key',
+    false,
+    (async (url, options) => {
+      assert.equal(options?.credentials, 'omit');
+      assert.equal(options?.redirect, 'error');
+      assert.equal(
+        new Headers(options?.headers).get('X-Monitor-Key'),
+        'public-key',
+      );
+      calls.push({ url: String(url), body: String(options?.body) });
+      if (calls.length === 1) throw new Error('offline');
+      return new Response('{}', { status: 202 });
+    }) as typeof fetch,
   );
+  const result = await transport.send([
+    { event_id: 'a'.repeat(32), sent_at: new Date().toISOString() },
+    [[{ type: 'event' }, { event_id: 'a'.repeat(32), message: 'safe' }]],
+  ]);
+  assert.equal(result.statusCode, 202);
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0]?.body, calls[1]?.body);
+  assert.ok(
+    calls.every((call) => call.url.startsWith('https://collector.example/')),
+  );
+  assert.equal(await transport.flush(100), true);
 });
-test('configuration rejects credential-bearing and non-HTTPS origins', () => {
-  for (const origin of [
-    'http://coach.example',
-    'https://user:secret@coach.example',
-    'https://coach.example/?token=secret',
-  ]) {
-    assert.throws(() => monitoringPlan({ ...env, PUBLIC_SITE_URL: origin }));
-  }
+
+test('HTTP metrics retry a frozen closed minute without copying routes or request data', async () => {
+  const sent: any[] = [];
+  const buffer = new HttpMetricBuffer(
+    'https://collector.example/v1/ingest/site',
+    'server-key',
+    (async (_url, options) => {
+      assert.equal(
+        new Headers(options?.headers).get('Authorization'),
+        'Bearer server-key',
+      );
+      sent.push(JSON.parse(String(options?.body)));
+      return new Response('{}', { status: sent.length === 1 ? 503 : 202 });
+    }) as typeof fetch,
+  );
+  buffer.record(
+    { durationMs: 50, status: 200, route: '/private/contact' },
+    120000,
+  );
+  buffer.record({ durationMs: 1200, status: 503 }, 120001);
+  await buffer.flush(false, 180000);
+  buffer.record({ durationMs: 400, status: 200 }, 180001);
+  await buffer.flush(false, 180100);
+  assert.deepEqual(sent[0], sent[1]);
+  assert.equal(sent[0].metrics.requests, 2);
+  assert.equal(sent[0].metrics.errors, 1);
+  assert.deepEqual(sent[0].metrics.buckets, [1, 0, 0, 1, 0, 0]);
+  assert.ok(!JSON.stringify(sent).includes('private'));
 });
-test('HetrixTools outages are failures, not an empty healthy result', async () => {
-  await assert.rejects(
-    verifyUptime(
-      { ...env, HETRIXTOOLS_API_KEY: 'private' },
-      async () => new Response('', { status: 503 }),
+
+test('source map destination stays outside the public site and validates the release', () => {
+  assert.equal(
+    privateMapDestination(
+      { directory: '/home/u/site.example/www' },
+      'a'.repeat(40),
+    ),
+    '/home/u/site.example/.source-maps/' + 'a'.repeat(40),
+  );
+  assert.throws(() =>
+    privateMapDestination(
+      { directory: '/home/u/site.example/www' },
+      '../../public',
     ),
   );
-  await assert.rejects(
-    verifyUptime({ ...env, HETRIXTOOLS_API_KEY: 'private' }, async () => {
-      throw new Error('private');
-    }),
-    /API unavailable/,
-  );
-});
-const monitorEnv = {
-  SENTRY_ORG: 'coach',
-  SENTRY_PROJECT: 'website',
-  SENTRY_READ_TOKEN: 'secret',
-  MONITOR_TELEGRAM_BOT_TOKEN: '123:secret',
-  MONITOR_TELEGRAM_CHAT_ID: '-456',
-  MONITOR_STATE_DIR: '/tmp/coach-monitor-test',
-  MONITOR_HEARTBEAT_URL: 'https://sm.hetrixtools.net/hb/?s=private',
-};
-
-test('error notifications persist delivery, suppress duplicates and retry failed Telegram sends', async () => {
-  const state: Record<string, { seen: number; notified: number }> = {};
-  let seen = now;
-  let sent = 0;
-  let saved = 0;
-  let heartbeats = 0;
-  let rejectTelegram = false;
-  const fetcher: typeof fetch = async (input, options) => {
-    const url = new URL(input instanceof Request ? input.url : input);
-    assert.equal(options?.redirect, 'error');
-    if (url.hostname === 'sentry.io') {
-      assert.equal(url.searchParams.get('environment'), 'production');
-      return Response.json([
-        {
-          id: '123',
-          lastSeen: new Date(seen).toISOString(),
-          title: 'private client text',
-        },
-      ]);
-    }
-    if (url.hostname === 'api.telegram.org') {
-      assert.ok(!String(options?.body).includes('private client text'));
-      sent++;
-      return Response.json({ ok: !rejectTelegram });
-    }
-    assert.equal(url.hostname, 'sm.hetrixtools.net');
-    heartbeats++;
-    return new Response(null);
-  };
-  const save = async () => {
-    saved++;
-  };
-  assert.equal(
-    await notificationCycle(monitorEnv, state, save, fetcher, now),
-    1,
-  );
-  assert.equal(
-    await notificationCycle(monitorEnv, state, save, fetcher, now + 60_000),
-    0,
-  );
-  seen += 120_000;
-  assert.equal(
-    await notificationCycle(monitorEnv, state, save, fetcher, now + 120_000),
-    0,
-  );
-  rejectTelegram = true;
-  await assert.rejects(
-    notificationCycle(monitorEnv, state, save, fetcher, now + 3_600_000),
-  );
-  assert.equal(heartbeats, 3);
-  assert.equal(state['123'].seen, now);
-  rejectTelegram = false;
-  assert.equal(
-    await notificationCycle(monitorEnv, state, save, fetcher, now + 3_660_000),
-    1,
-  );
-  assert.equal(state['123'].seen, seen);
-  assert.equal(sent, 3);
-  assert.ok(saved >= 4);
 });
 
-test('Sentry pagination copies only cursor and reports all pages', async () => {
-  let calls = 0;
-  const issues = await readIssues(
-    monitorEnv,
-    async (input) => {
-      calls++;
-      const url = new URL(input instanceof Request ? input.url : input);
-      assert.equal(url.hostname, 'sentry.io');
-      if (calls === 1)
-        return Response.json(
-          [{ id: '1', lastSeen: new Date(now).toISOString() }],
-          {
-            headers: {
-              link: '<https://untrusted.example/>; rel="next"; results="true"; cursor="100:1:0"',
-            },
-          },
-        );
-      assert.equal(url.searchParams.get('cursor'), '100:1:0');
-      return Response.json([
-        { id: '2', lastSeen: new Date(now).toISOString() },
-      ]);
-    },
-    now,
-  );
-  assert.equal(issues.length, 2);
-});
-
-test('upstream and state storage failures never send a healthy heartbeat', async () => {
-  for (const phase of ['sentry', 'storage']) {
-    let heartbeat = false;
-    const fetcher: typeof fetch = async (input) => {
-      const url = new URL(input instanceof Request ? input.url : input);
-      if (url.hostname === 'sentry.io')
-        return phase === 'sentry'
-          ? new Response('', { status: 403 })
-          : Response.json([]);
-      heartbeat = true;
-      return new Response(null);
-    };
-    await assert.rejects(
-      notificationCycle(
-        monitorEnv,
-        {},
-        async () => {
-          throw new Error();
-        },
-        fetcher,
-        now,
-      ),
-    );
-    assert.equal(heartbeat, false);
-  }
-});
-
-test('notifier retains confirmed deliveries across runs and refuses corrupted state', async () => {
-  const directory = await mkdtemp(join(tmpdir(), 'coach-notifier-test-'));
-  const settings = { ...monitorEnv, MONITOR_STATE_DIR: directory };
-  let messages = 0;
-  let heartbeats = 0;
-  const seen = new Date().toISOString();
-  const fetcher: typeof fetch = async (input) => {
-    const url = new URL(input instanceof Request ? input.url : input);
-    if (url.hostname === 'sentry.io')
-      return Response.json([{ id: '123', lastSeen: seen }]);
-    if (url.hostname === 'api.telegram.org') {
-      messages++;
-      return Response.json({ ok: true });
-    }
-    heartbeats++;
-    return new Response(null);
-  };
+test('source maps are archived by exact release and excluded from public output', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'monitor-map-test-'));
+  const original = process.cwd();
   try {
-    await runMonitor(settings, fetcher);
-    await runMonitor(settings, fetcher);
-    assert.equal(messages, 1);
-    assert.equal(heartbeats, 2);
-    const file = join(directory, 'sentry-notifications.json');
-    assert.ok(JSON.parse(await readFile(file, 'utf8'))['123']);
-    await writeFile(file, 'broken json');
-    await assert.rejects(runMonitor(settings, fetcher));
-    assert.equal(heartbeats, 2);
+    process.chdir(directory);
+    await mkdir('dist');
+    await writeFile(
+      'dist/app.js.map',
+      '{"version":3,"sourcesContent":["private source"]}',
+    );
+    await writeFile('dist/app.js', 'console.log(1)');
+    const sha = 'a'.repeat(40);
+    await prepareSourceMaps(['dist'], {
+      MONITOR_ARCHIVE_SOURCEMAPS: 'true',
+      GITHUB_SHA: sha,
+    });
+    await assert.rejects(access('dist/app.js.map'));
+    assert.ok(
+      (
+        await readFile(
+          join('.monitoring-artifacts', sha, 'dist/app.js.map'),
+          'utf8',
+        )
+      ).includes('private source'),
+    );
+    await access('dist/app.js');
   } finally {
+    process.chdir(original);
     await rm(directory, { recursive: true, force: true });
   }
 });
