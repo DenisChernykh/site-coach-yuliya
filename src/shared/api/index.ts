@@ -15,7 +15,7 @@ export type {
 } from './client/api-errors';
 export { getSiteSettings } from './generated/site/site';
 export { getSeoSettings } from './generated/seo/seo';
-export { getHomePage } from './generated/home/home';
+export { getHomePage, useGetHomePage } from './generated/home/home';
 export { getServices } from './generated/services/services';
 export {
   getArticles,

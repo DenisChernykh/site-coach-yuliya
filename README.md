@@ -25,6 +25,7 @@ React, Astro, TypeScript, TanStack Query, Tailwind CSS, NestJS, Prisma, React Ro
 - [src/](src/) — исходный код.
 - [tests/](tests/) — автоматизированные проверки.
 - [docs/](docs/) — архитектура и документация.
+- [docs/stories.md](docs/stories.md) — загрузка и публикация сторис.
 
 ## Разработка
 

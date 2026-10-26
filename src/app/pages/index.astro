@@ -3,6 +3,8 @@ import { loadPageLayouts } from '@/entities/cms';
 const layouts = await loadPageLayouts();
 import BaseLayout from '../layouts/base-layout.astro';
 import { ConsultationIsland } from '../islands/consultation-island';
+import { StoriesIsland } from '../islands/stories-island';
+import { isMockMode } from '@/shared/api';
 import { resolveArticleImages } from '../data/article-images';
 import { HomePage } from '@/pages/home';
 import { loadHomePage, loadSiteSettings } from '@/entities/site';
@@ -21,6 +23,9 @@ const [settings, home, services, faq, socials, rawArticles] = await Promise.all(
   ],
 );
 const articles = await resolveArticleImages(rawArticles, 960);
+const storiesBlock = layouts
+  .find((page) => page.key === 'home')
+  ?.blocks.find((block) => block.id === 'stories');
 ---
 
 <BaseLayout settings={settings} socials={socials} seoPage="home">
@@ -32,6 +37,13 @@ const articles = await resolveArticleImages(rawArticles, 960);
     socials={socials}
     articles={articles}
   >
+    <StoriesIsland
+      slot="stories"
+      client:load
+      demoStories={isMockMode ? home.stories : undefined}
+      title={storiesBlock?.title}
+      eyebrow={storiesBlock?.eyebrow}
+    />
     <ConsultationIsland
       slot="contact-form"
       client:load

@@ -116,30 +116,34 @@ const {
   </Fragment>
   <Fragment slot="stories">
     {
-      (preview ||
-        data.stories?.some(
-          (story) =>
-            story.enabled && story.slides.some((slide) => slide.enabled),
-        )) && (
-        <section
-          id="stories"
-          class="section-space"
-          aria-labelledby="stories-title"
-        >
-          <div class="page-container">
-            <p class="eyebrow" data-cms-copy="eyebrow">
-              Чуть ближе
-            </p>
-            <h2 id="stories-title" data-cms-copy="title">
-              Знакомство в историях
-            </h2>
-            {preview ? (
-              <div data-cms-react="stories" />
-            ) : (
-              <Stories stories={data.stories ?? []} client:load />
-            )}
-          </div>
-        </section>
+      Astro.slots.has('stories') ? (
+        <slot name="stories" />
+      ) : (
+        (preview ||
+          data.stories?.some(
+            (story) =>
+              story.enabled && story.slides.some((slide) => slide.enabled),
+          )) && (
+          <section
+            id="stories"
+            class="section-space"
+            aria-labelledby="stories-title"
+          >
+            <div class="page-container">
+              <p class="eyebrow" data-cms-copy="eyebrow">
+                Чуть ближе
+              </p>
+              <h2 id="stories-title" data-cms-copy="title">
+                Знакомство в историях
+              </h2>
+              {preview ? (
+                <div data-cms-react="stories" />
+              ) : (
+                <Stories stories={data.stories ?? []} client:load />
+              )}
+            </div>
+          </section>
+        )
       )
     }
   </Fragment>
