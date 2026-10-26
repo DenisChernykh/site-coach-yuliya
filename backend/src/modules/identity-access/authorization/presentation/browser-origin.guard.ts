@@ -1,5 +1,7 @@
 import { Injectable, UnsupportedMediaTypeException } from '@nestjs/common'
 import type { CanActivate, ExecutionContext } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { BINARY_BODY_METADATA } from '@/platform/http/policy/binary-body.decorator'
 
 import { AuthCsrfRejectedError } from '../../public-contracts/auth-errors'
 
@@ -32,6 +34,7 @@ function refererOrigin(referer: string | undefined): string | undefined {
 /** Enforces JSON media type and exact trusted origin for unsafe requests. */
 @Injectable()
 export class BrowserOriginGuard implements CanActivate {
+  private readonly reflector = new Reflector()
   private readonly allowedOrigins: ReadonlySet<string>
 
   public constructor(allowedOrigins: readonly string[]) {
@@ -43,9 +46,14 @@ export class BrowserOriginGuard implements CanActivate {
     if (safeMethods.has(request.method.toUpperCase())) return true
     const fetchSite = oneHeader(request.headers, 'sec-fetch-site')
     const contentType = oneHeader(request.headers, 'content-type')
-    if (
-      contentType?.split(';', 1)[0]?.trim().toLowerCase() !== 'application/json'
-    ) {
+    const expectedType =
+      this.reflector.get<boolean>(
+        BINARY_BODY_METADATA,
+        context.getHandler(),
+      ) === true
+        ? 'application/octet-stream'
+        : 'application/json'
+    if (contentType?.split(';', 1)[0]?.trim().toLowerCase() !== expectedType) {
       throw new UnsupportedMediaTypeException()
     }
     const origin =

@@ -84,8 +84,8 @@ import type { AuthenticatedPrincipal } from '@/modules/identity-access/public-co
 import { PrismaPasswordCredentialAdapter } from '@/modules/identity-access/authentication/infrastructure/prisma-password-credential.adapter'
 import { PrismaIdentitySecurityStateAdapter } from '@/modules/identity-access/identity/infrastructure/prisma-identity-security-state.adapter'
 import { Argon2PasswordHasher } from '@/modules/identity-access/authentication/infrastructure/argon2-password.hasher'
-import { RedisLoginRateLimiter } from '@/modules/identity-access/authentication/infrastructure/redis-login-rate-limiter'
-import { RedisSessionStore } from '@/modules/identity-access/sessions/infrastructure/redis-session.store'
+import { PostgresLoginRateLimiter } from '@/modules/identity-access/authentication/infrastructure/postgres-login-rate-limiter'
+import { PostgresSessionStore } from '@/modules/identity-access/sessions/infrastructure/postgres-session.store'
 import { PrismaSessionGenerationAdapter } from '@/modules/identity-access/sessions/infrastructure/prisma-session-generation.adapter'
 import { IdentityModule } from '@/modules/identity-access/identity/composition/identity.module'
 import { SessionsModule } from '@/modules/identity-access/sessions/composition/sessions.module'
@@ -288,7 +288,7 @@ describe('auth application Nest dependency injection', () => {
         }),
         expect.objectContaining({
           provide: SESSION_STORE,
-          useExisting: RedisSessionStore,
+          useExisting: PostgresSessionStore,
         }),
       ]),
     )
@@ -315,7 +315,7 @@ describe('auth application Nest dependency injection', () => {
         }),
         expect.objectContaining({
           provide: LOGIN_RATE_LIMITER,
-          useExisting: RedisLoginRateLimiter,
+          useExisting: PostgresLoginRateLimiter,
         }),
       ]),
     )

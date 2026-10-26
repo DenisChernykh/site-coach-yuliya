@@ -1,3 +1,4 @@
+import { MediaLibrary } from './media-library'
 import { useRef, useState } from 'react'
 import { ArrowDown, ArrowUp, ImagePlus, Plus, Trash2 } from 'lucide-react'
 import {
@@ -59,7 +60,12 @@ export function StoriesEditor({
     try {
       for (const file of Array.from(files)) {
         setProgress(0)
-        const media = await uploadStoryFile(file, setProgress)
+        const media = await uploadStoryFile(
+          file,
+          setProgress,
+          'story',
+          `${window.location.pathname}:story:${group.id}:${cover ? 'cover' : 'slides'}`,
+        )
         if (cover) next = { ...next, coverMediaId: media.id }
         else {
           next = {
@@ -104,7 +110,8 @@ export function StoriesEditor({
         <div>
           <h2 className="text-lg font-semibold">Сторис</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Подборки на главной. Фото — до 8 МБ, видео MP4 и WebM — до 30 МБ.
+            Подборки на главной. Фото — до 8 МБ, MP4 H.264/AAC — до 30 МБ и 60
+            секунд, Full HD, до 60 кадров/с, с быстрым стартом.
           </p>
         </div>
         <Button
@@ -137,7 +144,9 @@ export function StoriesEditor({
       )}
       {uploading && (
         <p role="status" className="text-sm">
-          {progress < 100 ? `Загрузка файла: ${progress}%` : 'Сохраняем файл…'}
+          {progress < 100
+            ? `Загрузка файла: ${progress}%`
+            : 'Файл сохранён. Ожидаем обработки — страницу можно закрыть.'}
         </p>
       )}
       {!value.length ? (
@@ -260,6 +269,34 @@ export function StoriesEditor({
                   )}
                 </div>
               </div>
+              <MediaLibrary
+                purpose="story"
+                disabled={disabled || uploading}
+                onSelect={(media) => {
+                  if (group.slides.length >= 30) return
+                  const type = media.mimeType.startsWith('image/')
+                    ? ('image' as const)
+                    : ('video' as const)
+                  changeGroup({
+                    ...group,
+                    coverMediaId:
+                      group.coverMediaId || (type === 'image' ? media.id : ''),
+                    slides: [
+                      ...group.slides,
+                      {
+                        id: crypto.randomUUID(),
+                        mediaId: media.id,
+                        type,
+                        caption: '',
+                        durationSeconds: 5,
+                        linkLabel: '',
+                        linkUrl: '',
+                        enabled: true,
+                      },
+                    ],
+                  })
+                }}
+              />
               <div className="space-y-5">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="font-medium">

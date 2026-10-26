@@ -12,8 +12,9 @@ import { Test } from '@nestjs/testing'
 import type { NestExpressApplication } from '@nestjs/platform-express'
 import request from 'supertest'
 
+import { MediaUploadController } from '@/modules/coach-site/presentation/media-upload.controller'
 import { AdminStoryMediaController } from '@/modules/coach-site/presentation/story-media.controller'
-import { StoryMediaService } from '@/modules/coach-site/application/story-media.service'
+import { MediaUploadService } from '@/modules/coach-site/application/media-upload.service'
 import { MANAGE_SITE_CONTENT } from '@/modules/coach-site/application/site-permissions'
 import { AUTH_HTTP_PROBLEM_CONTRIBUTION } from '@/modules/identity-access/composition/auth-http-problem.contribution'
 import type { AuthenticateSessionUseCase } from '@/modules/identity-access/authorization/application/authenticate-session.use-case'
@@ -23,7 +24,10 @@ import { SessionCsrfGuard } from '@/modules/identity-access/authorization/presen
 import { PermissionGuard } from '@/modules/identity-access/authorization/presentation/permission.guard'
 import { AuthRequestContext } from '@/modules/identity-access/authorization/presentation/auth-request.context'
 import { PreBodyAccessPolicyAdapter } from '@/modules/identity-access/authorization/presentation/pre-body-access-policy.adapter'
-import { STORY_MEDIA_UPLOAD } from '@/modules/coach-site/composition/story-media-upload.policy'
+import {
+  MEDIA_CHUNK_UPLOAD,
+  STORY_MEDIA_UPLOAD,
+} from '@/modules/coach-site/composition/story-media-upload.policy'
 import type { GetCsrfTokenQuery } from '@/modules/identity-access/sessions/application/get-csrf-token.query'
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import { buildApiRuntimeConfig } from '@/platform/config/runtime-environment'
@@ -57,6 +61,7 @@ describe('protected upload body admission', () => {
       type: 'image',
     }),
   )
+  const chunk = jest.fn().mockResolvedValue(undefined)
   const cookieName = 'nest-js-starter-session'
   const rawToken = Buffer.alloc(32, 1).toString('base64url')
   const csrfToken = Buffer.alloc(32, 2).toString('base64url')
@@ -75,8 +80,21 @@ describe('protected upload body admission', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      controllers: [AdminStoryMediaController, TestHttpController],
-      providers: [{ provide: StoryMediaService, useValue: { upload } }],
+      controllers: [
+        AdminStoryMediaController,
+        MediaUploadController,
+        TestHttpController,
+      ],
+      providers: [
+        {
+          provide: MediaUploadService,
+          useValue: {
+            create: upload,
+            chunk,
+            finish: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+      ],
     }).compile()
     app = moduleRef.createNestApplication<NestExpressApplication>({
       bodyParser: false,
@@ -128,16 +146,14 @@ describe('protected upload body admission', () => {
       context,
       undefined,
       undefined,
-      [
-        {
-          ...STORY_MEDIA_UPLOAD,
-          accessPolicy: new PreBodyAccessPolicyAdapter(...guards),
-          maxConcurrent: 2,
-          requestsPerWindow: 60,
-          windowMs: 60_000,
-          timeoutMs: 30_000,
-        },
-      ],
+      [STORY_MEDIA_UPLOAD, MEDIA_CHUNK_UPLOAD].map((policy) => ({
+        ...policy,
+        accessPolicy: new PreBodyAccessPolicyAdapter(...guards),
+        maxConcurrent: 2,
+        requestsPerWindow: 60,
+        windowMs: 60_000,
+        timeoutMs: 30_000,
+      })),
     )
     await app.init()
     await app.listen(0, '127.0.0.1')
@@ -148,6 +164,7 @@ describe('protected upload body admission', () => {
 
   beforeEach(() => {
     upload.mockClear()
+    chunk.mockClear()
     authenticate.execute.mockReset().mockResolvedValue({
       userId: 'admin',
       sessionId: 'session',
@@ -360,11 +377,14 @@ describe('protected upload body admission', () => {
       .set(authHeaders())
       .send({ name: 'video.mp4', mimeType: 'video/mp4', base64 })
       .expect(201)
-    expect(upload).toHaveBeenCalledWith({
-      name: 'video.mp4',
-      mimeType: 'video/mp4',
-      base64,
-    })
+    expect(upload).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'video.mp4',
+        mimeType: 'video/mp4',
+        size: 30 * 1024 * 1024,
+        purpose: 'story',
+      }),
+    )
   })
 
   it('counts actual chunked body bytes without a Content-Length header', async () => {
@@ -461,6 +481,49 @@ describe('protected upload body admission', () => {
       .set(authHeaders())
       .send(body)
       .expect(201)
+  })
+
+  it('protects raw chunks before reading and preserves binary bytes', async () => {
+    const path =
+      '/v1/admin/media-uploads/00000000-0000-4000-8000-000000000001/chunks/0'
+    expect(
+      (
+        await headersOnly(path, {
+          'Content-Type': 'application/octet-stream',
+          'Transfer-Encoding': 'chunked',
+        })
+      ).status,
+    ).toBe(401)
+    expect(
+      (
+        await headersOnly(path, {
+          ...authHeaders(),
+          'Content-Type': 'application/octet-stream',
+          'X-CSRF-Token': '',
+          'Transfer-Encoding': 'chunked',
+        })
+      ).status,
+    ).toBe(403)
+    expect(
+      (
+        await headersOnly(path, {
+          ...authHeaders(),
+          'Content-Type': 'application/octet-stream',
+          'Content-Length': String(1024 * 1024 + 1),
+        })
+      ).status,
+    ).toBe(413)
+    const bytes = Buffer.from([0, 255, 127, 128, 1, 2, 3, 4])
+    await request(server)
+      .post(path)
+      .set({ ...authHeaders(), 'Content-Type': 'application/octet-stream' })
+      .send(bytes)
+      .expect(204)
+    expect(chunk).toHaveBeenCalledWith(
+      '00000000-0000-4000-8000-000000000001',
+      0,
+      bytes,
+    )
   })
 
   it('returns the standard rate-limit problem and Retry-After before parsing', async () => {

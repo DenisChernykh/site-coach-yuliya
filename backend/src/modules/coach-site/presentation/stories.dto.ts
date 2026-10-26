@@ -117,6 +117,8 @@ export class UploadStoryMediaDto {
 }
 
 export class StoryMediaDto {
+  @ApiProperty({ enum: ['QUEUED'], required: false })
+  public readonly status?: 'QUEUED'
   @ApiProperty({ type: String, format: 'uuid' })
   public readonly id!: string
   @ApiProperty({ type: String })

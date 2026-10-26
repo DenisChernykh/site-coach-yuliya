@@ -9,7 +9,7 @@ export function createDemoGateway({ siteTarget, apiTarget, state }) {
 
   function upstream(incoming) {
     const path = incoming.url?.split('?', 1)[0] ?? '/';
-    return /^\/(?:v1|admin)(?:\/|$)/u.test(path) ? api : site;
+    return /^\/(?:v1|admin|media)(?:\/|$)/u.test(path) ? api : site;
   }
 
   function headers(incoming, target) {

@@ -180,7 +180,9 @@ model StoryMedia {
   name String @db.VarChar(200)
   mimeType String @map("mime_type") @db.VarChar(40)
   size Int
-  data Bytes
+  data Bytes?
+  path String?
+  variants Json?
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("story_media")
@@ -304,4 +306,52 @@ model SitePublication {
   updatedAt         DateTime              @updatedAt @map("updated_at")
 
   @@map("site_publications")
+}
+
+model MediaUpload {
+  id String @id @db.Uuid
+  name String @db.VarChar(200)
+  mimeType String @map("mime_type") @db.VarChar(40)
+  size Int
+  sha256 String @db.VarChar(64)
+  purpose String @db.VarChar(30)
+  contextKey String @map("context_key") @db.VarChar(300)
+  status String @default("UPLOADING") @db.VarChar(20)
+  attempts Int @default(0)
+  claimToken String? @map("claim_token") @db.Uuid
+  claimedUntil DateTime? @map("claimed_until")
+  nextAttemptAt DateTime @default(now()) @map("next_attempt_at")
+  error String? @db.VarChar(40)
+  output Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@index([status, nextAttemptAt])
+  @@index([contextKey, createdAt])
+  @@map("media_uploads")
+}
+
+model MediaWorkerLock {
+  id Int @id
+  token String? @db.Uuid
+  expiresAt DateTime @map("expires_at")
+  @@map("media_worker_lock")
+}
+
+model BrowserSession {
+  digest String @id @db.VarChar(43)
+  publicId String @unique @map("public_id") @db.VarChar(43)
+  userId String @map("user_id") @db.Uuid
+  payload Json
+  expiresAt DateTime @map("expires_at")
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("browser_sessions")
+}
+
+model RateLimitBucket {
+  key String @id @db.VarChar(160)
+  count Int
+  expiresAt DateTime @map("expires_at")
+  @@index([expiresAt])
+  @@map("rate_limit_buckets")
 }

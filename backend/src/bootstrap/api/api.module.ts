@@ -8,7 +8,6 @@ import { LifecycleModule } from '@/platform/lifecycle/lifecycle.module'
 import { IdentityAccessModule } from '@/modules/identity-access/composition/identity-access.module'
 import { CoachSiteModule } from '@/modules/coach-site/composition/coach-site.module'
 import { buildCoachSiteConfig } from '@/platform/config/coach-site.config'
-import { RedisModule } from '@/platform/redis/redis.module'
 import { LoggingModule } from '@/platform/logging/logging.module'
 import { HttpErrorsModule } from '@/platform/http/errors/http-errors.module'
 
@@ -33,7 +32,6 @@ export class ApiModule {
         RuntimeConfigModule.forRoot(config),
         LoggingModule.forRoot(),
         DatabaseModule,
-        RedisModule,
         LifecycleModule,
         HealthModule,
         HttpErrorsModule.forRoot(API_HTTP_PROBLEM_CONTRIBUTIONS),

@@ -8,4 +8,6 @@
 
 export * from './adminAuthListAccountsParams'
 export * from './adminListConsultationsParams'
+export * from './adminListMediaUploadsParams'
 export * from './getArticlesParams'
+export * from './getStoryMediaParams'

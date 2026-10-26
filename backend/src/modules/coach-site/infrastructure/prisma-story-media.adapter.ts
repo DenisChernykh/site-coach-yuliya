@@ -5,7 +5,13 @@ import type {
   StoryMediaPort,
 } from '../application/story-media.port'
 
-const metadata = { id: true, mimeType: true, size: true } as const
+const metadata = {
+  id: true,
+  mimeType: true,
+  size: true,
+  path: true,
+  variants: true,
+} as const
 
 export class PrismaStoryMediaAdapter implements StoryMediaPort {
   public constructor(private readonly database: PrismaClientProvider) {}

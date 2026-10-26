@@ -269,7 +269,7 @@ export const runtimeEnvironmentSchema = Joi.object<ValidatedRuntimeEnvironment>(
       .default([]),
     DATABASE_URL: databaseUrl,
     DATABASE_POOL_MAX: databasePoolMax,
-    REDIS_AUTH_URL: redisUrl.required(),
+    REDIS_AUTH_URL: redisUrl.allow('').default(''),
     REDIS_QUEUE_URL: redisUrl.empty('').optional(),
     REDIS_KEY_PREFIX: Joi.string()
       .pattern(/^[a-z0-9](?:[a-z0-9-]{0,62})$/u)
@@ -304,6 +304,7 @@ export const runtimeEnvironmentSchema = Joi.object<ValidatedRuntimeEnvironment>(
       value.TRUST_PROXY_CIDRS.length > 0)
   const queueEndpointIsDistinct =
     value.REDIS_QUEUE_URL === undefined ||
+    !value.REDIS_AUTH_URL ||
     redisEndpointIdentity(value.REDIS_AUTH_URL) !==
       redisEndpointIdentity(value.REDIS_QUEUE_URL)
   const selfServiceIsComplete =

@@ -40,7 +40,7 @@ test('published material has real local images and distinct Telegram destination
 test('uploaded images use the API origin and unsafe image schemes are rejected', () => {
   assert.equal(
     contentImageUrl('/v1/story-media/abc', 'https://api.example/'),
-    'https://api.example/v1/story-media/abc',
+    'https://api.example/v1/story-media/abc?variant=optimized',
   );
   for (const path of [
     'javascript:alert(1)',

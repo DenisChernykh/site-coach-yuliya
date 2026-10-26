@@ -15,23 +15,6 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
-  redis:
-    image: redis:8.8.0-trixie@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b
-    command:
-      [
-        'redis-server',
-        '--maxmemory',
-        '64mb',
-        '--maxmemory-policy',
-        'noeviction',
-      ]
-    ports:
-      - '127.0.0.1:6388:6379'
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 2s
-      timeout: 3s
-      retries: 30
 volumes:
   coach-postgres:
 networks:

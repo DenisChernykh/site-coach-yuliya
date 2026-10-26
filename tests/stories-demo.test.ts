@@ -42,7 +42,7 @@ test('test stories stay unpublished while bundled media remains available for pr
       );
       assert.equal(
         storyMediaUrl(id, 'https://api.example/'),
-        `https://api.example/v1/story-media/${id}`,
+        `https://api.example/v1/story-media/${id}?variant=optimized`,
       );
     }
   }

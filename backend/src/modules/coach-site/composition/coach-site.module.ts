@@ -1,3 +1,8 @@
+import { resolve } from 'node:path'
+import { MediaUploadService } from '../application/media-upload.service'
+import { PrismaMediaUploadAdapter } from '../infrastructure/prisma-media-upload.adapter'
+import { DiskMediaFiles } from '../infrastructure/disk-media-files'
+import { MediaUploadController } from '../presentation/media-upload.controller'
 import {
   TRANSACTION_PORT,
   type TransactionPort,
@@ -7,9 +12,6 @@ import type { CoachSiteRuntimeConfig } from '@/platform/config/coach-site.config
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import { DatabaseModule } from '@/platform/database/database.module'
 import { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
-import { RedisModule } from '@/platform/redis/redis.module'
-import { REDIS_AUTH_COMMAND_EXECUTOR } from '@/platform/redis/redis.tokens'
-import type { RedisCommandExecutorPort } from '@/platform/redis/redis-command.executor'
 import { LifecycleModule } from '@/platform/lifecycle/lifecycle.module'
 import { ApplicationLifecycleState } from '@/platform/lifecycle/application-lifecycle.state'
 import {
@@ -21,7 +23,6 @@ import { SiteCmsService } from '../application/cms.service'
 import { PrismaCmsAdapter } from '../infrastructure/prisma-cms.adapter'
 import { DraftContentAdapter } from '../infrastructure/draft-content.adapter'
 import { PrismaStoryMediaAdapter } from '../infrastructure/prisma-story-media.adapter'
-import { SharpArticleCoverOptimizer } from '../infrastructure/sharp-article-cover-optimizer'
 import { StoryMediaService } from '../application/story-media.service'
 import {
   AdminStoryMediaController,
@@ -37,7 +38,7 @@ import {
 } from '../application/consultations.service'
 import { PrismaSiteContentAdapter } from '../infrastructure/prisma-content.adapter'
 import { PrismaConsultationsAdapter } from '../infrastructure/prisma-consultations.adapter'
-import { RedisConsultationLimiter } from '../infrastructure/redis-consultation-limiter'
+import { PostgresConsultationLimiter } from '../infrastructure/postgres-consultation-limiter'
 import { TelegramAdapter } from '../infrastructure/telegram.adapter'
 import { TelegramNotificationRunner } from '../infrastructure/telegram-runner'
 import { PublishSiteContent } from '../application/publication.service'
@@ -59,9 +60,10 @@ export class CoachSiteModule {
   public static forRoot(config: CoachSiteRuntimeConfig): DynamicModule {
     return {
       module: CoachSiteModule,
-      imports: [DatabaseModule, RedisModule, LifecycleModule],
+      imports: [DatabaseModule, LifecycleModule],
       controllers: [
         AdminStoryMediaController,
+        MediaUploadController,
         PublicStoryMediaController,
         PublicSiteController,
         AdminContentController,
@@ -72,22 +74,35 @@ export class CoachSiteModule {
       ],
       providers: [
         {
+          provide: DiskMediaFiles,
+          useFactory: () =>
+            new DiskMediaFiles(config.mediaDirectory ?? resolve('var/media')),
+        },
+        {
+          provide: PrismaMediaUploadAdapter,
+          inject: [PrismaClientProvider, TRANSACTION_PORT],
+          useFactory: (db: PrismaClientProvider, tx: TransactionPort) =>
+            new PrismaMediaUploadAdapter(db, tx),
+        },
+        {
+          provide: MediaUploadService,
+          inject: [PrismaMediaUploadAdapter, DiskMediaFiles],
+          useFactory: (
+            store: PrismaMediaUploadAdapter,
+            files: DiskMediaFiles,
+          ) => new MediaUploadService(store, files),
+        },
+        {
           provide: PrismaStoryMediaAdapter,
           inject: [PrismaClientProvider],
           useFactory: (database: PrismaClientProvider) =>
             new PrismaStoryMediaAdapter(database),
         },
         {
-          provide: SharpArticleCoverOptimizer,
-          useFactory: () => new SharpArticleCoverOptimizer(),
-        },
-        {
           provide: StoryMediaService,
-          inject: [PrismaStoryMediaAdapter, SharpArticleCoverOptimizer],
-          useFactory: (
-            media: PrismaStoryMediaAdapter,
-            covers: SharpArticleCoverOptimizer,
-          ) => new StoryMediaService(media, covers),
+          inject: [PrismaStoryMediaAdapter],
+          useFactory: (media: PrismaStoryMediaAdapter) =>
+            new StoryMediaService(media),
         },
         {
           provide: PrismaCmsAdapter,
@@ -177,15 +192,14 @@ export class CoachSiteModule {
             new PrismaConsultationsAdapter(database, transaction),
         },
         {
-          provide: RedisConsultationLimiter,
-          inject: [REDIS_AUTH_COMMAND_EXECUTOR, RuntimeConfigService],
+          provide: PostgresConsultationLimiter,
+          inject: [PrismaClientProvider, RuntimeConfigService],
           useFactory: (
-            executor: RedisCommandExecutorPort,
+            database: PrismaClientProvider,
             runtime: RuntimeConfigService,
-          ): RedisConsultationLimiter =>
-            new RedisConsultationLimiter(
-              executor,
-              `${runtime.redis.keyPrefix}:${runtime.environment}`,
+          ): PostgresConsultationLimiter =>
+            new PostgresConsultationLimiter(
+              database,
               runtime.auth.rateLimitKeySecret,
             ),
         },
@@ -200,12 +214,12 @@ export class CoachSiteModule {
           inject: [
             PrismaConsultationsAdapter,
             PrismaSiteContentAdapter,
-            RedisConsultationLimiter,
+            PostgresConsultationLimiter,
           ],
           useFactory: (
             requests: PrismaConsultationsAdapter,
             content: PrismaSiteContentAdapter,
-            limiter: RedisConsultationLimiter,
+            limiter: PostgresConsultationLimiter,
           ): ConsultationsService =>
             new ConsultationsService(requests, content, limiter),
         },

@@ -125,7 +125,7 @@ describe('RuntimeConfigService', () => {
       corsOriginCount: 2,
       trustedProxyCount: 2,
       databasePoolMax: 10,
-      redisAuthConfigured: true,
+      redisAuthConfigured: false,
       redisQueueConfigured: false,
       authCookieName: 'nest-js-starter-session',
       authSelfServiceMode: 'disabled',
@@ -148,8 +148,8 @@ describe('RuntimeConfigService', () => {
     )
     expect(service.safeSummary).toEqual(
       expect.objectContaining({
-        redisAuthConfigured: true,
-        redisQueueConfigured: true,
+        redisAuthConfigured: false,
+        redisQueueConfigured: false,
       }),
     )
     expect(JSON.stringify(service.safeSummary)).not.toContain('queue-secret')

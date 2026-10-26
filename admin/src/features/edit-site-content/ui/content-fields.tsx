@@ -236,6 +236,11 @@ export function ContentFields({
   if (['image', 'reviewImage', 'ogImage', 'defaultImage'].includes(field))
     return (
       <ContentImageField
+        purpose={
+          field === 'ogImage' || field === 'defaultImage'
+            ? 'social'
+            : 'document'
+        }
         value={String(value ?? '')}
         label={labelFor(field)}
         onChange={onChange}

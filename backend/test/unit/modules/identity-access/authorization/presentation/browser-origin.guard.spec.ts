@@ -11,6 +11,7 @@ function context(
   headers: Record<string, string>,
 ): ExecutionContext {
   return {
+    getHandler: () => context,
     switchToHttp: () => ({ getRequest: () => ({ method, headers }) }),
   } as unknown as ExecutionContext
 }

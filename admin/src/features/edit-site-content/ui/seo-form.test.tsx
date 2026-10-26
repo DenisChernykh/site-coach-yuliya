@@ -57,7 +57,7 @@ describe('SEO editor', () => {
     })
     server.use(
       http.post(
-        `${window.location.origin}/v1/admin/story-media`,
+        `${window.location.origin}/v1/admin/media-uploads`,
         async ({ request }) => {
           expect(request.headers.get('x-csrf-token')).toBe('test-csrf')
           await gate
@@ -65,6 +65,8 @@ describe('SEO editor', () => {
             id,
             mimeType: 'image/png',
             type: 'image',
+            status: 'READY',
+            output: { mimeType: 'image/webp', size: 8 },
             size: 8,
           })
         },

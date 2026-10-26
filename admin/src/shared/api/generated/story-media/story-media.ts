@@ -22,6 +22,7 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
+  GetStoryMediaParams,
   GetStoryMediaPathParameters,
   ProblemResponseDto,
   StoryMediaDto,
@@ -53,7 +54,8 @@ const withQueryKey = <T extends object, K>(
 }
 
 /**
- * @summary Загрузить фото или видео для сторис
+ * @deprecated
+ * @summary Загрузить файл в общую очередь (устаревший JSON transport)
  */
 export const adminUploadStoryMedia = (
   uploadStoryMediaDto: BodyType<UploadStoryMediaDto>,
@@ -119,7 +121,8 @@ export type AdminUploadStoryMediaMutationError = ErrorType<
 >
 
 /**
- * @summary Загрузить фото или видео для сторис
+ * @deprecated
+ * @summary Загрузить файл в общую очередь (устаревший JSON transport)
  */
 export const useAdminUploadStoryMedia = <
   TError = ErrorType<ProblemResponseDto | ValidationProblemResponseDto>,
@@ -151,6 +154,7 @@ export const useAdminUploadStoryMedia = <
  */
 export const getStoryMedia = (
   { id }: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
   options?: SecondParameter<typeof apiMutator>,
   signal?: AbortSignal,
 ) => {
@@ -158,6 +162,7 @@ export const getStoryMedia = (
     {
       url: `/v1/story-media/${encodeURIComponent(String(id))}`,
       method: 'GET',
+      params,
       responseType: 'blob',
       signal,
     },
@@ -165,10 +170,11 @@ export const getStoryMedia = (
   )
 }
 
-export const getGetStoryMediaQueryKey = ({
-  id,
-}: GetStoryMediaPathParameters) => {
-  return [`/v1/story-media/${id}`] as const
+export const getGetStoryMediaQueryKey = (
+  { id }: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
+) => {
+  return [`/v1/story-media/${id}`, ...(params ? [params] : [])] as const
 }
 
 export const getGetStoryMediaQueryOptions = <
@@ -176,6 +182,7 @@ export const getGetStoryMediaQueryOptions = <
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   { id }: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -185,11 +192,12 @@ export const getGetStoryMediaQueryOptions = <
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetStoryMediaQueryKey({ id })
+  const queryKey =
+    queryOptions?.queryKey ?? getGetStoryMediaQueryKey({ id }, params)
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getStoryMedia>>> = ({
     signal,
-  }) => getStoryMedia({ id }, requestOptions, signal)
+  }) => getStoryMedia({ id }, params, requestOptions, signal)
 
   return {
     queryKey,
@@ -213,6 +221,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   pathParams: GetStoryMediaPathParameters,
+  params: undefined | GetStoryMediaParams,
   options: {
     query: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -236,6 +245,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   pathParams: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -259,6 +269,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   pathParams: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -278,6 +289,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   { id }: GetStoryMediaPathParameters,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -288,7 +300,7 @@ export function useGetStoryMedia<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>
 } {
-  const queryOptions = getGetStoryMediaQueryOptions({ id }, options)
+  const queryOptions = getGetStoryMediaQueryOptions({ id }, params, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

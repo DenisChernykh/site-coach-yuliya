@@ -66,7 +66,7 @@ export function Stories({
           >
             <span className={styles.cover}>
               <img
-                src={storyMediaUrl(group.coverMediaId, mediaBaseUrl)}
+                src={storyMediaUrl(group.coverMediaId, mediaBaseUrl, 'preview')}
                 alt=""
                 loading="lazy"
                 width={160}
@@ -232,7 +232,7 @@ function StoryPlayer({
       <header className={styles.header}>
         <img
           className={styles.avatar}
-          src={storyMediaUrl(group.coverMediaId, mediaBaseUrl)}
+          src={storyMediaUrl(group.coverMediaId, mediaBaseUrl, 'preview')}
           alt=""
           width={32}
           height={32}

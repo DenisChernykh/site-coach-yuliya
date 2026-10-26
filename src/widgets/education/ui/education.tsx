@@ -20,7 +20,7 @@ export function Education({
           <article key={item.id} className={styles.card}>
             {image && (
               <img
-                src={image}
+                src={contentImageUrl(item.image, mediaBaseUrl, 'mobile')}
                 alt={item.imageAlt}
                 loading="lazy"
                 width={1179}

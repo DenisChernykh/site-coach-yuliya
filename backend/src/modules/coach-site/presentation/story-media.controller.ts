@@ -1,8 +1,13 @@
+import { InvalidStoryMediaError } from '../application/site-errors'
+import { createHash, randomUUID } from 'node:crypto'
+import { MediaUploadService } from '../application/media-upload.service'
+import { MEDIA_CHUNK_BYTES } from '../application/media-upload.port'
 import {
   Body,
   Controller,
   Get,
   Headers,
+  Query,
   Inject,
   Param,
   ParseUUIDPipe,
@@ -18,6 +23,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiProduces,
   ApiResponse,
   ApiSecurity,
@@ -39,12 +45,13 @@ import { StoryMediaDto, UploadStoryMediaDto } from './stories.dto'
 @ApiTags('story-media')
 export class AdminStoryMediaController {
   public constructor(
-    @Inject(StoryMediaService) private readonly media: StoryMediaService,
+    @Inject(MediaUploadService) private readonly uploads: MediaUploadService,
   ) {}
   @Post()
   @ApiOperation({
     operationId: 'adminUploadStoryMedia',
-    summary: 'Загрузить фото или видео для сторис',
+    summary: 'Загрузить файл в общую очередь (устаревший JSON transport)',
+    deprecated: true,
   })
   @ApiBody({ type: UploadStoryMediaDto })
   @ApiCreatedResponse({ type: StoryMediaDto })
@@ -58,8 +65,41 @@ export class AdminStoryMediaController {
     'RATE_LIMIT_EXCEEDED',
     'DEPENDENCY_UNAVAILABLE',
   )
-  public upload(@Body() input: UploadStoryMediaDto): Promise<StoryMediaDto> {
-    return this.media.upload(input)
+  public async upload(
+    @Body() input: UploadStoryMediaDto,
+  ): Promise<StoryMediaDto> {
+    const data = Buffer.from(input.base64, 'base64')
+    if (data.toString('base64') !== input.base64)
+      throw new InvalidStoryMediaError()
+    const id = randomUUID()
+    await this.uploads.create({
+      id,
+      name: input.name,
+      mimeType: input.mimeType,
+      size: data.length,
+      sha256: createHash('sha256').update(data).digest('hex'),
+      purpose:
+        input.purpose ??
+        (input.mimeType.startsWith('video/') ? 'story' : 'photo'),
+      contextKey: 'legacy-upload',
+    })
+    for (let index = 0; index * MEDIA_CHUNK_BYTES < data.length; index++)
+      await this.uploads.chunk(
+        id,
+        index,
+        data.subarray(
+          index * MEDIA_CHUNK_BYTES,
+          (index + 1) * MEDIA_CHUNK_BYTES,
+        ),
+      )
+    await this.uploads.finish(id)
+    return {
+      id,
+      mimeType: input.mimeType,
+      type: input.mimeType.startsWith('image/') ? 'image' : 'video',
+      size: data.length,
+      status: 'QUEUED',
+    }
   }
 }
 
@@ -71,6 +111,11 @@ export class PublicStoryMediaController {
     @Inject(StoryMediaService) private readonly media: StoryMediaService,
   ) {}
   @Get(':id')
+  @ApiQuery({
+    name: 'variant',
+    enum: ['preview', 'mobile', 'optimized'],
+    required: false,
+  })
   @ApiProduces(
     'image/jpeg',
     'image/png',
@@ -102,10 +147,30 @@ export class PublicStoryMediaController {
   @ApiProblemResponses('NOT_FOUND')
   public async get(
     @Param('id', new ParseUUIDPipe()) id: string,
+    @Query('variant') variant: string | undefined,
     @Headers('range') range: string | undefined,
     @Res({ passthrough: true }) response: Response,
   ): Promise<StreamableFile | undefined> {
     const media = await this.media.get(id)
+    if (media.path) {
+      const variants = media.variants as
+        { previewUrl?: string; mobileUrl?: string; url?: string } | undefined
+      const path =
+        variant === 'preview'
+          ? variants?.previewUrl
+          : variant === 'mobile'
+            ? variants?.mobileUrl
+            : variant === 'optimized'
+              ? variants?.url
+              : media.path
+      response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+      response.setHeader(
+        'Cache-Control',
+        variant && !path ? 'no-store' : 'public, max-age=31536000, immutable',
+      )
+      response.redirect(302, path || media.path)
+      return undefined
+    }
     const segment = mediaRange(range, media.size)
     response.setHeader('Accept-Ranges', 'bytes')
     response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
@@ -114,7 +179,10 @@ export class PublicStoryMediaController {
       response.status(416).setHeader('Content-Range', `bytes */${media.size}`)
       return undefined
     }
-    response.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+    response.setHeader(
+      'Cache-Control',
+      variant ? 'no-store' : 'public, max-age=31536000, immutable',
+    )
     const start = segment?.start ?? 0
     const end = segment?.end ?? media.size - 1
     if (segment) {

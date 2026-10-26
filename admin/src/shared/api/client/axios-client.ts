@@ -39,7 +39,12 @@ API_AXIOS_INSTANCE.interceptors.request.use(async (config) => {
   const method = config.method?.toUpperCase() ?? 'GET'
   if (!unsafeMethods.has(method)) return config
 
-  config.headers.set('Content-Type', 'application/json')
+  config.headers.set(
+    'Content-Type',
+    config.data instanceof Blob || config.data instanceof ArrayBuffer
+      ? 'application/octet-stream'
+      : 'application/json',
+  )
   if (config.data === undefined) config.data = {}
   if (method === 'POST' && csrfExemptPaths.has(config.url ?? '')) return config
 

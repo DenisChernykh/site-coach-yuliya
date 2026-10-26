@@ -1,3 +1,5 @@
+import { resolve } from 'node:path'
+import type { Request, Response, NextFunction } from 'express'
 import type { AddressInfo } from 'node:net'
 
 import { NestFactory } from '@nestjs/core'
@@ -9,11 +11,16 @@ import { createApiRuntimeConfig } from '@/platform/config/runtime-environment'
 import type { DatabaseLifecycle } from '@/platform/database/database.contracts'
 import { DATABASE_LIFECYCLE } from '@/platform/database/database.tokens'
 import { configureHttpApplication } from '@/platform/http/bootstrap/configure-http-application'
-import { PRE_BODY_ACCESS_POLICY } from '@/platform/http/policy/protected-json-body.contracts'
-import { STORY_MEDIA_UPLOAD } from '@/modules/coach-site/composition/story-media-upload.policy'
+import {
+  PRE_BODY_ACCESS_POLICY,
+  type PreBodyAccessPolicy,
+} from '@/platform/http/policy/protected-json-body.contracts'
+import {
+  STORY_MEDIA_UPLOAD,
+  MEDIA_CHUNK_UPLOAD,
+} from '@/modules/coach-site/composition/story-media-upload.policy'
 import { ApplicationLifecycleState } from '@/platform/lifecycle/application-lifecycle.state'
 import type { RedisLifecycle } from '@/platform/redis/redis-lifecycle'
-import { REDIS_LIFECYCLE } from '@/platform/redis/redis.tokens'
 import { ActiveRequestTracker } from '@/platform/http/bootstrap/active-request-tracker'
 import { RequestContext } from '@/platform/http/context/request-context'
 import {
@@ -61,7 +68,7 @@ export interface ApiRuntimeResources {
   readonly database: DatabaseLifecycle
   readonly lifecycle: ApiLifecycleHandle
   readonly requestTracker?: ActiveRequestTracker
-  readonly redis: RedisLifecycle
+  readonly redis?: RedisLifecycle
   readonly observability?: ObservabilityRuntime
   readonly httpDrainTimeoutMs?: number
   readonly shutdownGraceMs?: number
@@ -91,7 +98,6 @@ export async function configureApi(
   const requestContext = app.get(RequestContext)
   const correlation = app.get(CorrelationFieldsProvider)
   const logger = app.get<StructuredLogger>(STRUCTURED_LOGGER)
-  const redis = app.get<RedisLifecycle>(REDIS_LIFECYCLE)
   configureHttpApplication(
     app,
     config,
@@ -103,14 +109,14 @@ export async function configureApi(
       correlation,
     }),
     [
-      {
-        ...STORY_MEDIA_UPLOAD,
-        accessPolicy: app.get(PRE_BODY_ACCESS_POLICY),
+      ...[STORY_MEDIA_UPLOAD, MEDIA_CHUNK_UPLOAD].map((route) => ({
+        ...route,
+        accessPolicy: app.get<PreBodyAccessPolicy>(PRE_BODY_ACCESS_POLICY),
         maxConcurrent: 2,
-        requestsPerWindow: 60,
+        requestsPerWindow: 240,
         windowMs: 60_000,
         timeoutMs: config.http.requestTimeoutMs,
-      },
+      })),
     ],
   )
   const docsPolicy =
@@ -124,12 +130,55 @@ export async function configureApi(
     docsPolicy,
     app.get(HttpProblemRegistry).definitions,
   )
+  app.useStaticAssets(
+    resolve(runtimeConfig.coachSite?.mediaDirectory ?? 'var/media', 'public'),
+    {
+      prefix: '/media/',
+      immutable: true,
+      maxAge: '1y',
+      index: false,
+      dotfiles: 'deny',
+      setHeaders: (response: Response) => {
+        response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+      },
+    },
+  )
+  app.use(
+    '/media',
+    (
+      error: unknown,
+      _request: Request,
+      response: Response,
+      next: NextFunction,
+    ) => {
+      const failure = error as {
+        status?: number
+        headers?: Record<string, unknown>
+      } | null
+      const range = failure?.headers?.['Content-Range']
+      if (
+        failure?.status === 416 &&
+        typeof range === 'string' &&
+        /^bytes \*\/\d+$/u.test(range)
+      ) {
+        response
+          .status(416)
+          .set({
+            'Content-Range': range,
+            'Cache-Control': 'no-store',
+            'Cross-Origin-Resource-Policy': 'cross-origin',
+          })
+          .end()
+        return
+      }
+      next(error)
+    },
+  )
   await configureAdminUi(app, runtimeConfig.coachSite?.adminDirectory ?? '')
   await app.init()
 
   return {
     database,
-    redis,
     lifecycle,
     requestTracker,
     ...(observability === undefined ? {} : { observability }),

@@ -18,7 +18,7 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { ProblemResponseDto } from '../model';
+import type { GetStoryMediaParams, ProblemResponseDto } from '../model';
 
 import { apiFetch } from '../../client/api-fetch.ts';
 import type { ErrorType } from '../../client/api-fetch.ts';
@@ -43,8 +43,23 @@ const withQueryKey = <T extends object, K>(
   return result;
 };
 
-export const getGetStoryMediaUrl = (id: string) => {
-  return `/v1/story-media/${encodeURIComponent(String(id))}`;
+export const getGetStoryMediaUrl = (
+  id: string,
+  params?: GetStoryMediaParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/v1/story-media/${encodeURIComponent(String(id))}?${stringifiedParams}`
+    : `/v1/story-media/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -52,16 +67,20 @@ export const getGetStoryMediaUrl = (id: string) => {
  */
 export const getStoryMedia = async (
   id: string,
+  params?: GetStoryMediaParams,
   options?: Parameters<typeof apiFetch>[1],
 ): Promise<Blob> => {
-  return apiFetch<Blob>(getGetStoryMediaUrl(id), {
+  return apiFetch<Blob>(getGetStoryMediaUrl(id, params), {
     ...options,
     method: 'GET',
   });
 };
 
-export const getGetStoryMediaQueryKey = (id: string) => {
-  return [`/v1/story-media/${id}`] as const;
+export const getGetStoryMediaQueryKey = (
+  id: string,
+  params?: GetStoryMediaParams,
+) => {
+  return [`/v1/story-media/${id}`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetStoryMediaQueryOptions = <
@@ -69,6 +88,7 @@ export const getGetStoryMediaQueryOptions = <
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   id: string,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -78,11 +98,12 @@ export const getGetStoryMediaQueryOptions = <
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetStoryMediaQueryKey(id);
+  const queryKey =
+    queryOptions?.queryKey ?? getGetStoryMediaQueryKey(id, params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getStoryMedia>>> = ({
     signal,
-  }) => getStoryMedia(id, { signal, ...requestOptions });
+  }) => getStoryMedia(id, params, { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -106,6 +127,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   id: string,
+  params: undefined | GetStoryMediaParams,
   options: {
     query: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -129,6 +151,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   id: string,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -152,6 +175,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   id: string,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -171,6 +195,7 @@ export function useGetStoryMedia<
   TError = ErrorType<ProblemResponseDto | void>,
 >(
   id: string,
+  params?: GetStoryMediaParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getStoryMedia>>, TError, TData>
@@ -181,7 +206,7 @@ export function useGetStoryMedia<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetStoryMediaQueryOptions(id, options);
+  const queryOptions = getGetStoryMediaQueryOptions(id, params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

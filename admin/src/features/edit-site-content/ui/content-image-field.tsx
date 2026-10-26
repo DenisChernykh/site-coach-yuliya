@@ -1,3 +1,5 @@
+import type { MediaUploadDtoPurpose } from '@/shared/api'
+import { MediaLibrary } from './media-library'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button } from '@/shared/ui'
 import { contentError } from '../model/errors'
@@ -10,6 +12,7 @@ import {
 export function ContentImageField({
   value,
   label,
+  purpose = 'photo',
   onChange,
   onUploadingChange,
   fallback,
@@ -17,6 +20,7 @@ export function ContentImageField({
   disabled = false,
 }: {
   value: string
+  purpose?: MediaUploadDtoPurpose
   label: string
   onChange: (value: string) => void
   onUploadingChange?: (busy: boolean) => void
@@ -33,8 +37,16 @@ export function ContentImageField({
   const [busy, setBusy] = useState(false)
   const [progress, setProgress] = useState(0)
   const [failedPreview, setFailedPreview] = useState('')
-  const preview = value || fallback || ''
-  const localPreview = /^\/(?![/\\])[^\s\\]*$/u.test(preview)
+  const [localPreview, setLocalPreview] = useState('')
+  useEffect(
+    () => () => {
+      if (localPreview) URL.revokeObjectURL(localPreview)
+    },
+    [localPreview],
+  )
+  const preview = localPreview || value || fallback || ''
+  const allowedPreview =
+    !!localPreview || /^\/(?![/\\])[^\s\\]*$/u.test(preview)
   useEffect(() => {
     callbacks.current = { onChange, onUploadingChange }
   }, [onChange, onUploadingChange])
@@ -53,20 +65,28 @@ export function ContentImageField({
       setError('Выберите изображение JPG, PNG или WebP.')
       return
     }
+    setLocalPreview(URL.createObjectURL(file))
     inFlight.current = true
     setBusy(true)
     setProgress(0)
     onUploadingChange?.(true)
     onChange(value)
     try {
-      const media = await uploadStoryFile(file, (percent) => {
-        if (mounted.current) setProgress(percent)
-      })
+      const media = await uploadStoryFile(
+        file,
+        (percent) => {
+          if (mounted.current) setProgress(percent)
+        },
+        purpose,
+        `${window.location.pathname}:${label}`,
+      )
       if (mounted.current) {
+        setLocalPreview('')
         setFailedPreview('')
         callbacks.current.onChange(`/v1/story-media/${media.id}`)
       }
     } catch (failure) {
+      if (mounted.current) setLocalPreview('')
       if (mounted.current)
         setError(
           failure instanceof StoryUploadError
@@ -88,7 +108,7 @@ export function ContentImageField({
         {label}
       </h3>
       <div className="flex min-h-32 items-center justify-center overflow-hidden rounded-lg border bg-muted/30">
-        {localPreview && failedPreview !== preview ? (
+        {allowedPreview && failedPreview !== preview ? (
           <img
             src={preview}
             alt={`Превью: ${label.toLowerCase()}`}
@@ -140,13 +160,26 @@ export function ContentImageField({
           </Button>
         )}
       </div>
+      <MediaLibrary
+        purpose={purpose}
+        imagesOnly
+        disabled={busy || disabled}
+        onSelect={(media) => {
+          setLocalPreview('')
+          setFailedPreview('')
+          onChange(`/v1/story-media/${media.id}`)
+        }}
+      />
       <p id={`${id}-hint`} className="text-xs text-muted-foreground">
-        JPG, PNG или WebP, до 8 МБ. После загрузки сохраните изменения.
+        JPG, PNG или WebP, до 8 МБ. Изображение оптимизируется автоматически.
+        После готовности сохраните изменения.
         {!value && fallback && ' Сейчас используется изображение по умолчанию.'}
       </p>
       {busy && (
         <p role="status" className="text-sm">
-          {progress < 100 ? `Загрузка: ${progress}%` : 'Сохраняем изображение…'}
+          {progress < 100
+            ? `Загрузка: ${progress}%`
+            : 'Файл сохранён. Ожидаем обработки — страницу можно закрыть.'}
         </p>
       )}
       {error && (

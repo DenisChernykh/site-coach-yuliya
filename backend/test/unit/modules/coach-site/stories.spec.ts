@@ -79,41 +79,8 @@ describe('media upload boundaries', () => {
     ),
     read: jest.fn(() => Promise.resolve(new Uint8Array())),
   }
-  const service = new StoryMediaService(media, {
-    optimize: jest.fn(() =>
-      Promise.reject(new Error('Unexpected optimization')),
-    ),
-  })
-  it('checks actual bytes and canonical base64 before persistence', async () => {
-    await expect(
-      service.upload({
-        name: 'fake.png',
-        mimeType: 'image/png',
-        base64: Buffer.from('<svg onload="alert(1)">').toString('base64'),
-      }),
-    ).rejects.toBeInstanceOf(InvalidStoryMediaError)
-    const base64 = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]).toString(
-      'base64',
-    )
-    await expect(
-      service.upload({ name: 'photo.png', mimeType: 'image/png', base64 }),
-    ).resolves.toMatchObject({ type: 'image' })
-    await expect(
-      service.upload({
-        name: 'photo.png',
-        mimeType: 'image/png',
-        base64: base64 + ' ',
-      }),
-    ).rejects.toBeInstanceOf(InvalidStoryMediaError)
-  })
-  it('rejects oversized files and mismatched media references', async () => {
-    await expect(
-      service.upload({
-        name: 'large.png',
-        mimeType: 'image/png',
-        base64: Buffer.alloc(8 * 1024 * 1024 + 1).toString('base64'),
-      }),
-    ).rejects.toBeInstanceOf(InvalidStoryMediaError)
+  const service = new StoryMediaService(media)
+  it('rejects mismatched media references', async () => {
     const stories = [group()]
     stories[0]!.slides[0]!.type = 'video'
     await expect(service.validateStories(stories)).rejects.toBeInstanceOf(

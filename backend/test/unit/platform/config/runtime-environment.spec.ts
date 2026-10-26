@@ -216,7 +216,7 @@ describe('runtime environment', () => {
         REDIS_AUTH_URL: undefined,
         [removedRedisUrlKey]: 'redis://default:old-secret@redis:6379',
       }),
-    ).toThrow(RuntimeConfigurationError)
+    ).not.toThrow()
   })
   it('requires production HTTPS, proxy trust and protected/off docs', () => {
     const base = {

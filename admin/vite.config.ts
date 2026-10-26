@@ -40,6 +40,7 @@ export default defineConfig(({ command, mode }) => {
             port: 5173,
             strictPort: true,
             proxy: {
+              '^/media(?:/|$)': { target, changeOrigin: true },
               '^/v1(?:/|$)': { target, changeOrigin: true },
               '^/health(?:/|$)': { target, changeOrigin: true },
             },

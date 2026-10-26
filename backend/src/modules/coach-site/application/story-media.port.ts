@@ -2,6 +2,8 @@ export interface StoryMedia {
   id: string
   mimeType: string
   size: number
+  path?: string | null
+  variants?: unknown
 }
 
 export interface StoryMediaPort {

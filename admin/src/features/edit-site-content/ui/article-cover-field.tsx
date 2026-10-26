@@ -1,3 +1,4 @@
+import { MediaLibrary } from './media-library'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button } from '@/shared/ui'
 import legacyArt from '../../../../../design/assets/art.png'
@@ -28,12 +29,21 @@ export function ArticleCoverField({
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
   const [failedPreview, setFailedPreview] = useState('')
-  const preview =
+  const [localPreview, setLocalPreview] = useState('')
+  useEffect(
+    () => () => {
+      if (localPreview) URL.revokeObjectURL(localPreview)
+    },
+    [localPreview],
+  )
+  const storedPreview =
     value === 'art'
       ? legacyArt
       : value === 'landscape'
         ? legacyLandscape
         : value
+
+  const preview = localPreview || storedPreview
 
   useEffect(() => {
     mounted.current = true
@@ -49,6 +59,7 @@ export function ArticleCoverField({
       setError('Выберите изображение JPG, PNG или WebP.')
       return
     }
+    setLocalPreview(URL.createObjectURL(file))
     inFlight.current = true
     setBusy(true)
     setProgress(0)
@@ -60,12 +71,15 @@ export function ArticleCoverField({
           if (mounted.current) setProgress(percent)
         },
         'article-cover',
+        `${window.location.pathname}:cover`,
       )
       if (mounted.current) {
+        setLocalPreview('')
         setFailedPreview('')
         onChange(`/v1/story-media/${media.id}`)
       }
     } catch (failure) {
+      if (mounted.current) setLocalPreview('')
       if (mounted.current)
         setError(
           failure instanceof StoryUploadError
@@ -124,12 +138,25 @@ export function ArticleCoverField({
       >
         {value ? 'Заменить обложку' : 'Загрузить обложку'}
       </Button>
+      <MediaLibrary
+        purpose="article-cover"
+        imagesOnly
+        disabled={busy || disabled}
+        onSelect={(media) => {
+          setLocalPreview('')
+          setFailedPreview('')
+          onChange(`/v1/story-media/${media.id}`)
+        }}
+      />
       <p id={`${id}-hint`} className="text-xs text-muted-foreground">
-        JPG, PNG или WebP, до 8 МБ. После загрузки сохраните статью.
+        JPG, PNG или WebP, до 8 МБ. Обложка оптимизируется автоматически. После
+        готовности сохраните статью.
       </p>
       {busy && (
         <p role="status" className="text-sm">
-          Загружаем обложку… {progress}%
+          {progress < 100
+            ? `Загружаем обложку… ${progress}%`
+            : 'Файл сохранён. Ожидаем обработки — страницу можно закрыть.'}
         </p>
       )}
       {error && (

@@ -1,3 +1,5 @@
+/// <reference types="node" />
+import { webcrypto } from 'node:crypto'
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, vi } from 'vitest'
@@ -13,6 +15,10 @@ vi.stubGlobal(
     disconnect = vi.fn()
   },
 )
+
+vi.stubGlobal('crypto', webcrypto)
+URL.createObjectURL = vi.fn(() => 'blob:test-preview')
+URL.revokeObjectURL = vi.fn()
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 afterEach(() => {

@@ -1,3 +1,4 @@
+import { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
 import { Module, type DynamicModule } from '@nestjs/common'
 
 import { AccountEmailWorkflowsPolicy } from '../application/account-email-workflows.policy'
@@ -14,7 +15,7 @@ import { PrismaEmailVerificationAdapter } from '../email-verification/infrastruc
 import { EmailVerificationController } from '../email-verification/presentation/email-verification.controller'
 import { NodeAccountLifecycleCryptoAdapter } from '../infrastructure/node-account-lifecycle-crypto.adapter'
 import { NodemailerAuthMailAdapter } from '../infrastructure/nodemailer-auth-mail.adapter'
-import { RedisPublicAuthRateLimiter } from '../infrastructure/redis-public-auth-rate-limiter'
+import { PostgresPublicAuthRateLimiter } from '../infrastructure/postgres-public-auth-rate-limiter'
 import { AcceptAccountInvitationUseCase } from '../invitations/application/accept-account-invitation.use-case'
 import { CreateAccountInvitationUseCase } from '../invitations/application/create-account-invitation.use-case'
 import { INVITATION_PERSISTENCE } from '../invitations/application/invitation-persistence.port'
@@ -43,9 +44,6 @@ import { RuntimeConfigModule } from '@/platform/config/runtime-config.module'
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import { DatabaseModule } from '@/platform/database/database.module'
 import { AuthAuditLogger } from '@/platform/logging/auth-audit.logger'
-import type { RedisCommandExecutorPort } from '@/platform/redis/redis-command.executor'
-import { RedisModule } from '@/platform/redis/redis.module'
-import { REDIS_AUTH_COMMAND_EXECUTOR } from '@/platform/redis/redis.tokens'
 
 @Module({})
 export class AccountLifecycleModule {
@@ -60,7 +58,6 @@ export class AccountLifecycleModule {
         SessionsModule,
         RuntimeConfigModule,
         DatabaseModule,
-        RedisModule,
       ],
       controllers: [
         RegistrationController,
@@ -124,18 +121,16 @@ export class AccountLifecycleModule {
         {
           provide: PUBLIC_AUTH_RATE_LIMITER,
           inject: [
-            REDIS_AUTH_COMMAND_EXECUTOR,
+            PrismaClientProvider,
             NodeAccountLifecycleCryptoAdapter,
             RuntimeConfigService,
           ],
           useFactory: (
-            executor: RedisCommandExecutorPort,
+            database: PrismaClientProvider,
             crypto: NodeAccountLifecycleCryptoAdapter,
             config: RuntimeConfigService,
-          ): RedisPublicAuthRateLimiter =>
-            new RedisPublicAuthRateLimiter(executor, crypto, {
-              keyPrefix: config.redis.keyPrefix,
-              environment: config.environment,
+          ): PostgresPublicAuthRateLimiter =>
+            new PostgresPublicAuthRateLimiter(database, crypto, {
               hmacSecret: config.auth.rateLimitKeySecret,
               registrationIpLimit: config.auth.selfService.registrationIpLimit,
               registrationAccountLimit:

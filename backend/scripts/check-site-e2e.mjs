@@ -8,7 +8,6 @@ import { createServer } from 'node:net'
 import { once } from 'node:events'
 import { setTimeout as delay } from 'node:timers/promises'
 import { Pool } from 'pg'
-import { createClient } from 'redis'
 import {
   buildPostgresCommandConfig,
   buildApiRuntimeConfig,
@@ -72,8 +71,7 @@ const env = {
     : origin,
   TRUST_PROXY_CIDRS: '',
   DATABASE_URL: databaseUrl,
-  REDIS_AUTH_URL: 'redis://127.0.0.1:6388',
-  REDIS_KEY_PREFIX: databaseName.replaceAll('_', '-'),
+  MEDIA_DIRECTORY: await mkdtemp(join(tmpdir(), 'coach-media-acceptance-')),
   AUTH_SELF_SERVICE_MODE: 'disabled',
   AUTH_ACCOUNT_ADMINISTRATION_MODE: 'disabled',
   AUTH_ACCOUNT_EMAIL_WORKFLOWS_MODE: 'disabled',
@@ -159,32 +157,73 @@ async function checkStories() {
     .body
   assert.equal(image.size, png.length)
   assert.equal(image.type, 'image')
-  const bytes = await readFile('test/fixtures/stories/short.webm')
+  const bytes = await readFile('test/fixtures/media/prepared.mp4')
   const video = (
     await http(
       '/v1/admin/story-media',
       'POST',
       {
-        name: 'short.webm',
-        mimeType: 'video/webm',
+        name: 'short.mp4',
+        mimeType: 'video/mp4',
         base64: bytes.toString('base64'),
       },
       201,
       true,
     )
   ).body
-  await http(
-    '/v1/admin/story-media',
-    'POST',
-    { ...upload, base64: Buffer.from('<svg/>').toString('base64') },
-    422,
-    true,
+  const invalidUpload = (
+    await http(
+      '/v1/admin/story-media',
+      'POST',
+      { ...upload, base64: Buffer.from('<svg/>').toString('base64') },
+      201,
+      true,
+    )
+  ).body
+  command(['dist/bootstrap/media/main.js'], env)
+  assert.equal(
+    (
+      await http(
+        `/v1/admin/media-uploads/${image.id}`,
+        'GET',
+        undefined,
+        200,
+        true,
+      )
+    ).body.status,
+    'READY',
+  )
+  assert.equal(
+    (
+      await http(
+        `/v1/admin/media-uploads/${video.id}`,
+        'GET',
+        undefined,
+        200,
+        true,
+      )
+    ).body.status,
+    'READY',
+  )
+  assert.equal(
+    (
+      await http(
+        `/v1/admin/media-uploads/${invalidUpload.id}`,
+        'GET',
+        undefined,
+        200,
+        true,
+      )
+    ).body.status,
+    'FAILED',
   )
   const full = await fetch(`${origin}/v1/story-media/${image.id}`)
   assert.equal(full.status, 200)
-  assert.equal(full.headers.get('content-type'), 'image/png')
+  assert.equal(full.headers.get('content-type'), 'image/webp')
   assert.equal(full.headers.get('cross-origin-resource-policy'), 'cross-origin')
-  assert.deepEqual(Buffer.from(await full.arrayBuffer()), png)
+  const optimized = Buffer.from(await full.arrayBuffer())
+  assert.ok(optimized.length < png.length)
+  assert.equal(optimized.subarray(8, 12).toString(), 'WEBP')
   for (const [range, start, end] of [
     ['bytes=0-31', 0, 31],
     ['bytes=100-', 100, bytes.length - 1],
@@ -1319,17 +1358,9 @@ try {
     'PASS publication changes during build, successful acknowledgement and logout\n',
   )
   if (process.env.BROWSER_ACCEPTANCE_STATE) {
-    const redis = createClient({ url: env.REDIS_AUTH_URL })
-    await redis.connect()
-    try {
-      const keys = await redis.keys(
-        `${env.REDIS_KEY_PREFIX}:test:consultations:*`,
-      )
-      assert.equal(keys.length, 1)
-      await redis.pExpire(keys[0], 120_000)
-    } finally {
-      redis.destroy()
-    }
+    await pool.query(
+      "UPDATE rate_limit_buckets SET expires_at=NOW()+INTERVAL '120 seconds' WHERE key LIKE 'consultations:%'",
+    )
     await writeFile(
       process.env.BROWSER_ACCEPTANCE_STATE,
       JSON.stringify({ origin, credentials, pid: process.pid }),
@@ -1342,6 +1373,7 @@ try {
     })
   }
 } finally {
+  await rm(env.MEDIA_DIRECTORY, { recursive: true, force: true })
   if (child && child.exitCode === null) {
     child.kill('SIGTERM')
     await Promise.race([

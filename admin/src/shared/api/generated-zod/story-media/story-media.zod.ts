@@ -8,7 +8,8 @@
 import * as zod from 'zod'
 
 /**
- * @summary Загрузить фото или видео для сторис
+ * @deprecated
+ * @summary Загрузить файл в общую очередь (устаревший JSON transport)
  */
 export const adminUploadStoryMediaBodyBase64Min = 4
 export const adminUploadStoryMediaBodyBase64Max = 41943040
@@ -35,6 +36,7 @@ export const AdminUploadStoryMedia201Response = zod.strictObject({
   id: zod.uuid(),
   mimeType: zod.string(),
   size: zod.number(),
+  status: zod.enum(['QUEUED']).optional(),
   type: zod.enum(['image', 'video']),
 })
 
@@ -331,6 +333,10 @@ export const AdminUploadStoryMedia503Response = zod.strictObject({
  */
 export const GetStoryMediaParams = zod.strictObject({
   id: zod.uuid(),
+})
+
+export const GetStoryMediaQueryParams = zod.strictObject({
+  variant: zod.enum(['preview', 'mobile', 'optimized']).optional(),
 })
 
 export const GetStoryMediaHeader = zod.strictObject({

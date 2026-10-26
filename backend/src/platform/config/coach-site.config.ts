@@ -1,4 +1,5 @@
 export interface CoachSiteRuntimeConfig {
+  readonly mediaDirectory?: string
   readonly adminDirectory: string
   readonly telegram: {
     readonly enabled: boolean
@@ -17,6 +18,15 @@ export interface CoachSiteRuntimeConfig {
 export function buildCoachSiteConfig(
   input: Record<string, unknown>,
 ): CoachSiteRuntimeConfig {
+  const mediaDirectory = input['MEDIA_DIRECTORY']
+  if (
+    mediaDirectory !== undefined &&
+    (typeof mediaDirectory !== 'string' ||
+      !mediaDirectory.startsWith('/') ||
+      mediaDirectory.includes('\0') ||
+      mediaDirectory.split('/').includes('..'))
+  )
+    throw new Error('MEDIA_DIRECTORY must be an absolute directory path')
   const adminDirectory = input['ADMIN_STATIC_DIR'] ?? ''
   if (
     typeof adminDirectory !== 'string' ||
@@ -67,6 +77,7 @@ export function buildCoachSiteConfig(
       'GitHub repository, ref, token and HTTPS site URL are required for automatic publication',
     )
   return Object.freeze({
+    ...(typeof mediaDirectory === 'string' ? { mediaDirectory } : {}),
     adminDirectory,
     telegram: Object.freeze({
       enabled: mode === 'enabled',
@@ -96,4 +107,10 @@ export function normalizeNetAngelsEnvironment(
         ? {}
         : { DATABASE_URL: input['DB_CONNECTION_STRING'] }),
   }
+}
+
+export function mediaDirectoryFromEnvironment(): string | undefined {
+  return buildCoachSiteConfig({
+    MEDIA_DIRECTORY: process.env['MEDIA_DIRECTORY'],
+  }).mediaDirectory
 }

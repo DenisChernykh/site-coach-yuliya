@@ -6,9 +6,9 @@ test('uploaded covers resolve against the API when site and API have different o
   const path = '/v1/story-media/a7b563f2-661d-4c18-a842-82b1c3707530';
   assert.equal(
     articleCoverUrl(path, 'https://api.example.com/'),
-    `https://api.example.com${path}`,
+    `https://api.example.com${path}?variant=optimized`,
   );
-  assert.equal(articleCoverUrl(path, ''), path);
+  assert.equal(articleCoverUrl(path, ''), `${path}?variant=optimized`);
   for (const value of [
     '/articles/cover.webp',
     '/_astro/cover.webp',

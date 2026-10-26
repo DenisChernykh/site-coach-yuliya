@@ -1,3 +1,4 @@
+import { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
 import { Module } from '@nestjs/common'
 
 import { AUTH_AUDIT } from '../../public-contracts/auth-audit.port'
@@ -11,7 +12,7 @@ import { PASSWORD_HASHER } from '../application/password-hasher.port'
 import { Argon2PasswordHasher } from '../infrastructure/argon2-password.hasher'
 import { NodePasswordAuthCryptoAdapter } from '../infrastructure/node-password-auth-crypto.adapter'
 import { PrismaPasswordCredentialAdapter } from '../infrastructure/prisma-password-credential.adapter'
-import { RedisLoginRateLimiter } from '../infrastructure/redis-login-rate-limiter'
+import { PostgresLoginRateLimiter } from '../infrastructure/postgres-login-rate-limiter'
 import {
   AUTH_LOGIN_METADATA_FACTORY,
   AuthenticationController,
@@ -20,36 +21,31 @@ import {
 import { RuntimeConfigModule } from '@/platform/config/runtime-config.module'
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import { DatabaseModule } from '@/platform/database/database.module'
-import type { RedisCommandExecutorPort } from '@/platform/redis/redis-command.executor'
-import { RedisModule } from '@/platform/redis/redis.module'
-import { REDIS_AUTH_COMMAND_EXECUTOR } from '@/platform/redis/redis.tokens'
 import { AuthAuditLogger } from '@/platform/logging/auth-audit.logger'
 
 const dummyPasswordHash =
   '$argon2id$v=19$m=19456,p=1,t=2$AQEBAQEBAQEBAQEBAQEBAQ$89iZHLNRbRP/PDabySsV1BxlW1VfqedCPSqmvYANw2U'
 
 @Module({
-  imports: [SessionsModule, RuntimeConfigModule, DatabaseModule, RedisModule],
+  imports: [SessionsModule, RuntimeConfigModule, DatabaseModule],
   controllers: [AuthenticationController],
   providers: [
     Argon2PasswordHasher,
     NodePasswordAuthCryptoAdapter,
     PrismaPasswordCredentialAdapter,
     {
-      provide: RedisLoginRateLimiter,
+      provide: PostgresLoginRateLimiter,
       inject: [
-        REDIS_AUTH_COMMAND_EXECUTOR,
+        PrismaClientProvider,
         NodePasswordAuthCryptoAdapter,
         RuntimeConfigService,
       ],
       useFactory: (
-        executor: RedisCommandExecutorPort,
+        database: PrismaClientProvider,
         crypto: NodePasswordAuthCryptoAdapter,
         config: RuntimeConfigService,
-      ): RedisLoginRateLimiter =>
-        new RedisLoginRateLimiter(executor, crypto, {
-          keyPrefix: config.redis.keyPrefix,
-          environment: config.environment,
+      ): PostgresLoginRateLimiter =>
+        new PostgresLoginRateLimiter(database, crypto, {
           hmacSecret: config.auth.rateLimitKeySecret,
           ipLimit: config.auth.loginIpLimit,
           accountLimit: config.auth.loginAccountLimit,
@@ -61,7 +57,7 @@ const dummyPasswordHash =
       useExisting: PrismaPasswordCredentialAdapter,
     },
     { provide: PASSWORD_HASHER, useExisting: Argon2PasswordHasher },
-    { provide: LOGIN_RATE_LIMITER, useExisting: RedisLoginRateLimiter },
+    { provide: LOGIN_RATE_LIMITER, useExisting: PostgresLoginRateLimiter },
     { provide: AUTH_AUDIT, useExisting: AuthAuditLogger },
     { provide: AUTH_DUMMY_PASSWORD_HASH, useValue: dummyPasswordHash },
     LoginUseCase,

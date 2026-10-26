@@ -178,3 +178,15 @@ export {
 } from './generated-zod/admin-content/admin-content.zod'
 
 export { AdminUpdateArticleParams as articlePathSchema } from './generated-zod/admin-content/admin-content.zod'
+
+export {
+  adminCreateMediaUpload,
+  adminUploadMediaChunk,
+  adminGetMediaUpload,
+  adminCompleteMediaUpload,
+  adminRetryMediaUpload,
+  adminListMediaUploads,
+  getAdminListMediaUploadsQueryOptions,
+  getAdminListMediaUploadsQueryKey,
+} from './generated/media-uploads/media-uploads'
+export type { MediaUploadDto, MediaUploadDtoPurpose } from './generated/model'

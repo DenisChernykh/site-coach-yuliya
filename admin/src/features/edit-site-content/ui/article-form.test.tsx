@@ -86,7 +86,7 @@ describe('article cover upload', () => {
     })
     server.use(
       http.post(
-        `${window.location.origin}/v1/admin/story-media`,
+        `${window.location.origin}/v1/admin/media-uploads`,
         async ({ request }) => {
           uploads.push({
             csrf: request.headers.get('x-csrf-token'),
@@ -94,7 +94,14 @@ describe('article cover upload', () => {
           })
           await gate
           return HttpResponse.json(
-            { id: mediaId, mimeType: 'image/png', type: 'image', size: 8 },
+            {
+              id: mediaId,
+              mimeType: 'image/png',
+              type: 'image',
+              status: 'READY',
+              output: { mimeType: 'image/webp', size: 8 },
+              size: 8,
+            },
             { status: 201 },
           )
         },
@@ -120,12 +127,13 @@ describe('article cover upload', () => {
       await user.type(title, 'Название во время загрузки')
       finishUpload()
       await waitFor(() => expect(uploads).toHaveLength(1))
-      expect(uploads[0]).toEqual({
+      expect(uploads[0]).toMatchObject({
         csrf: 'test-csrf',
         body: {
           name: 'cover.png',
           mimeType: 'image/png',
-          base64: 'iVBORw0KGgo=',
+          size: 8,
+          sha256: expect.stringMatching(/^[a-f0-9]{64}$/),
           purpose: 'article-cover',
         },
       })
@@ -153,7 +161,7 @@ describe('article cover upload', () => {
     const editor = show()
     let attempts = 0
     server.use(
-      http.post(`${window.location.origin}/v1/admin/story-media`, () => {
+      http.post(`${window.location.origin}/v1/admin/media-uploads`, () => {
         attempts++
         return attempts === 1
           ? HttpResponse.error()
@@ -161,6 +169,8 @@ describe('article cover upload', () => {
               id: mediaId,
               mimeType: 'image/png',
               type: 'image',
+              status: 'READY',
+              output: { mimeType: 'image/webp', size: 8 },
               size: 8,
             })
       }),

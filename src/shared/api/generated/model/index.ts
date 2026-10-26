@@ -26,6 +26,8 @@ export * from './educationDto.ts';
 export * from './faqItemDto.ts';
 export * from './getArticlesParams.ts';
 export * from './getArticlesTopic.ts';
+export * from './getStoryMediaParams.ts';
+export * from './getStoryMediaVariant.ts';
 export * from './heroDto.ts';
 export * from './homePageDto.ts';
 export * from './navigationItemDto.ts';

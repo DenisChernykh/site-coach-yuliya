@@ -5,11 +5,13 @@
  * Заявки, уведомления Telegram, статьи, программы и контактные данные.
  * OpenAPI spec version: 0.1.0
  */
+import type { StoryMediaDtoStatus } from './storyMediaDtoStatus'
 import type { StoryMediaDtoType } from './storyMediaDtoType'
 
 export type StoryMediaDto = {
   id: string
   mimeType: string
   size: number
+  status?: StoryMediaDtoStatus
   type: StoryMediaDtoType
 }

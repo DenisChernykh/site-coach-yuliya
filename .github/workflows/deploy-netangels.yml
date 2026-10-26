@@ -38,10 +38,6 @@ jobs:
           POSTGRES_PASSWORD: local-development-only
         ports: ['55438:5432']
         options: --health-cmd "pg_isready -U coach_yuliya -d coach_yuliya" --health-interval 2s --health-timeout 3s --health-retries 30
-      redis:
-        image: redis:8.8.0-trixie@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b
-        ports: ['6388:6379']
-        options: --health-cmd "redis-cli ping" --health-interval 2s --health-timeout 3s --health-retries 30
     env:
       NETANGELS_SSH_HOST: ${{ vars.NETANGELS_SSH_HOST }}
       NETANGELS_SSH_USER: ${{ vars.NETANGELS_SSH_USER }}

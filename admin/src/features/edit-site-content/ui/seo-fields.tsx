@@ -85,6 +85,7 @@ export function SeoFields({
             }
           />
           <ContentImageField
+            purpose="social"
             label="Изображение для соцсетей"
             fallback={fallback?.ogImage}
             value={value.ogImage}
@@ -162,6 +163,7 @@ export function SeoSettingsFields({
           }
         />
         <ContentImageField
+          purpose="social"
           label="Общее изображение для соцсетей"
           value={value.defaultImage}
           clearable={false}

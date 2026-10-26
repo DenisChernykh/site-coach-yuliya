@@ -1,219 +1,112 @@
-import { plainToInstance } from 'class-transformer'
-import { validate } from 'class-validator'
+import { createHash, randomUUID } from 'node:crypto'
+import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { crc32 } from 'node:zlib'
 import sharp from 'sharp'
-import { StoryMediaService } from '@/modules/coach-site/application/story-media.service'
-import type { StoryMediaPort } from '@/modules/coach-site/application/story-media.port'
+import { DiskMediaFiles } from '@/modules/coach-site/infrastructure/disk-media-files'
+import { SharpMediaProcessor } from '@/modules/coach-site/infrastructure/sharp-media-processor'
+import { inspectPreparedMp4 } from '@/modules/coach-site/infrastructure/prepared-mp4'
 import { InvalidStoryMediaError } from '@/modules/coach-site/application/site-errors'
-import { SharpArticleCoverOptimizer } from '@/modules/coach-site/infrastructure/sharp-article-cover-optimizer'
-import { UploadStoryMediaDto } from '@/modules/coach-site/presentation/stories.dto'
+import type { MediaUpload } from '@/modules/coach-site/application/media-upload.port'
 
-const id = 'b66d592e-b32e-4ea0-9876-74cacd4f5a25'
-
-function setup(): {
-  media: jest.Mocked<StoryMediaPort>
-  service: StoryMediaService
-} {
-  const media: jest.Mocked<StoryMediaPort> = {
-    create: jest.fn(
-      (input: { name: string; mimeType: string; data: Uint8Array }) =>
-        Promise.resolve({
-          id,
-          mimeType: input.mimeType,
-          size: input.data.length,
-        }),
-    ),
-    find: jest.fn(),
-    read: jest.fn(),
+let directory: string
+beforeEach(async () => {
+  directory = await mkdtemp(join(tmpdir(), 'media-profiles-'))
+})
+afterEach(async () => {
+  await rm(directory, { recursive: true, force: true })
+})
+async function processImage(
+  bytes: Buffer,
+  mimeType = 'image/png',
+  purpose: MediaUpload['purpose'] = 'photo',
+): Promise<Buffer> {
+  const files = new DiskMediaFiles(directory)
+  const id = randomUUID()
+  await mkdir(files.directory(id), { recursive: true })
+  await writeFile(files.source(id), bytes)
+  const input: MediaUpload = {
+    id,
+    name: 'image',
+    mimeType,
+    size: bytes.length,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+    purpose,
+    contextKey: 'test',
+    status: 'PROCESSING',
+    attempts: 1,
+    error: null,
+    output: null,
   }
-  return {
-    media,
-    service: new StoryMediaService(media, new SharpArticleCoverOptimizer()),
-  }
+  const output = await new SharpMediaProcessor(files).process(
+    input,
+    randomUUID(),
+  )
+  return readFile(join(directory, 'public', output.url.slice('/media/'.length)))
 }
-
-describe('article cover optimization', () => {
-  it('stores WebP after applying EXIF orientation and shrinking the long edge without cropping', async () => {
-    const { service, media } = setup()
-    const source = await sharp({
-      create: { width: 3840, height: 2160, channels: 3, background: '#527c9e' },
-    })
-      .withMetadata({ orientation: 6 })
-      .jpeg({ quality: 96 })
-      .toBuffer()
-    const result = await service.upload({
-      name: 'portrait.JPG',
-      mimeType: 'image/jpeg',
-      base64: source.toString('base64'),
-      purpose: 'article-cover',
-    })
-    const stored = media.create.mock.calls[0]![0]
-    const metadata = await sharp(stored.data).metadata()
-    expect(stored).toMatchObject({
-      name: 'portrait.webp',
-      mimeType: 'image/webp',
-    })
-    expect(metadata).toMatchObject({
-      format: 'webp',
-      width: 1440,
-      height: 2560,
-    })
-    expect(metadata.orientation).toBeUndefined()
-    expect(metadata.exif).toBeUndefined()
-    expect(result).toEqual({
-      id,
-      type: 'image',
-      mimeType: 'image/webp',
-      size: stored.data.length,
-    })
-    expect(stored.data.length).toBeLessThan(source.length)
-  })
-
-  it('does not enlarge small PNGs and preserves transparent pixels', async () => {
-    const { service, media } = setup()
-    const source = await sharp({
-      create: {
-        width: 64,
-        height: 32,
-        channels: 4,
-        background: { r: 20, g: 80, b: 160, alpha: 0.5 },
-      },
-    })
-      .png()
-      .toBuffer()
-    await service.upload({
-      name: 'alpha.png',
-      mimeType: 'image/png',
-      base64: source.toString('base64'),
-      purpose: 'article-cover',
-    })
-    const stored = media.create.mock.calls[0]![0]
-    expect(await sharp(stored.data).metadata()).toMatchObject({
-      format: 'webp',
+it('does not enlarge small photos and retains transparent pixels', async () => {
+  const input = await sharp({
+    create: {
       width: 64,
       height: 32,
-      hasAlpha: true,
-    })
-    const { data, info } = await sharp(stored.data)
+      channels: 4,
+      background: { r: 20, g: 80, b: 160, alpha: 0.5 },
+    },
+  })
+    .png()
+    .toBuffer()
+  const output = await processImage(input)
+  const { data, info } = await sharp(output)
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  expect(info).toMatchObject({ width: 64, height: 32, channels: 4 })
+  expect(data[3]).toBe(128)
+})
+it('uses lossless WebP for readable documents', async () => {
+  const input = await sharp({
+    create: { width: 64, height: 32, channels: 3, background: '#1b3759' },
+  })
+    .png()
+    .toBuffer()
+  expect(
+    await sharp(await processImage(input, 'image/png', 'document'))
       .raw()
-      .toBuffer({ resolveWithObject: true })
-    expect(info.channels).toBe(4)
-    expect(data[3]).toBe(128)
+      .toBuffer(),
+  ).toEqual(await sharp(input).raw().toBuffer())
+})
+it('rejects damaged bytes, pixel bombs, format mismatches and animated WebP', async () => {
+  const png = await sharp({
+    create: { width: 1, height: 1, channels: 3, background: '#000' },
   })
-
-  it('accepts WebP input and preserves its aspect ratio', async () => {
-    const { service, media } = setup()
-    const source = await sharp({
-      create: { width: 160, height: 90, channels: 3, background: '#6d6552' },
-    })
-      .webp()
-      .toBuffer()
-    await service.upload({
-      name: 'cover.webp',
-      mimeType: 'image/webp',
-      base64: source.toString('base64'),
-      purpose: 'article-cover',
-    })
-    expect(
-      await sharp(media.create.mock.calls[0]![0].data).metadata(),
-    ).toMatchObject({ format: 'webp', width: 160, height: 90 })
+    .png()
+    .toBuffer()
+  const bomb = Buffer.from(png)
+  bomb.writeUInt32BE(8001, 16)
+  bomb.writeUInt32BE(8000, 20)
+  bomb.writeUInt32BE(crc32(bomb.subarray(12, 29)), 29)
+  const animated = await sharp(Buffer.from([255, 0, 0, 0, 0, 255]), {
+    raw: { width: 1, height: 2, channels: 3, pageHeight: 1 },
   })
-
-  it('rejects damaged image data and videos before creating a cover', async () => {
-    const { service, media } = setup()
-    for (const input of [
-      {
-        name: 'broken.png',
-        mimeType: 'image/png',
-        data: Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
-      },
-      {
-        name: 'video.mp4',
-        mimeType: 'video/mp4',
-        data: Buffer.from([0, 0, 0, 24, 102, 116, 121, 112]),
-      },
-    ]) {
-      await expect(
-        service.upload({
-          name: input.name,
-          mimeType: input.mimeType,
-          base64: input.data.toString('base64'),
-          purpose: 'article-cover',
-        }),
-      ).rejects.toBeInstanceOf(InvalidStoryMediaError)
-    }
-    expect(media.create.mock.calls).toHaveLength(0)
-  })
-
-  it('leaves the existing story-media upload contract unchanged', async () => {
-    const { service, media } = setup()
-    const source = await sharp({
-      create: { width: 100, height: 50, channels: 3, background: '#9c7854' },
-    })
-      .png()
-      .toBuffer()
-    await service.upload({
-      name: 'story.png',
-      mimeType: 'image/png',
-      base64: source.toString('base64'),
-    })
-    expect(media.create.mock.calls).toEqual([
-      [
-        {
-          name: 'story.png',
-          mimeType: 'image/png',
-          data: source,
-        },
-      ],
-    ])
-  })
-
-  it('rejects excessive decoded dimensions and animated WebP before persistence', async () => {
-    const { service, media } = setup()
-    const png = await sharp({
-      create: { width: 1, height: 1, channels: 3, background: '#000' },
-    })
-      .png()
-      .toBuffer()
-    png.writeUInt32BE(8001, 16)
-    png.writeUInt32BE(8000, 20)
-    png.writeUInt32BE(crc32(png.subarray(12, 29)), 29)
-    const animated = await sharp(Buffer.from([255, 0, 0, 0, 0, 255]), {
-      raw: { width: 1, height: 2, channels: 3, pageHeight: 1 },
-    })
-      .webp({ loop: 0, delay: [100, 100] })
-      .toBuffer()
-    expect((await sharp(animated).metadata()).pages).toBe(2)
-    for (const [mimeType, source] of [
-      ['image/png', png],
-      ['image/webp', animated],
-    ] as const) {
-      await expect(
-        service.upload({
-          name: 'cover',
-          mimeType,
-          base64: source.toString('base64'),
-          purpose: 'article-cover',
-        }),
-      ).rejects.toBeInstanceOf(InvalidStoryMediaError)
-    }
-    expect(media.create.mock.calls).toHaveLength(0)
-  })
-
-  it('accepts only the declared cover purpose in the request DTO', async () => {
-    const input = {
-      name: 'cover.png',
-      mimeType: 'image/png',
-      base64: 'AAAA',
-      purpose: 'article-cover',
-    }
-    expect(
-      await validate(plainToInstance(UploadStoryMediaDto, input)),
-    ).toHaveLength(0)
-    expect(
-      await validate(
-        plainToInstance(UploadStoryMediaDto, { ...input, purpose: 'unknown' }),
-      ),
-    ).not.toHaveLength(0)
-  })
+    .webp({ loop: 0, delay: [100, 100] })
+    .toBuffer()
+  for (const [bytes, mime] of [
+    [Buffer.from('broken'), 'image/png'],
+    [bomb, 'image/png'],
+    [animated, 'image/webp'],
+    [png, 'image/jpeg'],
+  ] as const)
+    await expect(processImage(bytes, mime)).rejects.toBeInstanceOf(
+      InvalidStoryMediaError,
+    )
+})
+it('accepts a prepared MP4 and rejects missing samples or fabricated headers', async () => {
+  const bytes = await readFile('test/fixtures/media/prepared.mp4')
+  expect(inspectPreparedMp4(bytes)).toEqual({ width: 96, height: 160 })
+  expect(() =>
+    inspectPreparedMp4(bytes.subarray(0, bytes.length - 200)),
+  ).toThrow(InvalidStoryMediaError)
+  expect(() => inspectPreparedMp4(Buffer.from('0000ftypfake'))).toThrow(
+    InvalidStoryMediaError,
+  )
 })

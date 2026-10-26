@@ -18,12 +18,15 @@ let astro;
 let stopping = false;
 let ownsSession = false;
 let refreshTimer;
+let mediaTimer;
+let mediaRunning = false;
 
 async function stop(code = 0) {
   if (stopping) return;
   stopping = true;
   state.ready = false;
   clearTimeout(refreshTimer);
+  clearInterval(mediaTimer);
   for (const child of children) {
     try {
       process.kill(-child.pid, 'SIGTERM');
@@ -278,6 +281,7 @@ try {
   );
   await run('pnpm', ['--dir', 'admin', 'build']);
   await run('pnpm', ['--dir', 'backend', 'build']);
+  await run('pnpm', ['start:migrate'], backend);
   gateway = createDemoGateway({
     siteTarget: 'http://127.0.0.1:4323',
     apiTarget: 'http://127.0.0.1:3001',
@@ -313,6 +317,18 @@ try {
     },
   });
   await waitFor('http://127.0.0.1:3001/health/ready');
+  // Local equivalent of hosting cron; each invocation exits and the DB prevents overlaps.
+  mediaTimer = setInterval(async () => {
+    if (mediaRunning || stopping) return;
+    mediaRunning = true;
+    try {
+      await run('node', ['dist/bootstrap/media/main.js'], backend);
+    } catch {
+      console.error('Обработка медиа будет повторена при следующем запуске.');
+    } finally {
+      mediaRunning = false;
+    }
+  }, 10_000);
   process.env.PUBLIC_DATA_SOURCE = 'api';
   process.env.PUBLIC_API_BASE_URL = origin;
   process.env.API_INTERNAL_BASE_URL = 'http://127.0.0.1:3001';

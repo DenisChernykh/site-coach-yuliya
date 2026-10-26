@@ -1,3 +1,4 @@
+import { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
 import { Module } from '@nestjs/common'
 
 import { AUTH_AUDIT } from '../../public-contracts/auth-audit.port'
@@ -18,19 +19,16 @@ import { SessionIssuer } from '../application/session-issuer'
 import { SESSION_STORE } from '../application/session-store.port'
 import { NodeSessionCryptoAdapter } from '../infrastructure/node-session-crypto.adapter'
 import { PrismaSessionGenerationAdapter } from '../infrastructure/prisma-session-generation.adapter'
-import { RedisSessionStore } from '../infrastructure/redis-session.store'
+import { PostgresSessionStore } from '../infrastructure/postgres-session.store'
 import { AuthCookieAdapter } from '../presentation/auth-cookie.adapter'
 import { SessionsController } from '../presentation/sessions.controller'
 import { RuntimeConfigModule } from '@/platform/config/runtime-config.module'
 import { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import { DatabaseModule } from '@/platform/database/database.module'
-import type { RedisCommandExecutorPort } from '@/platform/redis/redis-command.executor'
-import { RedisModule } from '@/platform/redis/redis.module'
-import { REDIS_AUTH_COMMAND_EXECUTOR } from '@/platform/redis/redis.tokens'
 import { AuthAuditLogger } from '@/platform/logging/auth-audit.logger'
 
 @Module({
-  imports: [IdentityModule, RuntimeConfigModule, DatabaseModule, RedisModule],
+  imports: [IdentityModule, RuntimeConfigModule, DatabaseModule],
   controllers: [SessionsController],
   providers: [
     NodeSessionCryptoAdapter,
@@ -40,20 +38,18 @@ import { AuthAuditLogger } from '@/platform/logging/auth-audit.logger'
       useExisting: PrismaSessionGenerationAdapter,
     },
     {
-      provide: RedisSessionStore,
+      provide: PostgresSessionStore,
       inject: [
-        REDIS_AUTH_COMMAND_EXECUTOR,
+        PrismaClientProvider,
         NodeSessionCryptoAdapter,
         RuntimeConfigService,
       ],
       useFactory: (
-        executor: RedisCommandExecutorPort,
+        database: PrismaClientProvider,
         crypto: NodeSessionCryptoAdapter,
         config: RuntimeConfigService,
-      ): RedisSessionStore =>
-        new RedisSessionStore(executor, crypto, {
-          keyPrefix: config.redis.keyPrefix,
-          environment: config.environment,
+      ): PostgresSessionStore =>
+        new PostgresSessionStore(database, crypto, {
           sessionKeySecret: config.auth.sessionKeySecret,
           csrfSecret: config.auth.csrfSecret,
           idleTimeoutMs: config.auth.sessionIdleTimeoutMs,
@@ -61,7 +57,7 @@ import { AuthAuditLogger } from '@/platform/logging/auth-audit.logger'
           touchIntervalMs: config.auth.sessionTouchIntervalMs,
         }),
     },
-    { provide: SESSION_STORE, useExisting: RedisSessionStore },
+    { provide: SESSION_STORE, useExisting: PostgresSessionStore },
     { provide: AUTH_AUDIT, useExisting: AuthAuditLogger },
     {
       provide: AUTH_SESSION_CLEANUP_OBSERVER,

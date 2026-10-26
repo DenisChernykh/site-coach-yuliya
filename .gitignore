@@ -25,3 +25,6 @@ dist-pages/
 .env.production
 .dev.vars
 !*.example
+
+# Persistent uploaded media (never release artifacts)
+backend/var/

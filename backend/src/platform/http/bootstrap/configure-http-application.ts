@@ -52,6 +52,9 @@ export function configureHttpApplication(
     helmet({
       contentSecurityPolicy: {
         directives: {
+          'img-src': ["'self'", 'data:', 'blob:'],
+          'upgrade-insecure-requests':
+            config.environment === 'production' ? [] : null,
           'frame-src': ["'self'", ...config.http.corsOrigins],
           'connect-src': [
             "'self'",
@@ -82,7 +85,7 @@ export function configureHttpApplication(
       override.path,
       createProtectedJsonAdmission(override, admitted),
     )
-    app.useBodyParser('json', {
+    app.useBodyParser(override.bodyType ?? 'json', {
       limit: override.limitBytes,
       inflate: false,
       type: (request) => admitted.has(request),

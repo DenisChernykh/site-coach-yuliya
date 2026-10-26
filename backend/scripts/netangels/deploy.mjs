@@ -269,6 +269,7 @@ export async function deploy(config) {
           'content',
           'release.json',
           'scripts/netangels/start.cjs',
+          'scripts/netangels/media-cron.cjs',
           'scripts/netangels/notify-errors.mjs',
         ],
         { cwd: backendRoot },
@@ -312,6 +313,9 @@ export async function deploy(config) {
     if (config.target === 'backend') {
       await ssh(
         `cd ${shellQuote(dirname(config.directory))}\ncd ${shellQuote(releasePath)}\ntest -f ${shellQuote(`${config.directory}/shared/.env`)}\nln -s ${shellQuote(`${config.directory}/shared/.env`)} .env\nnode -e "if (!process.version.startsWith('v24.')) process.exit(1)"\ntest "$(pnpm --version)" = '11.15.1'\npnpm install --prod --frozen-lockfile\nnode node_modules/prisma/build/index.js migrate deploy --config prisma.config.ts\nnode dist/bootstrap/content/main.js`,
+      )
+      await ssh(
+        `mkdir -p ${shellQuote(`${config.directory}/shared/media/public`)}\ncp ${shellQuote(`${releasePath}/scripts/netangels/media-cron.cjs`)} ${shellQuote(`${config.directory}/media-cron.cjs.next`)}\nmv ${shellQuote(`${config.directory}/media-cron.cjs.next`)} ${shellQuote(`${config.directory}/media-cron.cjs`)}`,
       )
       if (config.initializeAdmin) {
         await ssh(

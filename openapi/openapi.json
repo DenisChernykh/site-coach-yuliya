@@ -28,6 +28,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "variant",
+            "required": false,
+            "schema": {
+              "enum": [
+                "preview",
+                "mobile",
+                "optimized"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {

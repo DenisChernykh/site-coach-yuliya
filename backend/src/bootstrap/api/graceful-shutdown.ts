@@ -48,7 +48,7 @@ export class GracefulShutdownCoordinator {
     const cleanupSignal = deadlineSignal(
       Math.max(1, overallBudget - httpBudget),
     )
-    await resources?.redis.close(cleanupSignal).catch(() => {
+    await resources?.redis?.close(cleanupSignal).catch(() => {
       failed = true
     })
     await resources?.database.close(cleanupSignal).catch(() => {

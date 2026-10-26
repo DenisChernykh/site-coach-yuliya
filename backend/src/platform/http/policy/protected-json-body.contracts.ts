@@ -13,6 +13,7 @@ export interface PreBodyAccessPolicy {
 export const PRE_BODY_ACCESS_POLICY = Symbol('platform:http:pre-body-access')
 
 export interface ProtectedJsonRoute {
+  readonly bodyType?: 'raw' | 'json'
   readonly path: string
   readonly limitBytes: number
   readonly target: ProtectedRequestTarget

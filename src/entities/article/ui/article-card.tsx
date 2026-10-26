@@ -31,7 +31,10 @@ export function ArticleCard({
           aria-hidden="true"
         >
           <img
-            src={articleCoverUrl(article.coverImage)}
+            src={articleCoverUrl(article.coverImage).replace(
+              /(\/v1\/story-media\/[a-f0-9-]+)(?:\?variant=optimized)?$/i,
+              '$1?variant=mobile',
+            )}
             alt={article.coverAlt}
             width={640}
             height={280}
