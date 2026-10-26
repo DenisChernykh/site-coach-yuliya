@@ -1,1 +1,1 @@
-export { startPreview } from './model/preview';
+export { CmsPreviewRuntime } from './ui/preview-runtime';

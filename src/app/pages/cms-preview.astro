@@ -6,6 +6,7 @@ import { CoachingPage } from '@/pages/coaching';
 import { ContactsPage } from '@/pages/contacts';
 import { JournalPage } from '@/pages/journal';
 import { ArticlePage } from '@/pages/article';
+import { CmsPreviewRuntime } from '@/pages/cms-preview';
 import {
   seoSettings,
   siteSettings,
@@ -82,18 +83,5 @@ const contacts = {
   <div data-preview-page="article" hidden>
     <ArticlePage preview article={publicArticles[0]!} />
   </div>
+  <CmsPreviewRuntime client:load />
 </BaseLayout>
-<script>
-  import { startPreview } from '@/pages/cms-preview';
-  startPreview();
-  window.addEventListener('message', (event) => {
-    if (event.source === window.parent && event.data?.type === 'cms:document') {
-      const placeholder = document.getElementById('preview-placeholder');
-      if (
-        placeholder &&
-        document.querySelector('[data-preview-page]:not([hidden])')
-      )
-        placeholder.hidden = true;
-    }
-  });
-</script>

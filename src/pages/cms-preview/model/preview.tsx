@@ -154,22 +154,14 @@ export function startPreview() {
       coverMap[a.coverImage] ??
       (/^(https?:\/\/|\/)/.test(a.coverImage) ? a.coverImage : ''),
   });
-  window.document.addEventListener(
-    'submit',
-    (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    },
-    true,
-  );
-  window.document.addEventListener(
-    'click',
-    (event) => {
-      if ((event.target as Element).closest('a')) event.preventDefault();
-    },
-    true,
-  );
-  window.addEventListener('message', (event: MessageEvent) => {
+  const preventSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  };
+  const preventNavigation = (event: MouseEvent) => {
+    if ((event.target as Element).closest('a')) event.preventDefault();
+  };
+  const receive = (event: MessageEvent) => {
     if (
       event.source !== window.parent ||
       event.origin !== parentOrigin ||
@@ -405,10 +397,23 @@ export function startPreview() {
           />,
         ),
       );
+    const placeholder = window.document.getElementById('preview-placeholder');
+    if (placeholder)
+      placeholder.hidden = Boolean(
+        window.document.querySelector('[data-preview-page]:not([hidden])'),
+      );
     window.parent.postMessage(
       { type: 'cms:rendered', sequence: event.data.sequence },
       parentOrigin,
     );
-  });
+  };
+  window.document.addEventListener('submit', preventSubmit, true);
+  window.document.addEventListener('click', preventNavigation, true);
+  window.addEventListener('message', receive);
   window.parent.postMessage({ type: 'cms:ready' }, parentOrigin);
+  return () => {
+    window.document.removeEventListener('submit', preventSubmit, true);
+    window.document.removeEventListener('click', preventNavigation, true);
+    window.removeEventListener('message', receive);
+  };
 }
