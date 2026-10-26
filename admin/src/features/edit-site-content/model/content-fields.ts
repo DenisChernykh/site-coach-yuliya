@@ -41,8 +41,6 @@ export const fieldLabels: Record<string, string> = {
   address: 'Адрес',
   title: 'Заголовок',
   slug: 'Адрес статьи',
-  topic: 'Тема',
-  topicLabel: 'Название темы',
   previewTitle: 'Заголовок карточки на главной',
   previewDescription: 'Описание карточки на главной',
   listingDescription: 'Описание в журнале',

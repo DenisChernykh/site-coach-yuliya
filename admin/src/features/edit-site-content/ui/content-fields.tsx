@@ -6,7 +6,6 @@ import {
   Button,
   Field,
   FieldLabel,
-  SelectField,
   TextField,
   TextareaField,
 } from '@/shared/ui'
@@ -29,7 +28,6 @@ const orderedFields = [
   'profession',
   'title',
   'eyebrow',
-  'topic',
   'description',
   'headingLines',
   'meetingNote',
@@ -233,18 +231,6 @@ export function ContentFields({
         label={labelFor(field)}
         onChange={onChange}
         onUploadingChange={onUploadingChange}
-      />
-    )
-  if (field === 'topic')
-    return (
-      <SelectField
-        label="Тема"
-        options={{
-          'finding-work': 'Поиск своего дела',
-          'showing-up': 'Проявленность',
-        }}
-        value={String(value)}
-        onChange={(event) => onChange(event.target.value)}
       />
     )
   const help =

@@ -39,7 +39,6 @@ export function ArticleCard({
           />
         </a>
         <div className={styles.copy}>
-          <p className="eyebrow">{article.topicLabel}</p>
           <h2>
             <a
               href={routes.article(article.slug)}

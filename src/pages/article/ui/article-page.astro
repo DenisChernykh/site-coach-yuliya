@@ -23,14 +23,8 @@ const toc =
     <nav class="breadcrumb" aria-label="Хлебные крошки">
       <a href={routes.home}>Главная</a><span aria-hidden="true">/</span><a
         href={routes.journal}>Журнал</a
-      ><span aria-hidden="true">/</span><span
-        aria-current="page"
-        data-cms-field="article.topicLabel">{article.topicLabel}</span
       >
     </nav>
-    <p class="eyebrow" data-cms-field="article.topicLabel">
-      {article.topicLabel}
-    </p>
     <h1 data-cms-field="article.title">{article.title}</h1>
     <p class="article-description" data-cms-field="article.description">
       {article.description}

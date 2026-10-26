@@ -24,12 +24,10 @@ import { SeoFields } from './seo-fields'
 import { emptyPageSeo } from '../model/seo'
 import { useContentNavigationGuard } from '../model/use-content-navigation-guard'
 
-const primaryMetadataKeys = ['title', 'topic', 'description']
+const primaryMetadataKeys = ['title', 'description']
 const metadataKeys = [
   'title',
   'description',
-  'topic',
-  'topicLabel',
   'previewTitle',
   'previewDescription',
   'listingDescription',
