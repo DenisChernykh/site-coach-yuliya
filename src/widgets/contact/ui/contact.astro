@@ -1,13 +1,14 @@
 ---
 import type { SocialLinkDto } from '@/entities/social-link';
-import { TelegramLink } from './telegram-link';
+import { ContactSocials } from '@/features/contact-socials';
+import { ArrowUpRight } from 'lucide-react';
+import { buttonVariants } from '@/shared/ui';
 interface Props {
   preview?: boolean;
   socials: SocialLinkDto[];
   telegramUrl?: string | null;
 }
-const { telegramUrl } = Astro.props;
-const telegram = telegramUrl;
+const { socials, telegramUrl } = Astro.props;
 ---
 
 <section id="contact" class="contact" aria-labelledby="contact-title">
@@ -17,21 +18,25 @@ const telegram = telegramUrl;
         Запишись на бесплатную встречу
       </h2>
       <p class="contact-note">
-        30–60 минут · по видеосвязи<br />{' '}Обсудим твою ситуацию, уточним
-        запрос и наметим темы для дальнейшей работы.
+        30–60 минут по видеосвязи. Обсудим твою ситуацию, уточним запрос и
+        наметим темы для дальнейшей работы.
       </p>
-      <div data-cms-react="telegram" style="display:contents">
-        <TelegramLink url={telegram} />
-      </div>
-      {
-        !telegram && (
-          <p class="fine-print" data-cms-no-telegram>
-            Telegram подключим после получения адреса.
-          </p>
-        )
-      }
+      <button
+        type="button"
+        data-consultation
+        aria-haspopup="dialog"
+        class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
+      >
+        Записаться на встречу <ArrowUpRight size={18} aria-hidden="true" />
+      </button>
     </div>
-    <div class="contact-form"><slot /></div>
+    <div class="contact-direct">
+      <h3>Связаться напрямую</h3>
+      <p>Выбери удобную социальную сеть.</p>
+      <div data-cms-react="contact-socials">
+        <ContactSocials items={socials} telegramUrl={telegramUrl} />
+      </div>
+    </div>
   </div>
 </section>
 <style>
@@ -41,9 +46,9 @@ const telegram = telegramUrl;
   }
   .contact-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 500px;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: 96px;
-    align-items: start;
+    align-items: center;
   }
   .contact-copy {
     display: flex;
@@ -52,14 +57,29 @@ const telegram = telegramUrl;
   }
   h2 {
     font-size: 58px;
+    max-width: 620px;
   }
   .contact-note {
+    max-width: 590px;
     font-size: 17px;
     line-height: 1.7;
   }
+  .contact-direct {
+    border-left: 1px solid #a4bac9;
+    padding-left: 40px;
+  }
+  h3 {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .contact-direct p {
+    margin: 12px 0 24px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
   @media (max-width: 1100px) {
     .contact-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 40px;
     }
     h2 {
@@ -72,13 +92,15 @@ const telegram = telegramUrl;
     }
     .contact-grid {
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: 36px;
     }
     h2 {
       font-size: 42px;
     }
-    .contact-note {
-      font-size: 17px;
+    .contact-direct {
+      padding: 28px 0 0;
+      border-left: 0;
+      border-top: 1px solid #a4bac9;
     }
   }
 </style>

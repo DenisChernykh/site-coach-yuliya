@@ -1,5 +1,4 @@
 import { Play, ArrowUpRight } from 'lucide-react';
-import { routes } from '@/shared/routes';
 import {
   Button,
   Dialog,
@@ -40,11 +39,10 @@ export function VideoIntroduction() {
           знакомства.
         </p>
         <DialogClose
-          nativeButton={false}
           render={
             <Button
-              nativeButton={false}
-              render={<a href={routes.contact} />}
+              data-consultation
+              aria-haspopup="dialog"
               className="h-12 gap-5 px-6"
             />
           }

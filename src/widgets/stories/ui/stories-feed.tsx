@@ -10,7 +10,7 @@ const selectStories = (home: HomePageDto) => home.stories ?? [];
 
 export function StoriesFeed({
   demoStories = [],
-  title = 'Сторис о моей работе',
+  title = 'Обо мне и моей работе',
   eyebrow = '',
 }: {
   demoStories?: StoryGroupDto[];

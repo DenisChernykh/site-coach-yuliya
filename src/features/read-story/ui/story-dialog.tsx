@@ -1,7 +1,7 @@
+import type { ReactNode } from 'react';
 import type { CaseStudyDto } from '@/entities/site';
 import { contentImageUrl } from '@/shared/lib/content-image';
 import {
-  Button,
   Dialog,
   DialogTrigger,
   DialogContent,
@@ -13,33 +13,48 @@ import {
 export function StoryDialog({
   story,
   mediaBaseUrl,
+  children,
+  triggerClassName,
 }: {
   story: CaseStudyDto;
   mediaBaseUrl?: string;
+  children?: ReactNode;
+  triggerClassName?: string;
 }) {
   const reviewImage = contentImageUrl(story.reviewImage ?? '', mediaBaseUrl);
   return (
     <Dialog>
       <DialogTrigger
-        render={
-          <Button
-            variant="link"
-            className="h-auto justify-start p-0 text-[13px] font-normal leading-[1.5]"
-          />
-        }
+        className={triggerClassName}
+        aria-label={`Открыть кейс: ${story.title}`}
       >
-        {story.review ? 'Читать историю и отзыв' : 'Читать историю'} ↗
+        {children ?? 'Открыть кейс ↗'}
       </DialogTrigger>
-      <DialogContent className="max-h-[85svh] overflow-auto p-7 sm:max-w-xl">
-        <DialogHeader>
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-auto rounded-md p-6 sm:max-w-xl sm:p-8">
+        <DialogHeader className="pr-6">
           <DialogTitle className="font-heading text-4xl leading-tight">
             {story.title}
           </DialogTitle>
           <DialogDescription>
-            {story.format || 'Индивидуальная работа'}
+            {story.format
+              ? `Индивидуальный коучинг · ${story.format}`
+              : 'Индивидуальный коучинг'}
           </DialogDescription>
         </DialogHeader>
-        <p className="leading-relaxed">{story.details}</p>
+        <dl className="space-y-5">
+          {[
+            ['Запрос', story.request],
+            ['Что разбирали', story.exploration],
+            ['Результат', story.result],
+          ].map(([label, text]) => (
+            <div key={label}>
+              <dt className="mb-1.5 text-sm font-semibold">{label}</dt>
+              <dd className="m-0 whitespace-pre-line text-sm leading-relaxed">
+                {text}
+              </dd>
+            </div>
+          ))}
+        </dl>
         {story.review && (
           <figure className="space-y-3 border-l-2 border-primary pl-5">
             <blockquote className="leading-relaxed">

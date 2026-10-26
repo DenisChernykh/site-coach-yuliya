@@ -49,8 +49,10 @@ const { layouts, preview = false, data } = Astro.props;
           >
             {data.about.paragraphs[1] ?? data.about.paragraphs[0]}
           </p>
-          <a
-            href={routes.contact}
+          <button
+            type="button"
+            data-consultation
+            aria-haspopup="dialog"
             class:list={[
               buttonVariants(),
               'h-14 w-fit gap-[18px] px-6 text-sm',
@@ -58,16 +60,13 @@ const { layouts, preview = false, data } = Astro.props;
             >Записаться на встречу <ArrowUpRight
               size={18}
               aria-hidden="true"
-            /></a
+            /></button
           >
           <p class="fine-print">Бесплатная видеовстреча · 30–60 минут.</p>
-          <p class="fine-print">
-            Демонстрационный AI-портрет · заменить фото Юли
-          </p>
         </div>
         <Image
           src={portrait}
-          alt="Демонстрационный портрет Юли для макета страницы обо мне"
+          alt="Портрет коуча"
           width={840}
           height={1060}
           format="webp"
@@ -141,13 +140,7 @@ const { layouts, preview = false, data } = Astro.props;
     >
       <div class="page-container approach-grid">
         <div class="approach-copy">
-          <p
-            class="eyebrow"
-            data-cms-field="home.approach.eyebrow"
-            data-cms-copy="eyebrow"
-          >
-            {data.approach.eyebrow}
-          </p><h2
+          <h2
             id="about-approach-title"
             data-cms-field="home.approach.title"
             data-cms-copy="title"
@@ -178,12 +171,11 @@ const { layouts, preview = false, data } = Astro.props;
             ))
           }
         </ol>
+        <WorkBoundaries embedded />
       </div>
     </section>
   </Fragment>
-  <Fragment slot="boundaries">
-    <WorkBoundaries />
-  </Fragment>
+
   <Fragment slot="cta">
     <section class="about-cta">
       <div class="page-container cta-inner">
@@ -191,10 +183,15 @@ const { layouts, preview = false, data } = Astro.props;
           <h2 data-cms-copy="title">Запишись на бесплатную встречу</h2><p>
             30–60 минут по видеосвязи: обсудим ситуацию и уточним запрос.
           </p>
-        </div><a
-          href={routes.contact}
+        </div><button
+          type="button"
+          data-consultation
+          aria-haspopup="dialog"
           class:list={[buttonVariants(), 'h-14 w-fit gap-[18px] px-6 text-sm']}
-          >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+          >Обсудить мой запрос <ArrowUpRight
+            size={18}
+            aria-hidden="true"
+          /></button
         >
       </div>
     </section>

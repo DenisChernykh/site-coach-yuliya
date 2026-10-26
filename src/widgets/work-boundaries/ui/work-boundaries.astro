@@ -1,12 +1,20 @@
 ---
-import { routes } from '@/shared/routes';
+interface Props {
+  embedded?: boolean;
+}
+const { embedded = false } = Astro.props;
+const Tag = embedded ? 'div' : 'section';
+const Heading = embedded ? 'h3' : 'h2';
 ---
 
-<section class="boundaries" aria-labelledby="boundaries-title">
-  <div class="page-container boundaries-grid">
-    <h2 id="boundaries-title" data-cms-copy="title">
-      Конфиденциальность<br />и границы коучинга
-    </h2>
+<Tag
+  class:list={['boundaries', { embedded }]}
+  aria-labelledby="boundaries-title"
+>
+  <div class:list={['boundaries-grid', !embedded && 'page-container']}>
+    <Heading id="boundaries-title"
+      >Конфиденциальность и границы коучинга</Heading
+    >
     <div>
       <p class="boundaries-intro">
         Конфиденциально. Без оценок и готовых советов.
@@ -16,12 +24,9 @@ import { routes } from '@/shared/routes';
         действий. Коучинг не заменяет психотерапию; если запрос выходит за мои
         компетенции, я предложу обратиться к профильному специалисту.
       </p>
-      <a href={routes.about} class="text-link"
-        >Обо мне и моём подходе <span aria-hidden="true">↗</span></a
-      >
     </div>
   </div>
-</section>
+</Tag>
 <style>
   .boundaries {
     background: var(--secondary);
@@ -29,25 +34,35 @@ import { routes } from '@/shared/routes';
   }
   .boundaries-grid {
     display: grid;
-    grid-template-columns: 400px 1fr;
+    grid-template-columns: 400px minmax(0, 1fr);
     gap: 80px;
   }
   h2 {
     font-size: 46px;
   }
-  .boundaries-intro {
-    font-size: 19px;
-    line-height: 1.5;
-    margin-bottom: 14px;
+  h3 {
+    font-family: var(--font-sans);
+    font-size: 20px;
     font-weight: 500;
+    line-height: 1.5;
   }
   p {
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.65;
   }
-  a {
-    margin-top: 14px;
-    font-weight: 600;
+  .boundaries-intro {
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
+  .embedded {
+    grid-column: 1 / -1;
+    border-top: 1px solid currentColor;
+    background: transparent;
+    padding: 36px 0 0;
+  }
+  .embedded .boundaries-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 60px;
   }
   @media (max-width: 1100px) {
     .boundaries-grid {
@@ -59,15 +74,16 @@ import { routes } from '@/shared/routes';
     .boundaries {
       padding-block: 44px;
     }
-    .boundaries-grid {
+    .boundaries-grid,
+    .embedded .boundaries-grid {
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: 20px;
+    }
+    .embedded {
+      padding: 28px 0 0;
     }
     h2 {
       font-size: 38px;
-    }
-    .boundaries-intro {
-      font-size: 19px;
     }
   }
 </style>

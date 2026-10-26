@@ -45,13 +45,6 @@ const {
     <section class="hero" aria-labelledby="hero-title">
       <div class="page-container hero-grid">
         <div class="hero-content">
-          <p
-            class="eyebrow"
-            data-cms-field="home.hero.eyebrow"
-            data-cms-copy="eyebrow"
-          >
-            {data.hero.eyebrow}
-          </p>
           <h1
             id="hero-title"
             data-cms-list="home.hero.headingLines"
@@ -80,14 +73,15 @@ const {
             {data.hero.description}
           </p>
           <div class="hero-actions">
-            <a href="#contact" class:list={[buttonVariants(), 'hero-cta']}
+            <button
+              type="button"
+              data-consultation
+              aria-haspopup="dialog"
+              class:list={[buttonVariants(), 'hero-cta']}
               >Записаться на встречу <ArrowUpRight
                 size={18}
                 aria-hidden="true"
-              /></a
-            >
-            <a href={routes.coaching} class="text-link"
-              >Индивидуальный коучинг <span aria-hidden="true">↗</span></a
+              /></button
             >
           </div>
           <p class="meeting-note" data-cms-field="home.hero.meetingNote">
@@ -98,7 +92,7 @@ const {
           <div class="hero-media">
             <Image
               src={portrait}
-              alt="Демонстрационный портрет для макета сайта Юли Валишиной"
+              alt="Портрет коуча"
               width={1040}
               height={1212}
               format="webp"
@@ -107,9 +101,6 @@ const {
               fetchpriority="high"
             />
           </div>
-          <figcaption>
-            Демонстрационный AI-портрет · заменить фото Юли
-          </figcaption>
         </figure>
       </div>
     </section>
@@ -135,7 +126,7 @@ const {
                 class="mb-6 text-[32px] md:text-[40px]"
                 data-cms-copy="title"
               >
-                Сторис о моей работе
+                Обо мне и моей работе
               </h2>
               {preview ? (
                 <div data-cms-react="stories" />
@@ -153,7 +144,7 @@ const {
       <div class="page-container">
         <div class="concerns-heading">
           <h2 id="concerns-title" data-cms-copy="title">
-            Как коуч я работаю с запросами
+            С какими запросами я работаю
           </h2>
         </div>
         <div class="concerns-grid" data-cms-list="home.concerns">
@@ -163,9 +154,14 @@ const {
                 <>
                   <h3 data-cms-field=".title">{concern.title}</h3>
                   <p data-cms-field=".description">{concern.description}</p>
-                  <a href="#contact" class="text-link">
+                  <button
+                    type="button"
+                    data-consultation
+                    aria-haspopup="dialog"
+                    class="text-link"
+                  >
                     Хочу обсудить <span aria-hidden="true">↗</span>
-                  </a>
+                  </button>
                 </>
               </article>
             ))
@@ -179,7 +175,7 @@ const {
       <div class="page-container about-grid">
         <Image
           src={portrait}
-          alt="Демонстрационный портрет коуча"
+          alt="Портрет коуча"
           width={780}
           height={876}
           format="webp"
@@ -218,13 +214,7 @@ const {
     <section id="approach" class="approach" aria-labelledby="approach-title">
       <div class="page-container approach-grid">
         <div class="approach-copy">
-          <p
-            class="eyebrow"
-            data-cms-field="home.approach.eyebrow"
-            data-cms-copy="eyebrow"
-          >
-            {data.approach.eyebrow}
-          </p><h2
+          <h2
             id="approach-title"
             data-cms-field="home.approach.title"
             data-cms-copy="title"
@@ -255,6 +245,7 @@ const {
             ))
           }
         </ol>
+        <WorkBoundaries embedded />
       </div>
     </section>
   </Fragment>
@@ -264,9 +255,7 @@ const {
   <Fragment slot="process">
     <WorkProcess steps={data.process} />
   </Fragment>
-  <Fragment slot="boundaries">
-    <WorkBoundaries />
-  </Fragment>
+
   <Fragment slot="cases">
     {
       (preview || data.caseStudies.some((item) => item.enabled !== false)) && (
@@ -314,9 +303,7 @@ const {
             height={912}
             format="webp"
             loading="lazy"
-          /><figcaption>
-            Демонстрационный AI-снимок творческого процесса
-          </figcaption>
+          />
         </figure>
         <div class="art-copy">
           <h2
@@ -336,8 +323,10 @@ const {
                 </p>
               ))
             }
-          </div><a
-            href="#contact"
+          </div><button
+            type="button"
+            data-consultation
+            aria-haspopup="dialog"
             class:list={[
               buttonVariants(),
               'h-14 px-6 gap-[18px] text-sm w-fit',
@@ -345,38 +334,51 @@ const {
             >Узнать о следующей встрече <ArrowUpRight
               size={18}
               aria-hidden="true"
-            /></a
+            /></button
           >
         </div>
       </div>
     </section>
   </Fragment>
   <Fragment slot="products">
-    <section
-      class="other-formats"
-      aria-label="Групповой коучинг и самостоятельные практики"
-    >
-      <div class="page-container products-grid" data-cms-list="home.products">
-        {
-          data.products.map((product) => (
-            <article data-cms-item>
-              <>
-                <h2 data-cms-field=".title" data-cms-copy="title">
-                  {product.title}
-                </h2>
-                <p class="product-details" data-cms-field=".eyebrow">
-                  {product.eyebrow}
-                </p>
+    <div data-cms-list="home.products">
+      {
+        data.products.map((product) => (
+          <section
+            class="product-format"
+            data-cms-item
+            aria-label={product.title}
+          >
+            <div class="page-container product-format-grid">
+              <div class="product-format-copy">
+                <h2 data-cms-field=".title">{product.title}</h2>
                 <p data-cms-field=".description">{product.description}</p>
-                <a href="#contact" class="text-link">
-                  {product.actionLabel} <span aria-hidden="true">↗</span>
-                </a>
-              </>
-            </article>
-          ))
-        }
-      </div>
-    </section>
+                <button
+                  type="button"
+                  data-consultation
+                  data-consultation-topic={product.title}
+                  aria-haspopup="dialog"
+                  class:list={[
+                    buttonVariants(),
+                    'h-14 w-fit gap-[18px] px-6 text-sm',
+                  ]}
+                >
+                  <>
+                    <span data-cms-field=".actionLabel">
+                      {product.actionLabel}
+                    </span>
+                    <ArrowUpRight size={18} aria-hidden="true" />
+                  </>
+                </button>
+              </div>
+              <div class="product-format-detail">
+                <p data-cms-field=".eyebrow">{product.eyebrow}</p>
+              </div>
+            </div>
+          </section>
+        ))
+      }
+    </div>
   </Fragment>
   <Fragment slot="articles">
     <section class="journal-preview" aria-labelledby="journal-preview-title">
@@ -408,9 +410,7 @@ const {
     <Faq preview={preview} items={faq} />
   </Fragment>
   <Fragment slot="contact">
-    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl}
-      ><slot name="contact-form" /></Contact
-    >
+    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl} />
   </Fragment>
 </PageSections>
 <style>
@@ -516,7 +516,7 @@ const {
     color: var(--muted-foreground);
     white-space: pre-line;
   }
-  .concerns-grid a {
+  .concerns-grid .text-link {
     margin: 0;
     align-self: end;
     justify-self: start;
@@ -671,36 +671,41 @@ const {
     font-size: 13px;
     line-height: 1.5;
   }
-  .other-formats {
-    padding-block: 0 64px;
+  .product-format {
+    padding-block: 72px;
+    background: var(--secondary);
   }
-  .products-grid {
+  .product-format + .product-format {
+    background: var(--card);
+  }
+  .product-format-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 56px;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 96px;
+    align-items: center;
   }
-  .products-grid article {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 4;
-    padding-top: 28px;
-    border-top: 1px solid var(--border);
+  .product-format-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
   }
-  .products-grid h2 {
-    font-size: 34px;
+  .product-format h2 {
+    font-size: 56px;
   }
-  .products-grid .product-details {
-    font-size: 13px;
+  .product-format-copy p {
+    max-width: 620px;
+    font-size: 17px;
+    line-height: 1.7;
   }
-  .products-grid p:not(.product-details) {
-    font-size: 15px;
-    color: var(--muted-foreground);
-    line-height: 1.5;
+  .product-format-detail {
+    border-left: 1px solid #a4bac9;
+    padding: 32px 0 32px 40px;
   }
-  .products-grid a {
-    justify-self: start;
-    align-self: end;
-    font-weight: 600;
+  .product-format-detail p {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    line-height: 1.15;
   }
   .journal-preview {
     padding-block: 72px;
@@ -907,20 +912,26 @@ const {
     .art-copy > p:not(.eyebrow, .fine-print) {
       font-size: 16px;
     }
-    .art-copy a {
+    .art-copy button {
       max-width: 100%;
     }
-    .other-formats {
-      padding-block: 0 44px;
+    .product-format {
+      padding-block: 44px;
     }
-    .products-grid {
+    .product-format-grid {
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: 32px;
     }
-    .products-grid article {
-      grid-template-rows: auto auto auto auto;
-      grid-row: auto;
-      gap: 14px;
+    .product-format h2 {
+      font-size: 42px;
+    }
+    .product-format-detail {
+      padding: 24px 0 0;
+      border-left: 0;
+      border-top: 1px solid #a4bac9;
+    }
+    .product-format-detail p {
+      font-size: 32px;
     }
     .journal-heading {
       align-items: flex-start;
@@ -937,10 +948,10 @@ const {
     }
   }
   @media (max-width: 359px) {
-    .hero-actions > a:first-child {
+    .hero-actions > button:first-child {
       padding-inline: 16px;
     }
-    .art-copy a {
+    .art-copy button {
       padding-inline: 16px;
       gap: 12px;
       font-size: 13px;

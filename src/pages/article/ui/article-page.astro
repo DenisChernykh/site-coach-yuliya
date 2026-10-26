@@ -60,10 +60,15 @@ const toc =
         </ol>
       </nav>
       <h2>Бесплатная встреча</h2>
-      <a
-        href={routes.contact}
+      <button
+        type="button"
+        data-consultation
+        aria-haspopup="dialog"
         class:list={[buttonVariants(), 'h-12 gap-[18px] px-6 text-sm w-fit']}
-        >Записаться на встречу <ArrowUpRight size={18} aria-hidden="true" /></a
+        >Записаться на встречу <ArrowUpRight
+          size={18}
+          aria-hidden="true"
+        /></button
       >
     </aside>
     <div class="article-body">
@@ -130,13 +135,15 @@ const toc =
           data-cms-field="article.ctaDescription"
         >
           {article.ctaDescription}
-        </p><a
-          href={routes.contact}
+        </p><button
+          type="button"
+          data-consultation
+          aria-haspopup="dialog"
           class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm w-fit']}
           >Записаться на встречу <ArrowUpRight
             size={18}
             aria-hidden="true"
-          /></a
+          /></button
         >
       </section>
     </div>

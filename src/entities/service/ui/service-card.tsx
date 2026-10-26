@@ -46,8 +46,10 @@ export function ServiceCard({ service }: { service: ServiceDto }) {
       </CardContent>
       <CardFooter className="mt-auto border-0 bg-transparent p-0 pt-5">
         <Button
-          nativeButton={false}
-          render={<a href={`?service=${service.id}#contact`} />}
+          type="button"
+          data-consultation
+          data-consultation-service={service.id}
+          aria-haspopup="dialog"
           className="h-12 w-full gap-[18px] px-6 text-sm"
         >
           Обсудить формат{' '}

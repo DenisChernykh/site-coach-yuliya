@@ -41,8 +41,15 @@ const pathname = Astro.url.pathname;
         ))
       }
     </nav>
-    <a href={routes.contact} class:list={[buttonVariants(), 'header-cta']}
-      >Записаться на встречу <ArrowUpRight size={18} aria-hidden="true" /></a
+    <button
+      type="button"
+      data-consultation
+      aria-haspopup="dialog"
+      class:list={[buttonVariants(), 'header-cta']}
+      >Записаться на встречу <ArrowUpRight
+        size={18}
+        aria-hidden="true"
+      /></button
     >
     <div class="mobile-navigation">
       {

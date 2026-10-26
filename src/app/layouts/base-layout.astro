@@ -14,9 +14,12 @@ import { SiteFooter } from '@/widgets/site-footer';
 import { SocialLinks } from '@/widgets/social-links';
 import { loadSocialLinks, type SocialLinkDto } from '@/entities/social-link';
 import '../styles/index.css';
+import { loadServices, type ServiceDto } from '@/entities/service';
+import { ConsultationIsland } from '../islands/consultation-island';
 
 interface Props {
   preview?: boolean;
+  services?: ServiceDto[];
   seo?: import('@/shared/api').SeoSettingsDto;
   settings: SiteSettingsDto;
   socials?: SocialLinkDto[];
@@ -29,6 +32,7 @@ interface Props {
 }
 const {
   settings,
+  services: suppliedServices,
   preview = false,
   seo: initialSeo,
   title,
@@ -39,10 +43,11 @@ const {
   socials: initialSocials,
   contacts: initialContacts,
 } = Astro.props;
-const [socials, contacts, seo] = await Promise.all([
+const [socials, contacts, seo, services] = await Promise.all([
   initialSocials ?? loadSocialLinks(),
   initialContacts ?? loadContacts(),
   initialSeo ?? loadSeoSettings(),
+  preview ? [] : (suppliedServices ?? loadServices()),
 ]);
 const metadata = resolvePageSeo({
   settings,
@@ -107,6 +112,21 @@ const metadata = resolvePageSeo({
     <SiteHeader settings={settings} preview={preview} />
     <main id="main-content"><slot /></main>
     <SiteFooter settings={settings} contacts={contacts} />
+    {
+      !preview && (
+        <ConsultationIsland
+          client:load
+          services={services}
+          source={
+            seoPage === 'coaching'
+              ? 'COACHING_CONTACT'
+              : seoPage === 'home'
+                ? 'HOME_CONTACT'
+                : 'CONTACTS_CONTACT'
+          }
+        />
+      )
+    }
     {
       preview ? (
         <div data-cms-react="socials" style="display:contents">

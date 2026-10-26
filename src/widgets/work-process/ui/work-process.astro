@@ -11,12 +11,9 @@ const { steps } = Astro.props;
     <h2 id="process-title" data-cms-copy="title">Как проходит работа</h2>
     <ol class="process-grid" data-cms-list="home.process">
       {
-        steps.map((step, index) => (
+        steps.map((step) => (
           <li data-cms-item>
             <>
-              <span class="step-number" data-cms-index>
-                {String(index + 1).padStart(2, '0')}
-              </span>
               <h3 data-cms-field=".title">{step.title}</h3>
               <p data-cms-field=".description">{step.description}</p>
             </>
@@ -41,17 +38,11 @@ const { steps } = Astro.props;
     padding: 0;
     list-style: none;
   }
-  .step-number {
-    display: block;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--muted-foreground);
-  }
   h3 {
     font-family: var(--font-sans);
     font-size: 17px;
     font-weight: 500;
-    margin-top: 12px;
+    margin-top: 0;
     line-height: 1.5;
   }
   li p {

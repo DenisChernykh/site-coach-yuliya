@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Menu, ArrowUpRight, X } from 'lucide-react';
 import type { NavigationItemDto } from '@/entities/site';
-import { routes, withBase } from '@/shared/routes';
+import { withBase } from '@/shared/routes';
 import {
   Button,
   Sheet,
@@ -70,12 +70,13 @@ export function MobileNavigation({
           ))}
         </nav>
         <Button
-          nativeButton={false}
-          render={<a href={routes.contact} />}
+          type="button"
+          data-consultation
+          aria-haspopup="dialog"
           onClick={() => setOpen(false)}
           className="mt-4 h-14 justify-between px-6"
         >
-          Давай познакомимся <ArrowUpRight aria-hidden="true" />
+          Записаться на встречу <ArrowUpRight aria-hidden="true" />
         </Button>
       </SheetContent>
     </Sheet>

@@ -17,7 +17,6 @@ import {
   FieldError,
   Input,
   Textarea,
-  Checkbox,
   Alert,
   AlertDescription,
 } from '@/shared/ui';
@@ -28,25 +27,23 @@ type Errors = Partial<Record<FieldName, string>>;
 export function ConsultationForm({
   services,
   source,
+  serviceId,
+  initialMessage = '',
+  embedded = false,
 }: {
   services: ServiceDto[];
   source: NonNullable<ConsultationRequestDto['source']>;
+  serviceId?: string;
+  initialMessage?: string;
+  embedded?: boolean;
 }) {
   const id = useId();
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
-  const [serviceId, setServiceId] = useState<string>();
   const mutation = useCreateConsultation();
   const successRef = useRef<HTMLDivElement>(null);
-  const consentRef = useRef<HTMLElement>(null);
+  const consentRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get(
-      'service',
-    );
-    if (services.some((service) => service.id === requested))
-      setServiceId(requested!);
-  }, [services]);
   useEffect(() => {
     if (mutation.isSuccess) successRef.current?.focus();
   }, [mutation.isSuccess]);
@@ -80,7 +77,7 @@ export function ConsultationForm({
         message,
         website,
         consent: true,
-        serviceId,
+        serviceId: serviceId || undefined,
         source,
       },
     });
@@ -89,7 +86,13 @@ export function ConsultationForm({
   const selectedService = services.find((service) => service.id === serviceId);
   if (mutation.isSuccess) {
     return (
-      <Card className="rounded-md p-5 ring-0 md:p-8">
+      <Card
+        className={
+          embedded
+            ? 'gap-0 rounded-none bg-transparent p-0 ring-0'
+            : 'rounded-md p-5 ring-0 md:p-8'
+        }
+      >
         <CardContent className="space-y-5 p-0">
           <div
             ref={successRef}
@@ -125,7 +128,13 @@ export function ConsultationForm({
     );
   }
   return (
-    <Card className="rounded-md p-5 ring-0 md:p-8">
+    <Card
+      className={
+        embedded
+          ? 'gap-0 rounded-none bg-transparent p-0 ring-0'
+          : 'rounded-md p-5 ring-0 md:p-8'
+      }
+    >
       <CardContent className="p-0">
         <form
           onSubmit={submit}
@@ -146,9 +155,11 @@ export function ConsultationForm({
               maxLength={2000}
             />
           </div>
-          <h3 className="mb-[18px] font-sans text-lg font-medium leading-[1.5]">
-            Оставь заявку на встречу
-          </h3>
+          {!embedded && (
+            <h3 className="mb-[18px] font-sans text-lg font-medium leading-[1.5]">
+              Оставь заявку на встречу
+            </h3>
+          )}
           {selectedService ? (
             <p className="mb-5 text-sm text-muted-foreground">
               Интересует: {selectedService.title}
@@ -214,6 +225,7 @@ export function ConsultationForm({
               <Textarea
                 id={`${id}-message`}
                 name="message"
+                defaultValue={initialMessage}
                 placeholder="Можно пока не знать точный запрос"
                 maxLength={2000}
                 className="min-h-[76px] rounded-md bg-background px-3.5 py-3 text-[13px] leading-[1.5]"
@@ -221,23 +233,27 @@ export function ConsultationForm({
             </Field>
             <Field data-invalid={Boolean(errors.consent)} className="gap-2">
               <div className="flex items-start gap-2.5">
-                <Checkbox
+                <input
+                  type="checkbox"
+                  name="consent"
+                  required
                   ref={consentRef}
                   id={`${id}-consent`}
                   checked={consent}
-                  onCheckedChange={setConsent}
-                  aria-labelledby={`${id}-consent-label`}
+                  onChange={(event) => setConsent(event.target.checked)}
                   aria-invalid={Boolean(errors.consent)}
-                  aria-describedby={`${id}-privacy-note${errors.consent ? ` ${id}-consent-error` : ''}`}
-                  className="size-4"
+                  aria-describedby={
+                    errors.consent ? `${id}-consent-error` : undefined
+                  }
+                  className="mt-0.5 size-4 shrink-0 cursor-pointer accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 />
-                <p className="text-[10px] font-normal leading-[1.5] text-muted-foreground">
+                <p className="text-[11px] font-normal leading-[1.5] text-muted-foreground">
                   <FieldLabel
                     id={`${id}-consent-label`}
                     htmlFor={`${id}-consent`}
-                    className="inline text-[10px] font-normal leading-[1.5]"
+                    className="inline cursor-pointer text-[11px] font-normal leading-[1.5]"
                   >
-                    Даю{' '}
+                    Даю согласие на обработку{' '}
                     <a
                       href={routes.consent}
                       target="_blank"
@@ -245,7 +261,7 @@ export function ConsultationForm({
                       title="Откроется в новой вкладке"
                       className="underline underline-offset-2"
                     >
-                      согласие на обработку данных
+                      персональных данных
                     </a>
                   </FieldLabel>
                   {' · '}

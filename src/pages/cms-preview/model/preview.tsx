@@ -1,5 +1,5 @@
 import { MobileNavigation } from '@/features/mobile-navigation';
-import { TelegramLink } from '@/widgets/contact';
+import { ContactSocials } from '@/features/contact-socials';
 import { SocialLinks } from '@/widgets/social-links';
 import { Stories } from '@/widgets/stories';
 import { Education } from '@/widgets/education';
@@ -293,8 +293,14 @@ export function startPreview() {
                     <ServiceCard key={p.content.id} service={p.content} />
                   )),
               );
-            if (type === 'telegram')
-              render(node, <TelegramLink url={content.contacts.telegramUrl} />);
+            if (type === 'contact-socials')
+              render(
+                node,
+                <ContactSocials
+                  items={content.socials}
+                  telegramUrl={content.contacts.telegramUrl}
+                />,
+              );
             if (type === 'socials')
               render(
                 node,

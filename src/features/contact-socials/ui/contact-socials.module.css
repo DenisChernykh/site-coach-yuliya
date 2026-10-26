@@ -1,0 +1,34 @@
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--primary);
+  border-radius: 50%;
+  transition:
+    transform 0.18s,
+    background 0.18s;
+}
+.link img {
+  width: 24px;
+  height: 24px;
+}
+.link:hover {
+  background: var(--background);
+  transform: translateY(-2px);
+}
+.link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

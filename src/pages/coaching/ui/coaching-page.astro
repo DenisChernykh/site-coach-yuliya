@@ -54,8 +54,10 @@ const {
             Помогаю разобраться с выбором дела, профессиональными решениями и
             сомнениями, из-за которых трудно начать действовать.
           </p>
-          <a
-            href="#contact"
+          <button
+            type="button"
+            data-consultation
+            aria-haspopup="dialog"
             class:list={[
               buttonVariants(),
               'h-14 px-6 gap-[18px] text-sm w-fit',
@@ -63,13 +65,13 @@ const {
             >Обсудить мой запрос <ArrowUpRight
               size={18}
               aria-hidden="true"
-            /></a
+            /></button
           >
           <p class="fine-print">Бесплатная видеовстреча · 30–60 минут.</p>
         </div>
         <Image
           src={portrait}
-          alt="Демонстрационный портрет для макета коучинга"
+          alt="Портрет коуча"
           width={840}
           height={1060}
           format="webp"
@@ -127,9 +129,7 @@ const {
     <Faq preview={preview} items={faq} />
   </Fragment>
   <Fragment slot="contact">
-    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl}
-      ><slot name="contact-form" /></Contact
-    >
+    <Contact preview={preview} socials={socials} telegramUrl={telegramUrl} />
   </Fragment>
 </PageSections>
 <style>

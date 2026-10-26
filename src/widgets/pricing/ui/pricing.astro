@@ -20,10 +20,15 @@ const { services } = Astro.props;
         </p>
       </div>
       <div class="intro-action">
-        <a
-          href="#contact"
+        <button
+          type="button"
+          data-consultation
+          aria-haspopup="dialog"
           class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
-          >Записаться бесплатно <ArrowUpRight size={18} aria-hidden="true" /></a
+          >Записаться бесплатно <ArrowUpRight
+            size={18}
+            aria-hidden="true"
+          /></button
         >
         <p>Можно прийти без готового запроса.</p>
       </div>
@@ -134,7 +139,7 @@ const { services } = Astro.props;
     .intro-offer h2 {
       font-size: 38px;
     }
-    .intro-offer a {
+    .intro-offer button {
       max-width: 100%;
     }
   }

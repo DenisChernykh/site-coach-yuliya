@@ -1,5 +1,5 @@
 import type { ServiceDto } from '@/entities/service';
-import { ConsultationForm } from '@/features/request-consultation';
+import { ConsultationDialog } from '@/features/request-consultation';
 import { QueryProvider } from '../providers/query-provider';
 import type { ConsultationRequestDto } from '@/shared/api';
 
@@ -12,7 +12,7 @@ export function ConsultationIsland({
 }) {
   return (
     <QueryProvider>
-      <ConsultationForm services={services} source={source} />
+      <ConsultationDialog services={services} source={source} />
     </QueryProvider>
   );
 }

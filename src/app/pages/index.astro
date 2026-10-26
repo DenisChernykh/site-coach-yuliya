@@ -2,7 +2,6 @@
 import { loadPageLayouts } from '@/entities/cms';
 const layouts = await loadPageLayouts();
 import BaseLayout from '../layouts/base-layout.astro';
-import { ConsultationIsland } from '../islands/consultation-island';
 import { StoriesIsland } from '../islands/stories-island';
 import { isMockMode } from '@/shared/api';
 import { resolveArticleImages } from '../data/article-images';
@@ -28,7 +27,12 @@ const storiesBlock = layouts
   ?.blocks.find((block) => block.id === 'stories');
 ---
 
-<BaseLayout settings={settings} socials={socials} seoPage="home">
+<BaseLayout
+  services={services}
+  settings={settings}
+  socials={socials}
+  seoPage="home"
+>
   <HomePage
     layouts={layouts}
     data={home}
@@ -44,12 +48,6 @@ const storiesBlock = layouts
       demoStories={isMockMode ? home.stories : undefined}
       title={storiesBlock?.title}
       eyebrow={storiesBlock?.eyebrow}
-    />
-    <ConsultationIsland
-      slot="contact-form"
-      client:load
-      services={services}
-      source="HOME_CONTACT"
     />
   </HomePage>
 </BaseLayout>

@@ -38,10 +38,15 @@ const { layouts, preview = false } = Astro.props;
           <h2 data-cms-copy="title">Запишись на бесплатную встречу</h2><p>
             30–60 минут по видеосвязи: обсудим ситуацию и уточним запрос.
           </p>
-        </div><a
-          href={routes.contact}
+        </div><button
+          type="button"
+          data-consultation
+          aria-haspopup="dialog"
           class:list={[buttonVariants(), 'h-14 px-6 gap-[18px] text-sm']}
-          >Обсудить мой запрос <ArrowUpRight size={18} aria-hidden="true" /></a
+          >Обсудить мой запрос <ArrowUpRight
+            size={18}
+            aria-hidden="true"
+          /></button
         >
       </div>
     </section>
