@@ -11,6 +11,10 @@ export default defineConfig({
   devToolbar: { enabled: false },
   integrations: [react()],
   vite: {
+    build: {
+      sourcemap:
+        process.env.SENTRY_UPLOAD_SOURCEMAPS === 'true' ? 'hidden' : false,
+    },
     plugins: [tailwindcss()],
   },
 });

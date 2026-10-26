@@ -102,4 +102,28 @@ describe('Telegram delivery boundary', () => {
       ),
     ).toMatchObject({ permanent: true, errorCode: 'TELEGRAM_HTTP_403' })
   })
+
+  it('reports delivery failures without customer data or bot credentials', async () => {
+    const logger = { write: jest.fn() }
+    const fetcher = (): Promise<Response> =>
+      Promise.resolve(
+        Response.json(
+          { error_code: 403, description: config.botToken },
+          { status: 403 },
+        ),
+      )
+    await new TelegramAdapter(config, fetcher, logger).send(
+      consultation,
+      new AbortController().signal,
+    )
+    expect(logger.write).toHaveBeenCalledWith({
+      level: 'error',
+      event: 'telegram_delivery_failed',
+      module: 'CoachSite',
+      attributes: { reasonCode: 'TELEGRAM_HTTP_403' },
+    })
+    const serialized = JSON.stringify(logger.write.mock.calls)
+    expect(serialized).not.toContain(consultation.contact)
+    expect(serialized).not.toContain(config.botToken)
+  })
 })

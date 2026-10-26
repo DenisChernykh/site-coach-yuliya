@@ -6,6 +6,20 @@ import {
   normalizeApiError,
 } from './api-errors'
 import { API_AXIOS_INSTANCE } from './axios-client'
+import { reportError } from '@/shared/monitoring'
+
+function reportRequestFailure(error: unknown): void {
+  if (error instanceof AxiosError && error.code === 'ERR_CANCELED') return
+  const status =
+    error instanceof AxiosError ? error.response?.status : undefined
+  if (status !== undefined && status < 500) return
+  const normalized = normalizeApiError(error)
+  reportError(
+    normalized,
+    status,
+    'requestId' in normalized ? normalized.requestId : undefined,
+  )
+}
 
 /** Тип нормализованной ошибки для сгенерированного API-клиента. */
 export type ErrorType<ErrorData> = ApiClientError<
@@ -98,6 +112,7 @@ export async function apiMutator<T>(
   try {
     return (await executeApiRequest<T>(config, options)).data
   } catch (error) {
+    reportRequestFailure(error)
     throw normalizeApiError(error)
   }
 }
@@ -111,6 +126,7 @@ export async function apiResponseMutator<T>(
     const response = await executeApiRequest<T>(config, options)
     return { data: response.data, headers: response.headers }
   } catch (error) {
+    reportRequestFailure(error)
     throw normalizeApiError(error)
   }
 }

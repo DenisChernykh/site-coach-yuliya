@@ -9,6 +9,7 @@ import {
 import { clearCurrentSession } from '@/entities/session'
 import { isProblemCode } from '@/shared/api'
 import { loginPathWithReturnTo } from '@/shared/routes'
+import { reportError } from '@/shared/monitoring'
 import {
   Alert,
   AlertDescription,
@@ -43,6 +44,12 @@ function AuthenticationRedirect() {
 export function RouteError() {
   const error = useRouteError()
   const revalidator = useRevalidator()
+
+  useEffect(() => {
+    // Transport errors have already been reported at the request boundary.
+    if (error instanceof Error && !error.name.startsWith('Api'))
+      reportError(error)
+  }, [error])
 
   if (isProblemCode(error, 'AUTHENTICATION_REQUIRED')) {
     return <AuthenticationRedirect />

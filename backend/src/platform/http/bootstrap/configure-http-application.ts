@@ -6,6 +6,7 @@ import type { Express } from 'express'
 import type { RequestHandler, Request, Response, NextFunction } from 'express'
 import cookieParser from 'cookie-parser'
 import helmet from 'helmet'
+import { errorReportingOrigin } from '@/platform/monitoring/error-reporting'
 
 import type { RuntimeConfigService } from '@/platform/config/runtime-config.service'
 import type { ApplicationLifecycleState } from '@/platform/lifecycle/application-lifecycle.state'
@@ -50,7 +51,13 @@ export function configureHttpApplication(
   app.use(
     helmet({
       contentSecurityPolicy: {
-        directives: { 'frame-src': ["'self'", ...config.http.corsOrigins] },
+        directives: {
+          'frame-src': ["'self'", ...config.http.corsOrigins],
+          'connect-src': [
+            "'self'",
+            ...(errorReportingOrigin() ? [errorReportingOrigin()!] : []),
+          ],
+        },
       },
     }),
   )

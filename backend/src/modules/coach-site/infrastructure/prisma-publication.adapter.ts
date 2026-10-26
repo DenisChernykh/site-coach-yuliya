@@ -1,3 +1,4 @@
+import type { StructuredLogger } from '@/platform/logging/logging.contracts'
 import { Prisma } from '@/generated/prisma/client'
 import { randomUUID } from 'node:crypto'
 import type { PrismaClientProvider } from '@/platform/database/prisma-client.provider'
@@ -10,6 +11,7 @@ export class PrismaPublicationAdapter implements PublicationPort {
   public constructor(
     private readonly database: PrismaClientProvider,
     private readonly transaction: TransactionPort,
+    private readonly logger?: StructuredLogger,
   ) {}
 
   public async get(): Promise<SitePublication> {
@@ -140,7 +142,7 @@ export class PrismaPublicationAdapter implements PublicationPort {
     errorCode: string,
     permanent: boolean,
   ): Promise<void> {
-    await this.transaction.run(() =>
+    const changed = await this.transaction.run(() =>
       this.database.withClient(async (client) => {
         await client.$queryRaw(
           Prisma.sql`SELECT id FROM site_publications WHERE id = 'site' FOR UPDATE`,
@@ -153,7 +155,7 @@ export class PrismaPublicationAdapter implements PublicationPort {
               : { status: 'DISPATCHING', claimToken }),
           },
         })
-        if (row === null) return
+        if (row === null) return false
         await client.sitePublication.update({
           where: { id: 'site' },
           data: {
@@ -166,8 +168,16 @@ export class PrismaPublicationAdapter implements PublicationPort {
             lastErrorCode: errorCode,
           },
         })
+        return true
       }),
     )
+    if (changed)
+      this.logger?.write({
+        level: 'error',
+        event: 'site_publication_failed',
+        module: 'CoachSite',
+        attributes: { reasonCode: errorCode },
+      })
   }
 
   public async completed(deployedRevision: number): Promise<void> {

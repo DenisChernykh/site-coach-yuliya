@@ -1,4 +1,10 @@
 import 'dotenv/config'
+import { createErrorReportingConfig } from '@/platform/config/error-reporting-config'
+import {
+  startErrorReporting,
+  flushErrorReporting,
+  reportBackendRecord,
+} from '@/platform/monitoring/error-reporting'
 
 import { startObservability } from '@/bootstrap/observability/start-observability'
 import type { ApplicationRuntimeConfig } from '@/platform/config/runtime-config.types'
@@ -38,6 +44,7 @@ function startupFailureAttributes(
  * @throws Re-throws startup failures after publishing bounded diagnostics.
  */
 export async function main(): Promise<void> {
+  startErrorReporting(createErrorReportingConfig())
   const config = createApiRuntimeConfig()
   const logger = new PinoLogSink(config)
   const observability = startObservability(config, logger)
@@ -56,6 +63,13 @@ export async function main(): Promise<void> {
   }
 }
 
-void main().catch(() => {
+void main().catch(async (error: unknown) => {
+  reportBackendRecord({
+    level: 'fatal',
+    event: 'api_process_failed',
+    module: 'Bootstrap',
+    error,
+  })
+  await flushErrorReporting()
   process.exitCode = 1
 })

@@ -1,4 +1,5 @@
 import type { ApiRuntime } from './api-runtime'
+import { flushErrorReporting } from '@/platform/monitoring/error-reporting'
 
 /** Exit decision produced after bounded graceful cleanup. */
 export interface GracefulShutdownResult {
@@ -59,6 +60,7 @@ export class GracefulShutdownCoordinator {
     await resources?.application.close().catch(() => {
       failed = true
     })
+    await flushErrorReporting()
     return { exitCode: failed ? 1 : 0, forced }
   }
 }

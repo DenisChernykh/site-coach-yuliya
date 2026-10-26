@@ -1,10 +1,12 @@
 import {
+  ApiProblemError,
   ApiNetworkError,
   ApiProtocolError,
   createApiError,
   type ApiClientError,
   type ProblemDocumentLike,
 } from './api-errors';
+import { reportApiFailure } from '../../monitoring';
 
 export type ErrorType<T> = ApiClientError<T & ProblemDocumentLike>;
 export type BodyType<T> = T;
@@ -25,12 +27,20 @@ export async function fetchApi<T>(
     options?.signal?.throwIfAborted();
     if (error instanceof DOMException && error.name === 'AbortError')
       throw error;
-    throw new ApiNetworkError();
+    const failure = new ApiNetworkError();
+    reportApiFailure(failure);
+    throw failure;
   }
   options?.signal?.throwIfAborted();
   if (!response.ok) {
     const error = await createApiError(response);
     options?.signal?.throwIfAborted();
+    if (response.status >= 500)
+      reportApiFailure(
+        error,
+        response.status,
+        error instanceof ApiProblemError ? error.requestId : undefined,
+      );
     throw error;
   }
   const contentType = response.headers
@@ -38,12 +48,18 @@ export async function fetchApi<T>(
     ?.split(';', 1)[0]
     ?.trim()
     .toLowerCase();
-  if (contentType !== 'application/json') throw new ApiProtocolError();
+  if (contentType !== 'application/json') {
+    const error = new ApiProtocolError();
+    reportApiFailure(error, response.status);
+    throw error;
+  }
   try {
     return (await response.json()) as T;
   } catch {
     options?.signal?.throwIfAborted();
-    throw new ApiProtocolError();
+    const error = new ApiProtocolError();
+    reportApiFailure(error, response.status);
+    throw error;
   }
 }
 

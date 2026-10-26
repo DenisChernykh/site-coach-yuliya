@@ -60,10 +60,15 @@ const metadata = resolvePageSeo({
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
+    <meta name="application-name" content="Coach Yuliya" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={metadata.description} />
     <meta name="robots" content={metadata.robots} />
     <meta name="theme-color" content="#F7F9F8" />
+    <script>
+      import { initializeMonitoring } from '@/shared/monitoring';
+      initializeMonitoring();
+    </script>
     {metadata.canonical && <link rel="canonical" href={metadata.canonical} />}
     <meta property="og:title" content={metadata.ogTitle} />
     <meta property="og:description" content={metadata.ogDescription} />

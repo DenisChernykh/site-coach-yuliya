@@ -1,3 +1,4 @@
+import type { StructuredLogger } from '@/platform/logging/logging.contracts'
 import type { CoachSiteRuntimeConfig } from '@/platform/config/coach-site.config'
 import {
   consultationSourceLabel,
@@ -56,6 +57,7 @@ export class TelegramAdapter implements TelegramSenderPort {
   public constructor(
     private readonly config: CoachSiteRuntimeConfig['telegram'],
     private readonly fetcher: typeof fetch = fetch,
+    private readonly logger?: StructuredLogger,
   ) {}
 
   public async send(
@@ -95,6 +97,7 @@ export class TelegramAdapter implements TelegramSenderPort {
           ? body['parameters']
           : undefined
       const retry = parameters?.['retry_after']
+      this.reportFailure(`TELEGRAM_HTTP_${code}`)
       return {
         errorCode: `TELEGRAM_HTTP_${code}`,
         permanent: [400, 401, 403, 404].includes(code),
@@ -104,6 +107,7 @@ export class TelegramAdapter implements TelegramSenderPort {
             : 0,
       }
     } catch {
+      if (!signal.aborted) this.reportFailure('TELEGRAM_UNAVAILABLE')
       return {
         errorCode: signal.aborted
           ? 'TELEGRAM_SHUTDOWN'
@@ -112,5 +116,13 @@ export class TelegramAdapter implements TelegramSenderPort {
         retryAfterMs: 5000,
       }
     }
+  }
+  private reportFailure(reasonCode: string): void {
+    this.logger?.write({
+      level: 'error',
+      event: 'telegram_delivery_failed',
+      module: 'CoachSite',
+      attributes: { reasonCode },
+    })
   }
 }

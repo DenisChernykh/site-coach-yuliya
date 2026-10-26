@@ -49,6 +49,10 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: '/admin/',
+    build: {
+      sourcemap:
+        process.env.SENTRY_UPLOAD_SOURCEMAPS === 'true' ? 'hidden' : false,
+    },
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

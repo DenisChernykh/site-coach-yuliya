@@ -110,12 +110,13 @@ export class CoachSiteModule {
         },
         {
           provide: PrismaPublicationAdapter,
-          inject: [PrismaClientProvider, TRANSACTION_PORT],
+          inject: [PrismaClientProvider, TRANSACTION_PORT, STRUCTURED_LOGGER],
           useFactory: (
             database: PrismaClientProvider,
             transaction: TransactionPort,
+            logger: StructuredLogger,
           ): PrismaPublicationAdapter =>
-            new PrismaPublicationAdapter(database, transaction),
+            new PrismaPublicationAdapter(database, transaction, logger),
         },
         {
           provide: GithubSiteBuilder,
@@ -203,8 +204,9 @@ export class CoachSiteModule {
         },
         {
           provide: TelegramAdapter,
-          useFactory: (): TelegramAdapter =>
-            new TelegramAdapter(config.telegram),
+          inject: [STRUCTURED_LOGGER],
+          useFactory: (logger: StructuredLogger): TelegramAdapter =>
+            new TelegramAdapter(config.telegram, fetch, logger),
         },
         {
           provide: DeliverTelegramNotifications,

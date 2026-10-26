@@ -1,3 +1,5 @@
 allowBuilds:
+  '@sentry/cli@3.8.2': true
+  '@sentry/cli': set this to true or false
   esbuild: true
   sharp: true

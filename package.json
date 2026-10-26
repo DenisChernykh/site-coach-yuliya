@@ -19,8 +19,8 @@
     "api:generate": "orval && node scripts/openapi/generate-docs.mjs && prettier --write src/shared/api/generated docs/api.md",
     "api:update": "pnpm api:sync && pnpm api:generate",
     "api:check": "node scripts/openapi/check-generated.mjs",
-    "format": "prettier --write src tests scripts/openapi scripts/demo '*.{json,mjs,ts}' docs/architecture.md README.md",
-    "format:check": "prettier --check src tests scripts/openapi scripts/demo '*.{json,mjs,ts}' docs/architecture.md README.md",
+    "format": "prettier --write src tests scripts/openapi scripts/demo scripts/monitoring '*.{json,mjs,ts}' docs/architecture.md README.md",
+    "format:check": "prettier --check src tests scripts/openapi scripts/demo scripts/monitoring '*.{json,mjs,ts}' docs/architecture.md README.md",
     "test": "node --import tsx --test tests/*.test.ts",
     "check": "pnpm api:check && pnpm format:check && pnpm test && pnpm build",
     "design:check": "python3 scripts/build_preview.py --check && python3 scripts/validate.py"
@@ -30,6 +30,7 @@
     "@base-ui/react": "^1.6.0",
     "@fontsource-variable/manrope": "^5.2.0",
     "@fontsource/cormorant-garamond": "^5.2.0",
+    "@sentry/browser": "11.9.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.101.4",
     "astro": "^7.3.8",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@sentry/cli": "3.8.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

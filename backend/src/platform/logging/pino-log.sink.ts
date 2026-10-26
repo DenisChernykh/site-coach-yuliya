@@ -1,4 +1,5 @@
 import pino, { type DestinationStream, type Logger } from 'pino'
+import { reportBackendRecord } from '@/platform/monitoring/error-reporting'
 
 import type { ApplicationRuntimeConfig } from '@/platform/config/runtime-config.types'
 
@@ -169,6 +170,13 @@ export class PinoLogSink implements StructuredLogger {
       ...(record.error === undefined ? {} : { error: record.error }),
     }
     this.publish(record.level, payload)
+    reportBackendRecord({
+      ...record,
+      correlation: safeCorrelation({
+        ...this.correlationFields(),
+        ...record.correlation,
+      }),
+    })
   }
 
   private publish(level: LogLevel, payload: object): void {

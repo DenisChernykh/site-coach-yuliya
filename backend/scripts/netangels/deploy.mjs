@@ -269,6 +269,7 @@ export async function deploy(config) {
           'content',
           'release.json',
           'scripts/netangels/start.cjs',
+          'scripts/netangels/notify-errors.mjs',
         ],
         { cwd: backendRoot },
       )

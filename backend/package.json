@@ -17,7 +17,7 @@
     "build:clean": "tsx scripts/build/clean-dist.ts",
     "build:compiled": "pnpm run build:clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "check": "pnpm run check:quick && pnpm run test:integration:run && pnpm run test:e2e:run",
-    "check:quick": "pnpm run format:check && pnpm run prisma:validate && pnpm run prisma:generate && pnpm run openapi:drift && pnpm run openapi:lint && pnpm run lint && pnpm run typecheck && pnpm run test:unit:run && pnpm run test:deploy && pnpm run architecture:check && pnpm run build:compiled",
+    "check:quick": "pnpm run format:check && pnpm run prisma:validate && pnpm run prisma:generate && pnpm run openapi:drift && pnpm run openapi:lint && pnpm run lint && pnpm run typecheck && pnpm run test:unit:run && pnpm run test:deploy && pnpm run architecture:check && pnpm run build:compiled && pnpm run test:monitoring-runtime",
     "db:migrate:dev": "prisma migrate dev --config prisma.config.ts",
     "dev": "docker compose --profile development --profile observability up --watch api alloy loki tempo grafana",
     "dev:api": "pnpm run prisma:generate && nest start --watch --no-shell",
@@ -55,7 +55,8 @@
     "start:seed": "node dist/bootstrap/content/main.js",
     "start:create-admin": "node dist/bootstrap/admin/main.js",
     "test:site:e2e": "pnpm build && node scripts/check-site-e2e.mjs",
-    "test:deploy": "node --test test/netangels-deploy.test.mjs"
+    "test:deploy": "node --test test/netangels-deploy.test.mjs",
+    "test:monitoring-runtime": "node --test test/monitoring-runtime.test.mjs"
   },
   "dependencies": {
     "@nestjs/bullmq": "11.0.4",
@@ -77,6 +78,7 @@
     "@opentelemetry/semantic-conventions": "1.43.0",
     "@prisma/adapter-pg": "7.9.0",
     "@prisma/client": "7.9.0",
+    "@sentry/node": "11.9.0",
     "argon2": "0.45.0",
     "bullmq": "5.79.0",
     "class-transformer": "0.5.1",

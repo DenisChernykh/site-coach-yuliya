@@ -19,6 +19,7 @@ dist-pages/
 
 .playwright-cli/
 .demo/
+.monitoring/
 /output/playwright/
 .env.local
 .env.production
