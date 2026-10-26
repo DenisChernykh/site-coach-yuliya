@@ -18,6 +18,8 @@
 .link img {
   width: 24px;
   height: 24px;
+  filter: brightness(0);
+  opacity: 0.8;
 }
 .link:hover {
   background: var(--background);
