@@ -86,9 +86,6 @@ export const fieldLabels: Record<string, string> = {
   review: 'Текст отзыва',
   reviewImage: 'Изображение отзыва',
   reviewImageAlt: 'Описание изображения отзыва',
-  editorialNotes: 'Источники материалов',
-  materialId: 'Идентификатор материала',
-  source: 'Источник материала',
   products: 'Другие продукты',
   subtitle: 'Подзаголовок',
   body: 'Текст',
@@ -146,7 +143,6 @@ export const itemTemplates: Record<string, ContentValue> = {
     imageAlt: '',
     enabled: false,
   },
-  editorialNotes: { materialId: '', source: '' },
   products: {
     id: '',
     eyebrow: '',

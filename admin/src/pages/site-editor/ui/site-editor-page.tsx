@@ -604,29 +604,6 @@ function PageEditor({ initial }: { initial: CmsWorkspaceDto }) {
                       })
                     }
                   />
-                  <details className="mt-8 rounded-lg border p-4">
-                    <summary className="cursor-pointer font-medium">
-                      Источники материалов
-                    </summary>
-                    <p className="my-3 text-sm text-muted-foreground">
-                      Внутренние заметки по материалам. Они сохраняются только в
-                      CMS и не передаются на публичный сайт.
-                    </p>
-                    <ContentFields
-                      value={
-                        (content.editorialNotes ??
-                          []) as unknown as ContentValue
-                      }
-                      field="editorialNotes"
-                      onChange={(next) =>
-                        change({
-                          ...content,
-                          editorialNotes:
-                            next as unknown as CmsDocumentDto['editorialNotes'],
-                        })
-                      }
-                    />
-                  </details>
                 </fieldset>
               </div>
             </Tabs.Panel>
