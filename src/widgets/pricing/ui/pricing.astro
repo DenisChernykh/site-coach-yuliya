@@ -1,6 +1,7 @@
 ---
 import { ServiceCard, type ServiceDto } from '@/entities/service';
 import { buttonVariants } from '@/shared/ui';
+import { routes } from '@/shared/routes';
 import { ArrowUpRight } from 'lucide-react';
 interface Props {
   services: ServiceDto[];
@@ -45,6 +46,9 @@ const { services } = Astro.props;
     <p class="fine-print">
       Оплата до начала работы. Условия переноса и отмены согласуем заранее. Цены
       из задания — подтвердить перед публикацией.
+      <a href={routes.terms} class="underline underline-offset-2"
+        >Условия работы, отмены и возврата</a
+      >.
     </p>
   </div>
 </section>

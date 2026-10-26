@@ -795,7 +795,7 @@ try {
   assert.equal(consultation.source, 'COACHING_CONTACT')
   assert.equal(consultation.sourceLabel, 'Коучинг → форма заявки')
   assert.equal(consultation.delivery.status, 'PENDING')
-  assert.equal(consultation.consentVersion, '2026-10-11')
+  assert.equal(consultation.consentVersion, '2026-10-26')
   assert.equal(consultation.delivery.claimToken, undefined)
   const updatedConsultation = await http(
     `/v1/admin/consultations/${consultation.id}`,

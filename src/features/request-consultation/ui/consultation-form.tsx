@@ -224,9 +224,7 @@ export function ConsultationForm({
                   onCheckedChange={setConsent}
                   aria-labelledby={`${id}-consent-label`}
                   aria-invalid={Boolean(errors.consent)}
-                  aria-describedby={
-                    errors.consent ? `${id}-consent-error` : undefined
-                  }
+                  aria-describedby={`${id}-privacy-note${errors.consent ? ` ${id}-consent-error` : ''}`}
                   className="size-4"
                 />
                 <FieldLabel
@@ -234,17 +232,35 @@ export function ConsultationForm({
                   htmlFor={`${id}-consent`}
                   className="block text-[10px] font-normal leading-[1.5]"
                 >
-                  Согласна на обработку персональных данных
-                  <br className="hidden sm:block" /> и ознакомилась с{' '}
+                  Даю{' '}
                   <a
-                    href={routes.privacy}
+                    href={routes.consent}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Откроется в новой вкладке"
                     className="underline underline-offset-2"
                   >
-                    политикой конфиденциальности
+                    согласие на обработку персональных данных
                   </a>
                   .
                 </FieldLabel>
               </div>
+              <p
+                id={`${id}-privacy-note`}
+                className="text-[10px] leading-[1.5] text-muted-foreground"
+              >
+                Как обрабатываются данные — в{' '}
+                <a
+                  href={routes.privacy}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Откроется в новой вкладке"
+                  className="underline underline-offset-2"
+                >
+                  политике конфиденциальности
+                </a>
+                .
+              </p>
               {errors.consent ? (
                 <FieldError id={`${id}-consent-error`}>
                   {errors.consent}
@@ -275,7 +291,17 @@ export function ConsultationForm({
               )}
             </Button>
             <p className="fine-print">
-              Запись не обязывает покупать сессии или пакет.
+              Запись не обязывает покупать сессии или пакет.{' '}
+              <a
+                href={routes.terms}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Откроется в новой вкладке"
+                className="underline underline-offset-2"
+              >
+                Условия работы
+              </a>
+              .
             </p>
           </FieldGroup>
         </form>

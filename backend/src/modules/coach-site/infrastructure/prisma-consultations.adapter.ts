@@ -80,7 +80,7 @@ export class PrismaConsultationsAdapter implements ConsultationsPort {
             ...fields,
             serviceTitle,
             source: input.source ?? null,
-            consentVersion: '2026-10-11',
+            consentVersion: '2026-10-26',
             delivery: { create: {} },
           },
           include: { delivery: true },

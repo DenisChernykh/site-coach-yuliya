@@ -1,0 +1,93 @@
+---
+import { routes } from '@/shared/routes';
+import { legal } from '@/shared/config/legal';
+interface Props {
+  title: string;
+  current: 'privacy' | 'consent' | 'terms';
+}
+const { title, current } = Astro.props;
+const documents = [
+  {
+    key: 'privacy',
+    title: 'Политика конфиденциальности',
+    href: routes.privacy,
+  },
+  {
+    key: 'consent',
+    title: 'Согласие на обработку данных',
+    href: routes.consent,
+  },
+  { key: 'terms', title: 'Условия работы', href: routes.terms },
+];
+---
+
+<article class="page-container legal-document">
+  <nav class="breadcrumb" aria-label="Хлебные крошки">
+    <a href={routes.home}>Главная</a><span aria-hidden="true">/</span>
+    <span aria-current="page">{title}</span>
+  </nav>
+  <h1>{title}</h1>
+  <p class="legal-date">
+    Редакция от <time datetime={legal.version}>{legal.date}</time>
+  </p>
+  <div class="legal-copy"><slot /></div>
+  <nav class="legal-links" aria-label="Документы сайта">
+    {
+      documents
+        .filter((document) => document.key !== current)
+        .map((document) => <a href={document.href}>{document.title}</a>)
+    }
+    <a href={routes.contact}>Связаться с Юлей</a>
+  </nav>
+</article>
+<style>
+  .legal-document {
+    max-width: 900px;
+    padding-block: 56px 100px;
+    overflow-wrap: anywhere;
+  }
+  h1 {
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.08;
+    margin-top: 24px;
+  }
+  .legal-date {
+    margin-top: 20px;
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+  .legal-copy {
+    line-height: 1.75;
+    color: var(--muted-foreground);
+  }
+  .legal-copy :global(h2) {
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.2;
+    margin-block: 36px 16px;
+    color: var(--foreground);
+    scroll-margin-top: 100px;
+  }
+  .legal-copy :global(p),
+  .legal-copy :global(ul) {
+    margin-top: 16px;
+  }
+  .legal-copy :global(a),
+  .legal-links a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 40px;
+    font-size: 13px;
+  }
+  @media (max-width: 767px) {
+    .legal-document {
+      padding-block: 40px 56px;
+    }
+  }
+</style>

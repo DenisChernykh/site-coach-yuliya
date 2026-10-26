@@ -16,5 +16,7 @@ export const routes = {
   journal: withBase('/journal/'),
   contact: withBase('/contacts/#contact'),
   privacy: withBase('/privacy/'),
+  consent: withBase('/consent/'),
+  terms: withBase('/terms/'),
   article: (slug: string) => withBase(`/journal/${encodeURIComponent(slug)}/`),
 } as const;

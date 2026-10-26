@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { ConsentPage } from '@/pages/consent';
+import { loadSiteSettings } from '@/entities/site';
+const settings = await loadSiteSettings();
+---
+
+<BaseLayout
+  settings={settings}
+  title="Согласие на обработку персональных данных — Юля Валишина"
+  description="Цель, состав данных, срок действия и порядок отзыва согласия при отправке заявки Юле Валишиной."
+  noIndex
+>
+  <ConsentPage />
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { TermsPage } from '@/pages/terms';
+import { loadSiteSettings } from '@/entities/site';
+const settings = await loadSiteSettings();
+---
+
+<BaseLayout
+  settings={settings}
+  title="Условия работы — Юля Валишина"
+  description="Порядок записи, оплаты, переноса, отмены и возврата при индивидуальной работе с Юлей Валишиной."
+  noIndex
+>
+  <TermsPage />
+</BaseLayout>

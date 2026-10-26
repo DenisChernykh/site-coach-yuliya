@@ -50,10 +50,11 @@ const { settings, contacts } = Astro.props;
     <nav aria-label="Правовая информация">
       <a href={routes.privacy}>Политика конфиденциальности</a>
       <div>
-        <a href={routes.privacy + '#consent'}>Согласие на обработку данных</a
-        ><span aria-hidden="true"> · </span><a
-          href={routes.coaching + '#formats'}>Условия работы</a
+        <a href={routes.consent}>Согласие на обработку данных</a><span
+          aria-hidden="true"
         >
+          ·
+        </span><a href={routes.terms}>Условия работы</a>
       </div>
     </nav>
   </div>
